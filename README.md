@@ -1,7 +1,7 @@
 ## Installation
 
 ```shell
-npm install --save resq$
+npm install --save resq
 ```
 
 ## Usage
