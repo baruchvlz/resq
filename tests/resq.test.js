@@ -48,6 +48,14 @@ describe('RESQ', () => {
                 state: { testState: true },
                 node: document.createElement('div'),
             },
+            {
+                name: 'div',
+                props: { },
+                state: {
+                    testState: true,
+                },
+                node: document.createElement('div'),
+            },
         ])
     })
 
@@ -117,12 +125,20 @@ describe('RESQ', () => {
 
             const result = $$.byState({ testState: true })
 
-            expect(result.length).toBe(1)
+            expect(result.length).toBe(2)
             expect(result).toMatchObject([
                 {
                     name: 'div',
                     props: { testProp: 'some prop' },
                     state: { testState: true },
+                    node: document.createElement('div'),
+                },
+                {
+                    name: 'div',
+                    props: { },
+                    state: {
+                        testState: true,
+                    },
                     node: document.createElement('div'),
                 },
             ])

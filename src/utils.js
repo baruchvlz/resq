@@ -69,7 +69,7 @@ export function findInTree(tree, searchFn, selectFirst = false) {
     return returnArray
 }
 
-export function findSelectorInTree(selectors, tree, selectFirst = false,searchFn) {
+export function findSelectorInTree(selectors, tree, selectFirst = false, searchFn) {
     let treeArray = [tree]
 
     selectors.forEach((selector) => {
