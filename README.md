@@ -1,8 +1,8 @@
+
 ## Installation
 
-```shell
-npm install --save resq
-```
+Not yet available on NPM
+
 
 ## Usage
 
