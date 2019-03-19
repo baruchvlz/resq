@@ -1,0 +1,10 @@
+.babelrc
+.eslintignore
+.eslintrc
+.gitignore
+index.js
+package.json
+package-lock.json
+/dist
+/src
+/tests

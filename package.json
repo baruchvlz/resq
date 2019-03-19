@@ -1,7 +1,7 @@
 {
-    "name": "react-selector",
-    "version": "0.1.0",
-    "private": true,
+    "name": "resq",
+    "version": "0.0.1-alpha",
+    "author": "Baruch Velez <baruchvelez@gmail.com>",
     "main": "dist/index.js",
     "devDependencies": {
         "@babel/cli": "^7.2.3",
@@ -27,7 +27,7 @@
         ]
     },
     "files": [
-        "/dist"
+        
     ],
     "dependencies": {
         "fast-deep-equal": "^2.0.1"
