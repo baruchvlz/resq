@@ -1,107 +1,56 @@
-import deepEqual from 'fast-deep-equal'
-import { findInTree, buildNodeTree } from './utils'
-
-let tree,
-    nodes,
-    selectors,
-    rootComponent
-
-function searchTree(selectors, searchFn) {
-    let treeArray = [tree]
-
-    selectors.forEach((selector) => {
-        treeArray = findInTree(treeArray, child => {
-            if (searchFn && typeof searchFn === 'function') {
-                return searchFn(child)
-            }
-
-            return child.name === selector
-        })
-    })
-
-    return treeArray
-}
+import { filterBy, searchTree, buildNodeTree } from './utils'
 
 class RESQNodes extends Array {
     constructor(nodes) {
         super(...nodes)
     }
 
-    filterBy(key, obj) {
-        const filtered = []
-
-        const interator = el => {
-            if (deepEqual(obj, el[key])) {
-                filtered.push(el)
-            }
-        }
-
-        this.forEach(interator)
-
-        return filtered
-    }
-
     byProps(props) {
-        return this.filterBy('props', props)
+        return filterBy(this, 'props', props)
     }
 
     byState(state) {
-        return this.filterBy('state', state)
+        return filterBy(this, 'state', state)
     }
 }
 
 class RESQNode extends Object {
-    constructor(item) {
+    constructor(item, resq) {
         super(item)
+
+        this.resq = resq
 
         for(let key in item) {
             this[key] = item[key]
         }
     }
 
-
-    filterBy(key, obj) {
-        const filtered = []
-
-        const interator = el => {
-            if (deepEqual(obj, el[key])) {
-                filtered.push(el)
-            }
-        }
-
-        if (nodes) {
-            nodes.forEach(interator)
-
-            return filtered[0]
-        }
-    }
-
     byProps(props) {
-        return this.filterBy('props', props)
+        return filterBy(this.resq.nodes, 'props', props)[0]
     }
 
     byState(state) {
-        return this.filterBy('state', state)
+        return filterBy(this.resq.nodes, 'state', state)[0]
     }
 }
 
 export default class RESQ {
     constructor(selector) {
-        selectors = selector.split(' ').filter(el => !!el).map(el => el.trim())
-        rootComponent = (document.querySelector('#root')).
+        this.selectors = selector.split(' ').filter(el => !!el).map(el => el.trim())
+        this.rootComponent = (document.querySelector('#root')).
             _reactRootContainer._internalRoot.current
-        tree = buildNodeTree(rootComponent)
+        this.tree = buildNodeTree(this.rootComponent)
     }
 
     find() {
-        nodes = new RESQNodes(searchTree(selectors))
+        this.nodes = new RESQNodes(searchTree(this.selectors, this.tree))
 
-        return new RESQNode(nodes[0])
+        return new RESQNode(this.nodes[0])
     }
 
     findAll() {
-        nodes = undefined
+        this.nodes = undefined
 
-        return new RESQNodes(searchTree(selectors))
+        return new RESQNodes(searchTree(this.selectors, this.tree))
     }
 }

@@ -1,3 +1,5 @@
+import deepEqual from 'fast-deep-equal'
+
 export function getElementType(type) {
     if (typeof type === 'string') {
         return type
@@ -22,14 +24,14 @@ function findStateNode (element) {
 }
 
 export function buildNodeTree(element) {
-    let tree = { children: [], }
+    let tree = { children: [] }
     if (!element) {
         return tree
     }
     tree.name = getElementType(element.type)
     tree.node = findStateNode(element)
-    tree.props = { ...element.memoizedProps, }
-    tree.state = { ...element.memoizedState, }
+    tree.props = { ...element.memoizedProps }
+    tree.state = { ...element.memoizedState }
 
     if (element.child) {
         tree.children.push(element.child)
@@ -65,4 +67,36 @@ export function findInTree(tree, searchFn) {
     }
 
     return returnArray
+}
+
+export function searchTree(selectors, tree, searchFn) {
+    let treeArray = [tree]
+
+    selectors.forEach((selector) => {
+        treeArray = findInTree(treeArray, child => {
+            if (searchFn && typeof searchFn === 'function') {
+                return searchFn(child)
+            }
+
+            return child.name === selector
+        })
+    })
+
+    return treeArray
+}
+
+export function filterBy(nodes, key, obj) {
+    const filtered = []
+
+    const interator = el => {
+        if (deepEqual(obj, el[key])) {
+            filtered.push(el)
+        }
+    }
+
+    if (nodes) {
+        nodes.forEach(interator)
+
+        return filtered
+    }
 }
