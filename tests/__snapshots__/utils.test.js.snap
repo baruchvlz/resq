@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils buildNodeTree 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [],
+          "name": "div",
+          "node": <div />,
+          "props": Object {},
+          "state": Object {},
+        },
+        Object {
+          "children": Array [],
+          "name": "span",
+          "node": <span />,
+          "props": Object {},
+          "state": Object {},
+        },
+        Object {
+          "children": Array [],
+          "name": "div",
+          "node": <div />,
+          "props": Object {},
+          "state": Object {},
+        },
+      ],
+      "name": "TestWrapper",
+      "node": <div />,
+      "props": Object {
+        "myProps": "test prop",
+      },
+      "state": Object {
+        "initialized": true,
+      },
+    },
+  ],
+  "name": undefined,
+  "node": undefined,
+  "props": Object {},
+  "state": Object {},
+}
+`;
+
+exports[`utils findInTree 1`] = `
+Array [
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {},
+    "state": Object {},
+  },
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {},
+    "state": Object {},
+  },
+]
+`;

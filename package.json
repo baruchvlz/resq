@@ -1,0 +1,35 @@
+{
+    "name": "react-selector",
+    "version": "0.1.0",
+    "private": true,
+    "main": "dist/index.js",
+    "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.3.4",
+        "@babel/plugin-proposal-private-methods": "^7.3.4",
+        "@babel/preset-env": "^7.3.4",
+        "babel-eslint": "^10.0.1",
+        "babel-jest": "^24.5.0",
+        "eslint": "^5.15.3",
+        "eslint-plugin-jest": "^22.4.1",
+        "jest": "^24.5.0"
+    },
+    "scripts": {
+        "test": "jest ./tests --verbose",
+        "lint": "eslint . --fix",
+        "build": "babel . --out-dir dist --ignore node_modules,.eslintrc.js,tests",
+        "prebuild": "rimraf dist/"
+    },
+    "jest": {
+        "testPathIgnorePatterns": [
+            "node_modules",
+            "dist"
+        ]
+    },
+    "files": [
+        "/dist"
+    ],
+    "dependencies": {
+        "fast-deep-equal": "^2.0.1"
+    }
+}
