@@ -1,7 +1,9 @@
 {
     "name": "resq",
     "version": "0.0.1-alpha",
+    "description": "REact Selector Query (resq) - Query React components and children by selector (component name)",
     "author": "Baruch Velez <baruchvelez@gmail.com>",
+    "license": "MIT",
     "main": "dist/index.js",
     "devDependencies": {
         "@babel/cli": "^7.2.3",
@@ -27,7 +29,7 @@
         ]
     },
     "files": [
-        
+
     ],
     "dependencies": {
         "fast-deep-equal": "^2.0.1"
