@@ -47,7 +47,7 @@ export default class RESQ {
     }
 
     find() {
-        this.nodes = new RESQNodes(findSelectorInTree(this.selectors, this.tree))
+        this.nodes = new RESQNodes(findSelectorInTree(this.selectors, this.tree, true))
 
         return new RESQNode(this.nodes[0], this.nodes)
     }

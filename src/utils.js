@@ -48,11 +48,11 @@ export function buildNodeTree(element) {
     return tree
 }
 
-export function findInTree(tree, searchFn) {
+export function findInTree(tree, searchFn, selectFirst = false) {
     let returnArray = []
     let stack = tree
 
-    while (stack.length) {
+    while (stack.length || (selectFirst && returnArray.length)) {
         const node = stack.shift()
 
         if(node.children && node.children.length) {
@@ -69,7 +69,7 @@ export function findInTree(tree, searchFn) {
     return returnArray
 }
 
-export function findSelectorInTree(selectors, tree, searchFn) {
+export function findSelectorInTree(selectors, tree, selectFirst = false,searchFn) {
     let treeArray = [tree]
 
     selectors.forEach((selector) => {
@@ -79,7 +79,7 @@ export function findSelectorInTree(selectors, tree, searchFn) {
             }
 
             return child.name === selector
-        })
+        }, selectFirst)
     })
 
     return treeArray
