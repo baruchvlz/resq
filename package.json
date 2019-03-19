@@ -28,9 +28,7 @@
             "dist"
         ]
     },
-    "files": [
-
-    ],
+    "files": [],
     "dependencies": {
         "fast-deep-equal": "^2.0.1"
     }

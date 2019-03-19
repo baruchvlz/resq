@@ -34,10 +34,15 @@ class RESQNode extends Object {
 }
 
 export default class RESQ {
+    static getRootComponent() {
+        const element = document.querySelector('#root')
+
+        return element._reactRootContainer._internalRoot.current
+    }
+
     constructor(selector) {
         this.selectors = selector.split(' ').filter(el => !!el).map(el => el.trim())
-        this.rootComponent = (document.querySelector('#root')).
-            _reactRootContainer._internalRoot.current
+        this.rootComponent = RESQ.getRootComponent()
         this.tree = buildNodeTree(this.rootComponent)
     }
 

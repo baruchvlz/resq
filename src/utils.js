@@ -94,9 +94,7 @@ export function filterNodesBy(nodes, key, obj) {
         }
     }
 
-    if (nodes) {
-        nodes.forEach(interator)
+    nodes.forEach(interator)
 
-        return filtered
-    }
+    return filtered
 }

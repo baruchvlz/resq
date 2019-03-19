@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`utils buildNodeTree 1`] = `
+exports[`utils buildNodeTree should build tree 1`] = `
 Object {
   "children": Array [
     Object {
@@ -9,22 +9,30 @@ Object {
           "children": Array [],
           "name": "div",
           "node": <div />,
-          "props": Object {},
+          "props": Object {
+            "testProp": "some prop",
+          },
           "state": Object {},
         },
         Object {
           "children": Array [],
           "name": "span",
           "node": <span />,
-          "props": Object {},
+          "props": Object {
+            "testProp": "some prop",
+          },
           "state": Object {},
         },
         Object {
           "children": Array [],
           "name": "div",
           "node": <div />,
-          "props": Object {},
-          "state": Object {},
+          "props": Object {
+            "testProp": "some prop",
+          },
+          "state": Object {
+            "testState": true,
+          },
         },
       ],
       "name": "TestWrapper",
@@ -49,13 +57,55 @@ Array [
   Object {
     "name": "div",
     "node": <div />,
-    "props": Object {},
+    "props": Object {
+      "testProp": "some prop",
+    },
     "state": Object {},
   },
   Object {
     "name": "div",
     "node": <div />,
-    "props": Object {},
+    "props": Object {
+      "testProp": "some prop",
+    },
+    "state": Object {
+      "testState": true,
+    },
+  },
+]
+`;
+
+exports[`utils findSelectorInTree should correctly use a custom search fn 1`] = `
+Array [
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {
+      "testProp": "some prop",
+    },
+    "state": Object {},
+  },
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {
+      "testProp": "some prop",
+    },
+    "state": Object {
+      "testState": true,
+    },
+  },
+]
+`;
+
+exports[`utils findSelectorInTree should return all intances of nested selectors 1`] = `
+Array [
+  Object {
+    "name": "span",
+    "node": <span />,
+    "props": Object {
+      "testProp": "some prop",
+    },
     "state": Object {},
   },
 ]

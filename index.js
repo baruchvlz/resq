@@ -1,4 +1,4 @@
-import ReactSelector from './src/resq$'
+import ReactSelector from './src/resq'
 import { waitToLoadReact } from './src/waitToLoadReact'
 
 export const resq$ = async (selector) => {
