@@ -9,7 +9,7 @@ npm install --save resq$
 If you want to only get the first instance use `resq$`
 
 ```javascript
-import { resq$ } from 'resq$'
+import { resq$ } from 'resq'
 
 (async () => {
     const divElements = await resq$('MyComponent div')

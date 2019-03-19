@@ -4,7 +4,7 @@ import {
     findInTree,
 } from '../src/utils'
 
-import { vdom, tree, } from './__mocks__/vdom'
+import { vdom, tree } from './__mocks__/vdom'
 
 describe('utils', () => {
     it('getElementType', () => {
@@ -17,8 +17,8 @@ describe('utils', () => {
     })
 
     it('findInTree', () => {
-        let results = [tree,]
-        const selectors = ['TestWrapper', 'div',]
+        let results = [tree]
+        const selectors = ['TestWrapper', 'div']
 
         selectors.forEach((selector) => {
             results = findInTree(results, child => child.name === selector)

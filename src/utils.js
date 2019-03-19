@@ -69,7 +69,7 @@ export function findInTree(tree, searchFn) {
     return returnArray
 }
 
-export function searchTree(selectors, tree, searchFn) {
+export function findSelectorInTree(selectors, tree, searchFn) {
     let treeArray = [tree]
 
     selectors.forEach((selector) => {
@@ -85,7 +85,7 @@ export function searchTree(selectors, tree, searchFn) {
     return treeArray
 }
 
-export function filterBy(nodes, key, obj) {
+export function filterNodesBy(nodes, key, obj) {
     const filtered = []
 
     const interator = el => {

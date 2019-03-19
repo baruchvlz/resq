@@ -1,4 +1,4 @@
-import { filterBy, searchTree, buildNodeTree } from './utils'
+import { filterNodesBy, findSelectorInTree, buildNodeTree } from './utils'
 
 class RESQNodes extends Array {
     constructor(nodes) {
@@ -6,19 +6,18 @@ class RESQNodes extends Array {
     }
 
     byProps(props) {
-        return filterBy(this, 'props', props)
+        return filterNodesBy(this, 'props', props)
     }
 
     byState(state) {
-        return filterBy(this, 'state', state)
+        return filterNodesBy(this, 'state', state)
     }
 }
 
 class RESQNode extends Object {
-    constructor(item, resq) {
+    constructor(item, nodes) {
         super(item)
-
-        this.resq = resq
+        this.nodes = nodes
 
         for(let key in item) {
             this[key] = item[key]
@@ -26,11 +25,11 @@ class RESQNode extends Object {
     }
 
     byProps(props) {
-        return filterBy(this.resq.nodes, 'props', props)[0]
+        return filterNodesBy(this.nodes, 'props', props)[0]
     }
 
     byState(state) {
-        return filterBy(this.resq.nodes, 'state', state)[0]
+        return filterNodesBy(this.nodes, 'state', state)[0]
     }
 }
 
@@ -43,14 +42,12 @@ export default class RESQ {
     }
 
     find() {
-        this.nodes = new RESQNodes(searchTree(this.selectors, this.tree))
+        this.nodes = new RESQNodes(findSelectorInTree(this.selectors, this.tree))
 
-        return new RESQNode(this.nodes[0])
+        return new RESQNode(this.nodes[0], this.nodes)
     }
 
     findAll() {
-        this.nodes = undefined
-
-        return new RESQNodes(searchTree(this.selectors, this.tree))
+        return new RESQNodes(findSelectorInTree(this.selectors, this.tree))
     }
 }
