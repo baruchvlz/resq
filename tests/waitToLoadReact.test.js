@@ -1,4 +1,4 @@
-import { REACT_VERSION_MATCHERS, waitToLoadReact, } from '../src/waitToLoadReact'
+import { REACT_VERSION_MATCHERS, waitToLoadReact } from '../src/waitToLoadReact'
 
 // reset the document object so it doesn't over lap other tests
 afterEach(() => {
@@ -26,7 +26,7 @@ describe('waitToLoadReact', () => {
     })
 
     it('should get react apps rendered with ssr', () => {
-        global.document[REACT_VERSION_MATCHERS.SSR] = ['true',]
+        global.document[REACT_VERSION_MATCHERS.SSR] = ['true']
 
         waitToLoadReact(10).then(() => {
             expect(global.reactVersion).toBe(REACT_VERSION_MATCHERS.SSR)
