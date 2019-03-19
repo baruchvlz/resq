@@ -52,7 +52,7 @@ export function findInTree(tree, searchFn, selectFirst = false) {
     let returnArray = []
     let stack = tree
 
-    while (stack.length || (selectFirst && returnArray.length)) {
+    while (stack.length || (selectFirst && !returnArray.length)) {
         const node = stack.shift()
 
         if(node.children && node.children.length) {

@@ -1,12 +1,11 @@
 import {
-    getElementType,
     buildNodeTree,
+    filterNodesBy,
     findInTree,
     findSelectorInTree,
-    filterNodesBy,
+    getElementType,
 } from '../src/utils'
-
-import { vdom, tree } from './__mocks__/vdom'
+import { tree, vdom } from './__mocks__/vdom'
 
 describe('utils', () => {
     test('getElementType', () => {
@@ -72,6 +71,7 @@ describe('utils', () => {
             const results = findSelectorInTree(
                 'TestWrapper span'.split(' '),
                 tree,
+                false,
                 (child) => child.name !== 'span',
             )
 
