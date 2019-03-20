@@ -1,7 +1,15 @@
 
 ## Installation
 
-Not yet available on NPM
+```
+    npm install --save resq
+```
+
+Or
+
+```
+    yarn add resq
+```
 
 
 ## Usage
