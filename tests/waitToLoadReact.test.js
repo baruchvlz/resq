@@ -1,6 +1,7 @@
-import { REACT_VERSION_MATCHERS, waitToLoadReact } from '../src/waitToLoadReact'
+import { waitToLoadReact } from '../src/waitToLoadReact'
 
-// reset the document object so it doesn't over lap other tests
+import { vdom } from './__mocks__/vdom'
+
 afterEach(() => {
     global.document = {}
     global.document.createTreeWalker = () => ({
@@ -9,27 +10,29 @@ afterEach(() => {
     })
     global.document.querySelector = () => {}
 })
-describe('waitToLoadReact', () => {
 
-    it('should get react 16 apps', () => {
+describe('waitToLoadReact', () => {
+    it('should find react root element', () => {
         global.document.createTreeWalker = () => ({
             currentNode: {
-                [REACT_VERSION_MATCHERS.V16]: 'foobar',
+                _reactRootContainer: { _internalRoot: { current: vdom } },
             },
             nextNode: () => true,
         })
 
-        waitToLoadReact(10).then(() => {
-            expect(global.reactVersion).toBe(REACT_VERSION_MATCHERS.V16)
+        waitToLoadReact(10).then((root) => {
+            expect(root).toMatchObject(vdom)
         })
-
     })
 
-    it('should get react apps rendered with ssr', () => {
-        global.document[REACT_VERSION_MATCHERS.SSR] = ['true']
+    it('should find react root element if user pases selector', () => {
+        global.document.querySelector = jest.fn().mockReturnValue({
+            _reactRootContainer: { _internalRoot: { current: vdom } },
+        })
 
-        waitToLoadReact(10).then(() => {
-            expect(global.reactVersion).toBe(REACT_VERSION_MATCHERS.SSR)
+        waitToLoadReact(10, '#root').then((root) => {
+            expect(global.document.querySelector).toHaveBeenCalledWith('#root')
+            expect(root).toMatchObject(vdom)
         })
     })
 

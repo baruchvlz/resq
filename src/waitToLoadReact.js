@@ -1,40 +1,26 @@
-export const REACT_VERSION_MATCHERS = {
-    V16: '_reactRootContainer',
-    SSR: '_reactListenersID',
-}
-
-export function waitToLoadReact(timeout) {
-    const isReact16 = () => {
+export function waitToLoadReact(timeout, rootElSelector) {
+    const findReactRoot = () => {
         const walker = document.createTreeWalker(document)
 
+        if (rootElSelector) {
+            return document.querySelector(rootElSelector)
+        }
+
         while(walker.nextNode()) {
-            if (walker.currentNode.hasOwnProperty(REACT_VERSION_MATCHERS.V16)) {
-                return REACT_VERSION_MATCHERS.V16
+            if (walker.currentNode.hasOwnProperty('_reactRootContainer')) {
+                return walker.currentNode
             }
         }
     }
-
-    const hasReactHandler = () => {
-        const handlerExists = !!Object.keys(document)
-            .filter(prop => prop.startsWith(REACT_VERSION_MATCHERS.SSR)).length
-
-        if (handlerExists) {
-            return REACT_VERSION_MATCHERS.SSR
-        }
-    }
-
-    const hasReactVersion = () => (isReact16() || hasReactHandler())
 
     return (() => new Promise((resolve, reject) => {
         let timedout = false
 
         const tryToFindApp = () => {
-            const reactVersion = hasReactVersion()
+            const reactRoot = findReactRoot()
 
-            if (reactVersion) {
-                global.reactVersion = reactVersion
-
-                return resolve(true)
+            if (reactRoot) {
+                return resolve(reactRoot._reactRootContainer._internalRoot.current)
             }
 
             if (timedout) {

@@ -23,7 +23,7 @@ class RESQNodes extends Array {
 class RESQNode extends Object {
     constructor(item, nodes) {
         super(item)
-        this.nodes = nodes
+        this._nodes = nodes
 
         for(let key in item) {
             this[key] = item[key]
@@ -31,28 +31,22 @@ class RESQNode extends Object {
     }
 
     byProps(props) {
-        const filtered = filterNodesBy(this.nodes, 'props', props)[0]
+        const filtered = filterNodesBy(this._nodes, 'props', props)[0]
 
-        return new RESQNode(filtered, this.nodes)
+        return new RESQNode(filtered, this._nodes)
     }
 
     byState(state) {
-        const filtered = filterNodesBy(this.nodes, 'state', state)[0]
+        const filtered = filterNodesBy(this._nodes, 'state', state)[0]
 
-        return new RESQNode(filtered, this.nodes)
+        return new RESQNode(filtered, this._nodes)
     }
 }
 
 export default class RESQ {
-    static getRootComponent() {
-        const element = document.querySelector('#root')
-
-        return element._reactRootContainer._internalRoot.current
-    }
-
-    constructor(selector) {
+    constructor(selector, root) {
         this.selectors = selector.split(' ').filter(el => !!el).map(el => el.trim())
-        this.rootComponent = RESQ.getRootComponent()
+        this.rootComponent = root
         this.tree = buildNodeTree(this.rootComponent)
     }
 

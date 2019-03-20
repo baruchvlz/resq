@@ -2,16 +2,15 @@
 ## Installation
 
 ```
-    npm install --save resq
+$ npm install --save resq
 ```
 
 Or
 
 ```
-    yarn add resq
+$ yarn add resq
 ```
-
-
+---
 ## Usage
 
 If you want to only get the first instance use `resq$`
@@ -26,7 +25,7 @@ import { resq$ } from 'resq'
         {
             children: Array,
             name: String,
-            node: FiberNode || HTMLElement,
+            node: HTMLElement,
             props: Object,
             state: Object
         }
@@ -39,7 +38,7 @@ If you want to get multiple instances, use `resq$$`
 
 
 ```javascript
-import { resq$$ } from 'resq$'
+import { resq$$ } from 'resq'
 
 (async () => {
     const divElements = await resq$$('MyComponent div')
@@ -49,21 +48,21 @@ import { resq$$ } from 'resq$'
             {
                 children: Array,
                 name: String,
-                node: FiberNode || HTMLElement,
+                node: HTMLElement,
                 props: Object,
                 state: Object
             },
             {
                 children: Array,
                 name: String,
-                node: FiberNode || HTMLElement,
+                node: HTMLElement,
                 props: Object,
                 state: Object
             },
             {
                 children: Array,
                 name: String,
-                node: FiberNode || HTMLElement,
+                node: HTMLElement,
                 props: Object,
                 state: Object
             }
@@ -73,20 +72,71 @@ import { resq$$ } from 'resq$'
 
 ```
 
-## API
-
-Both `resq$` and `resq$$` provide an API to search `byProps` and/or `byState`.
+**Note:** For React component instances, the `node` property will be the same as the child's node, this node is the wrapper node of the component, this is due to how the Virtual DOM is rendered. Example:
 
 ```javascript
-import { resq$$ } from 'resq$'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { resq$ } from 'resq'
 
 (async () => {
-    const myComponent = await resq$('MyComponent') // returns the first instance of <MyComponent />
+    try {
+        const myComponentInstance = await resq$('MyComponent')
+        console.log(myComponentInstance.node) // <div>MyComponent</div>
+        console.log(myComponentInstance.children[0].node) // <div>MyComponent</div>
+    } catch(error) {}
+})()
 
+const MyComponent = () => (
+    <div>MyComponent</div>
+)
+
+const App = () => (
+    <div>
+        <MyComponent />
+    </div>
+)
+
+ReactDOM.render(
+    <App />,
+    document.querySelector('#root')
+)
+```
+View it live: https://repl.it/@baruchvlz/resq
+
+---
+
+# API
+
+#### byProps / byState
+
+```javascript
+import { resq$ } from 'resq'
+
+(async () => {
+    // returns the first instance of <MyComponent />
+    const myComponent = await resq$('MyComponent')
+
+    // returns first instance of <MyComponent foo="bar" />
     const myComponentWithProps = await resq$('MyComponent').byProps({ foo: 'bar' })
-    // returns first instance of MyComponent with at least `foo: bar` as props
 
-    // You can also use `myComponent`
+    // Alternatively, you can also use `myComponent`
     myComponent.byProps({ foo: 'bar' })
+})()
+```
+
+The `byState` API is the same as `byProps`, just the name of the method changes.
+You can also chain these two methods to further your filter
+
+
+```javascript
+import { resq$ } from 'resq'
+
+(async () => {
+    // returns the first instance of <MyComponent />
+    const myComponent = await resq$('MyComponent')
+
+    // returns the first instance of <MyComponent foo="bar" /> with `this.state.myState = true`
+    myComponent.byProps({ foo: 'bar' }).byState({ myState: true })
 })()
 ```
