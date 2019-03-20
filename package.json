@@ -2,24 +2,34 @@
     "name": "resq",
     "version": "0.0.1-alpha",
     "description": "REact Selector Query (resq) - Query React components and children by selector (component name)",
+    "keywords": [
+        "react",
+        "selector",
+        "resq",
+        "rescue",
+        "queryselector",
+        "query"
+    ],
     "author": "Baruch Velez <baruchvelez@gmail.com>",
     "license": "MIT",
     "main": "dist/index.js",
+    "source": "./index.js",
     "devDependencies": {
         "@babel/cli": "^7.2.3",
         "@babel/core": "^7.3.4",
-        "@babel/plugin-proposal-private-methods": "^7.3.4",
         "@babel/preset-env": "^7.3.4",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.5.0",
         "eslint": "^5.15.3",
         "eslint-plugin-jest": "^22.4.1",
-        "jest": "^24.5.0"
+        "jest": "^24.5.0",
+        "microbundle": "^0.11.0"
     },
     "scripts": {
         "test": "jest ./tests --verbose",
         "lint": "eslint . --fix",
-        "build": "babel . --out-dir dist --ignore node_modules,.eslintrc.js,tests",
+        "build": "microbundle",
+        "dev": "microbundle watch",
         "prebuild": "rimraf dist/"
     },
     "jest": {
@@ -28,7 +38,9 @@
             "dist"
         ]
     },
-    "files": [],
+    "files": [
+        "dist"
+    ],
     "dependencies": {
         "fast-deep-equal": "^2.0.1"
     }
