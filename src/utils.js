@@ -23,6 +23,22 @@ function findStateNode (element) {
     }
 }
 
+function removeChildrenFromProps(props) {
+    if (!props) {
+        return props
+    }
+
+    const returnProps = {}
+
+    for(let key in props) {
+        if (key !== 'children') {
+            returnProps[key] = props[key]
+        }
+    }
+
+    return returnProps
+}
+
 export function buildNodeTree(element) {
     let tree = { children: [] }
     if (!element) {
@@ -30,7 +46,7 @@ export function buildNodeTree(element) {
     }
     tree.name = getElementType(element.type)
     tree.node = findStateNode(element)
-    tree.props = { ...element.memoizedProps }
+    tree.props = { ...removeChildrenFromProps(element.memoizedProps) }
     tree.state = { ...element.memoizedState }
 
     if (element.child) {
