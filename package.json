@@ -13,6 +13,8 @@
     "author": "Baruch Velez <baruchvelez@gmail.com>",
     "license": "MIT",
     "main": "dist/index.js",
+    "umd:main": "dist/index.umd.js",
+    "module": "dist/index.mjs",
     "source": "./index.js",
     "bugs": {
         "url": "https://github.com/baruchvlz/resq/issues"
@@ -22,21 +24,22 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.2.3",
-        "@babel/core": "^7.3.4",
-        "@babel/preset-env": "^7.3.4",
+        "@babel/core": "^7.4.0",
+        "@babel/preset-env": "^7.4.1",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.5.0",
+        "babel-plugin-external-helpers": "^6.22.0",
         "eslint": "^5.15.3",
         "eslint-plugin-jest": "^22.4.1",
         "jest": "^24.5.0",
-        "microbundle": "^0.11.0"
+        "rollup": "^1.7.0",
+        "rollup-plugin-babel": "^4.3.2"
     },
     "scripts": {
         "test": "jest ./tests --verbose",
         "lint": "eslint . --fix",
-        "build": "microbundle",
-        "dev": "microbundle watch",
-        "prebuild": "rimraf dist/"
+        "build": "rollup -c",
+        "dev": "rollup -c -w"
     },
     "jest": {
         "testPathIgnorePatterns": [
