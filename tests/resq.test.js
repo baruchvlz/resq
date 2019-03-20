@@ -8,13 +8,13 @@ beforeEach(() => {
 
 describe('RESQ', () => {
     it('should build', () => {
-        const resq = new RESQ('TestWrapper')
+        const resq = new RESQ('TestWrapper', vdom)
 
         expect(resq).toBeTruthy()
     })
 
     it('should select one element', () => {
-        const resq = new RESQ('TestWrapper span')
+        const resq = new RESQ('TestWrapper span', vdom)
         resq.rootComponent = vdom
 
         const $ = resq.find()
@@ -30,8 +30,7 @@ describe('RESQ', () => {
     })
 
     it('should select multiple elements', () => {
-        const resq = new RESQ('TestWrapper div')
-        resq.rootComponent = vdom
+        const resq = new RESQ('TestWrapper div', vdom)
 
         const $$ = resq.findAll()
 
@@ -69,7 +68,7 @@ describe('RESQ', () => {
 
     describe('byProps', () => {
         it('should return the first instance of component filtered by prop', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $ = resq.find()
@@ -84,7 +83,7 @@ describe('RESQ', () => {
         })
 
         it('should return all components filtered by prop', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $$ = resq.findAll()
@@ -111,7 +110,7 @@ describe('RESQ', () => {
 
     describe('byState', () => {
         it('should return the first instance of component filtered by state', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $ = resq.find()
@@ -126,7 +125,7 @@ describe('RESQ', () => {
         })
 
         it('should return all components filtered by state', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $$ = resq.findAll()
@@ -163,7 +162,7 @@ describe('RESQ', () => {
 
     describe('should be able to use both filtering functions', () => {
         it('should filter for one instance', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $ = resq.find()
@@ -178,7 +177,7 @@ describe('RESQ', () => {
         })
 
         it('should filter for multiple instances', () => {
-            const resq = new RESQ('TestWrapper div')
+            const resq = new RESQ('TestWrapper div', vdom)
             resq.rootComponent = vdom
 
             const $$ = resq.findAll()
