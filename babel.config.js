@@ -8,7 +8,6 @@ module.exports = {
         '.eslintrc.js',
         'babel.config.js',
         'rollup.config.js',
-        'tests/',
         'scripts/',
         'node_modules/',
         'dist/',
