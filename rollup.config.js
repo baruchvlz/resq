@@ -1,5 +1,6 @@
 // Rollup plugins
 import babel from 'rollup-plugin-babel'
+import babelConfig from './babel.conf'
 
 export default {
     input: './index.js',
@@ -20,8 +21,6 @@ export default {
         },
     ],
     plugins: [
-        babel({
-            exclude: 'node_modules/**',
-        }),
+        babel(babelConfig),
     ],
 }
