@@ -31,7 +31,7 @@ describe('utils', () => {
             results = findInTree(results, child => child.name === selector)
         })
 
-        expect(results.length).toBe(3)
+        expect(results.length).toBe(4)
         expect(results).toMatchObject([
             {
                 name: 'div',
@@ -42,6 +42,14 @@ describe('utils', () => {
             {
                 name: 'div',
                 props: { testProp: 'some prop' },
+                state: {
+                    testState: true,
+                },
+                node: document.createElement('div'),
+            },
+            {
+                name: 'div',
+                props: { },
                 state: {
                     testState: true,
                 },
@@ -83,7 +91,7 @@ describe('utils', () => {
                 (child) => child.name !== 'span',
             )
 
-            expect(results.length).toBe(3)
+            expect(results.length).toBe(4)
             expect(results).toMatchObject([
                 {
                     name: 'div',
@@ -94,6 +102,14 @@ describe('utils', () => {
                 {
                     name: 'div',
                     props: { testProp: 'some prop' },
+                    state: {
+                        testState: true,
+                    },
+                    node: document.createElement('div'),
+                },
+                {
+                    name: 'div',
+                    props: { },
                     state: {
                         testState: true,
                     },

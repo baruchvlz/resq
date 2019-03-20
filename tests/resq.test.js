@@ -56,6 +56,14 @@ describe('RESQ', () => {
                 },
                 node: document.createElement('div'),
             },
+            {
+                name: 'div',
+                props: { },
+                state: {
+                    testState: true,
+                },
+                node: document.createElement('div'),
+            },
         ])
     })
 
@@ -125,7 +133,7 @@ describe('RESQ', () => {
 
             const result = $$.byState({ testState: true })
 
-            expect(result.length).toBe(2)
+            expect(result.length).toBe(3)
             expect(result).toMatchObject([
                 {
                     name: 'div',
@@ -139,6 +147,54 @@ describe('RESQ', () => {
                     state: {
                         testState: true,
                     },
+                    node: document.createElement('div'),
+                },
+                {
+                    name: 'div',
+                    props: { },
+                    state: {
+                        testState: true,
+                    },
+                    node: document.createElement('div'),
+                },
+            ])
+        })
+    })
+
+    describe('should be able to use both filtering functions', () => {
+        it('should filter for one instance', () => {
+            const resq = new RESQ('TestWrapper div')
+            resq.rootComponent = vdom
+
+            const $ = resq.find()
+            const result = $.byProps({}).byState({ testState: true })
+
+            expect(result).toMatchObject({
+                name: 'div',
+                props: {},
+                state: { testState: true },
+                node: document.createElement('div'),
+            })
+        })
+
+        it('should filter for multiple instances', () => {
+            const resq = new RESQ('TestWrapper div')
+            resq.rootComponent = vdom
+
+            const $$ = resq.findAll()
+            const result = $$.byState({ testState: true }).byProps({})
+
+            expect(result).toMatchObject([
+                {
+                    name: 'div',
+                    props: {},
+                    state: { testState: true },
+                    node: document.createElement('div'),
+                },
+                {
+                    name: 'div',
+                    props: {},
+                    state: { testState: true },
                     node: document.createElement('div'),
                 },
             ])

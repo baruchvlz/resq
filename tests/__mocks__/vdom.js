@@ -38,7 +38,15 @@ export const vdom = {
                             testState: true,
                         },
                         stateNode: document.createElement('div'),
-                    }
+                        sibling: {
+                            type: 'div',
+                            memoizedProps: {},
+                            memoizedState: {
+                                testState: true,
+                            },
+                            stateNode: document.createElement('div'),
+                        },
+                    },
                 },
             },
         },
@@ -73,6 +81,14 @@ export const tree = {
                 {
                     name: 'div',
                     props: { testProp: 'some prop' },
+                    state: {
+                        testState: true,
+                    },
+                    node: document.createElement('div'),
+                },
+                {
+                    name: 'div',
+                    props: { },
                     state: {
                         testState: true,
                     },

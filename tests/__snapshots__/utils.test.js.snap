@@ -43,6 +43,15 @@ Object {
             "testState": true,
           },
         },
+        Object {
+          "children": Array [],
+          "name": "div",
+          "node": <div />,
+          "props": Object {},
+          "state": Object {
+            "testState": true,
+          },
+        },
       ],
       "name": "TestWrapper",
       "node": <div />,
@@ -89,6 +98,14 @@ Array [
       "testState": true,
     },
   },
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {},
+    "state": Object {
+      "testState": true,
+    },
+  },
 ]
 `;
 
@@ -108,6 +125,14 @@ Array [
     "props": Object {
       "testProp": "some prop",
     },
+    "state": Object {
+      "testState": true,
+    },
+  },
+  Object {
+    "name": "div",
+    "node": <div />,
+    "props": Object {},
     "state": Object {
       "testState": true,
     },

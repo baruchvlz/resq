@@ -3,14 +3,20 @@ import { filterNodesBy, findSelectorInTree, buildNodeTree } from './utils'
 class RESQNodes extends Array {
     constructor(nodes) {
         super(...nodes)
+
     }
 
     byProps(props) {
-        return filterNodesBy(this, 'props', props)
+        const filtered = filterNodesBy(this, 'props', props)
+
+        return new RESQNodes(filtered)
+
     }
 
     byState(state) {
-        return filterNodesBy(this, 'state', state)
+        const filtered = filterNodesBy(this, 'state', state)
+
+        return new RESQNodes(filtered)
     }
 }
 
@@ -25,11 +31,15 @@ class RESQNode extends Object {
     }
 
     byProps(props) {
-        return filterNodesBy(this.nodes, 'props', props)[0]
+        const filtered = filterNodesBy(this.nodes, 'props', props)[0]
+
+        return new RESQNode(filtered, this.nodes)
     }
 
     byState(state) {
-        return filterNodesBy(this.nodes, 'state', state)[0]
+        const filtered = filterNodesBy(this.nodes, 'state', state)[0]
+
+        return new RESQNode(filtered, this.nodes)
     }
 }
 
