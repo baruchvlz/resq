@@ -1,6 +1,4 @@
-// Rollup plugins
 import babel from 'rollup-plugin-babel'
-import babelConfig from './babel.config'
 
 export default {
     input: './index.js',
@@ -11,16 +9,28 @@ export default {
             name: 'resq',
         },
         {
-            file: 'dist/index.esm.js',
-            format: 'esm',
-        },
-        {
             file: 'dist/index.umd.js',
             format: 'umd',
             name: 'resq',
         },
     ],
     plugins: [
-        babel(babelConfig),
+        babel({
+            'presets': [
+                [
+                    '@babel/preset-env',
+                ],
+            ],
+            'ignore': [
+                'node_modules',
+                '.eslintrc.js',
+            ],
+            'runtimeHelpers': true,
+            'plugins': [
+                ['@babel/plugin-transform-runtime', {
+                    'regenerator': true,
+                }],
+            ],
+        }),
     ],
 }
