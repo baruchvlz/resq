@@ -1,6 +1,6 @@
 // Rollup plugins
 import babel from 'rollup-plugin-babel'
-import babelConfig from './babel.conf'
+import babelConfig from './babel.config'
 
 export default {
     input: './index.js',

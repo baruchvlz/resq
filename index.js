@@ -1,26 +1,28 @@
 import ReactSelector from './src/resq'
 import { waitToLoadReact } from './src/waitToLoadReact'
 
-export const resq$ = async (selector) => {
+export const resq$ = async (selector, { timeout, rootElSelector } = { timeout: 5000 }) => {
+    let root
     if (!global.reactVersion) {
         try {
-            await waitToLoadReact(5000)
+            root = await waitToLoadReact(timeout, rootElSelector)
         } catch (error) {
-            throw new Error('Error while looking for React Component %s', selector, error)
+            throw new Error('Could not find the root element of your application')
         }
     }
 
-    return new ReactSelector(selector).find()
+    return new ReactSelector(selector, root).find()
 }
 
-export const resq$$ = async (selector) => {
+export const resq$$ = async (selector, { timeout, rootElSelector } = { timeout: 5000 }) => {
+    let root
     if (!global.reactVersion) {
         try {
-            await waitToLoadReact(5000)
+            root = await waitToLoadReact(timeout, rootElSelector)
         } catch (error) {
-            throw new Error('Error while looking for React Component %s', selector, error)
+            throw new Error('Could not find the root element of your application')
         }
     }
 
-    return new ReactSelector(selector).findAll()
+    return new ReactSelector(selector, root).findAll()
 }

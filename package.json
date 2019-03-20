@@ -42,6 +42,9 @@
         "dev": "rollup -c -w"
     },
     "jest": {
+        "transform": {
+            "^.+\\.jsx?$": "babel-jest"
+        },
         "testPathIgnorePatterns": [
             "node_modules",
             "dist"
