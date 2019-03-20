@@ -45,11 +45,9 @@
         "test": "jest ./tests --verbose",
         "lint": "eslint . --fix",
         "build": "node ./scripts/build.js",
-        "setup": "run-s transpile rollup",
+        "setup": "run-s rollup",
         "presetup": "npm run test",
         "dev": "rollup -c -w",
-        "pretranspile": "rimraf babel dist",
-        "transpile": "babel . --out-dir babel",
         "rollup": "rollup -c"
     },
     "jest": {
