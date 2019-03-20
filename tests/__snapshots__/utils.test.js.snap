@@ -15,42 +15,43 @@ Object {
           "state": Object {},
         },
         Object {
-          "children": Array [],
+          "children": Array [
+            Object {
+              "children": Array [],
+              "name": "div",
+              "node": <div />,
+              "props": Object {
+                "testProp": "some prop",
+              },
+              "state": Object {
+                "testState": true,
+              },
+            },
+            Object {
+              "children": Array [],
+              "name": "div",
+              "node": <div />,
+              "props": Object {},
+              "state": Object {
+                "testState": true,
+              },
+            },
+            Object {
+              "children": Array [],
+              "name": "div",
+              "node": <div />,
+              "props": Object {},
+              "state": Object {
+                "testState": true,
+              },
+            },
+          ],
           "name": "span",
           "node": <span />,
           "props": Object {
             "testProp": "some prop",
           },
           "state": Object {},
-        },
-        Object {
-          "children": Array [],
-          "name": "div",
-          "node": <div />,
-          "props": Object {
-            "testProp": "some prop",
-          },
-          "state": Object {
-            "testState": true,
-          },
-        },
-        Object {
-          "children": Array [],
-          "name": "div",
-          "node": <div />,
-          "props": Object {},
-          "state": Object {
-            "testState": true,
-          },
-        },
-        Object {
-          "children": Array [],
-          "name": "div",
-          "node": <div />,
-          "props": Object {},
-          "state": Object {
-            "testState": true,
-          },
         },
       ],
       "name": "TestWrapper",
@@ -73,6 +74,42 @@ Object {
 exports[`utils findInTree 1`] = `
 Array [
   Object {
+    "children": Array [
+      Object {
+        "name": "span",
+        "node": <span />,
+        "props": Object {
+          "testProp": "some prop",
+        },
+        "state": Object {},
+      },
+      Object {
+        "name": "div",
+        "node": <div />,
+        "props": Object {
+          "testProp": "some prop",
+        },
+        "state": Object {
+          "testState": true,
+        },
+      },
+      Object {
+        "name": "div",
+        "node": <div />,
+        "props": Object {},
+        "state": Object {
+          "testState": true,
+        },
+      },
+      Object {
+        "name": "div",
+        "node": <div />,
+        "props": Object {},
+        "state": Object {
+          "testState": true,
+        },
+      },
+    ],
     "name": "div",
     "node": <div />,
     "props": Object {
@@ -112,38 +149,12 @@ Array [
 exports[`utils findSelectorInTree should correctly use a custom search fn 1`] = `
 Array [
   Object {
-    "name": "div",
-    "node": <div />,
+    "name": "span",
+    "node": <span />,
     "props": Object {
       "testProp": "some prop",
     },
     "state": Object {},
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {
-      "testProp": "some prop",
-    },
-    "state": Object {
-      "testState": true,
-    },
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {},
-    "state": Object {
-      "testState": true,
-    },
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {},
-    "state": Object {
-      "testState": true,
-    },
   },
 ]
 `;

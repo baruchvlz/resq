@@ -22,28 +22,22 @@ export const vdom = {
                 },
                 memoizedState: {},
                 stateNode: document.createElement('span'),
-                sibling: {
+                child: {
                     type: 'div',
                     memoizedProps: {
                         testProp: 'some prop',
                     },
-                    memoizedState: {
-                        testState: true,
-                    },
+                    memoizedState: { testState: true },
                     stateNode: document.createElement('div'),
                     sibling: {
                         type: 'div',
                         memoizedProps: {},
-                        memoizedState: {
-                            testState: true,
-                        },
+                        memoizedState: { testState: true },
                         stateNode: document.createElement('div'),
                         sibling: {
                             type: 'div',
                             memoizedProps: {},
-                            memoizedState: {
-                                testState: true,
-                            },
+                            memoizedState: { testState: true },
                             stateNode: document.createElement('div'),
                         },
                     },
@@ -70,36 +64,32 @@ export const tree = {
                     name: 'div',
                     props: { testProp: 'some prop' },
                     state: {},
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'span',
-                    props: { testProp: 'some prop' },
-                    state: {},
-                    node: document.createElement('span'),
-                },
-                {
-                    name: 'div',
-                    props: { testProp: 'some prop' },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'div',
-                    props: { },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'div',
-                    props: { },
-                    state: {
-                        testState: true,
-                    },
+                    children: [
+                        {
+                            name: 'span',
+                            props: { testProp: 'some prop' },
+                            state: {},
+                            node: document.createElement('span'),
+                        },
+                        {
+                            name: 'div',
+                            props: { testProp: 'some prop' },
+                            state: { testState: true },
+                            node: document.createElement('div'),
+                        },
+                        {
+                            name: 'div',
+                            props: { },
+                            state: { testState: true },
+                            node: document.createElement('div'),
+                        },
+                        {
+                            name: 'div',
+                            props: { },
+                            state: { testState: true },
+                            node: document.createElement('div'),
+                        },
+                    ],
                     node: document.createElement('div'),
                 },
             ],
