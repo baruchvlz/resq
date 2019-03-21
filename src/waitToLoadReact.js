@@ -21,7 +21,8 @@ export function waitToLoadReact(timeout, rootElSelector) {
 
             if (reactRoot) {
                 global.isReactLoaded = true
-                return resolve(reactRoot._reactRootContainer._internalRoot.current)
+                global.rootReactElement = reactRoot._reactRootContainer._internalRoot.current
+                return resolve()
             }
 
             if (timedout) {

@@ -34,6 +34,12 @@ describe('RESQ', () => {
         expect($$).toMatchObject([
             {
                 name: 'div',
+                props: {},
+                state: {},
+                node: document.createElement('div'),
+            },
+            {
+                name: 'div',
                 props: { testProp: 'some prop' },
                 state: { testState: true },
                 node: document.createElement('div'),

@@ -7,6 +7,10 @@ import {
 } from '../src/utils'
 import { tree, vdom } from './__mocks__/vdom'
 
+beforeAll(() => {
+    global.isReactLoaded = true
+})
+
 describe('utils', () => {
     test('getElementType', () => {
         expect(getElementType('test')).toBe('test')
@@ -19,7 +23,8 @@ describe('utils', () => {
         })
 
         it('should build tree', () => {
-            expect(buildNodeTree(vdom)).toMatchObject(tree)
+            // expect(buildNodeTree(vdom)).toMatchObject(tree)
+            expect(buildNodeTree(vdom)).toMatchSnapshot()
         })
     })
 
@@ -31,8 +36,14 @@ describe('utils', () => {
             results = findInTree(results, child => child.name === selector)
         })
 
-        expect(results.length).toBe(3)
+        expect(results.length).toBe(4)
         expect(results).toMatchObject([
+            {
+                name: 'div',
+                props: {},
+                state: {},
+                node: document.createElement('div'),
+            },
             {
                 name: 'div',
                 props: { testProp: 'some prop' },

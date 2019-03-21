@@ -13,11 +13,8 @@ function findStateNode (element) {
         return element.stateNode
     }
 
-    if (typeof element.type === 'function' &&
-        element.child &&
-        element.child.stateNode instanceof HTMLElement
-    ) {
-        return element.child.stateNode
+    if (typeof element.type === 'function') {
+        return element
     }
 }
 
@@ -58,20 +55,10 @@ export function buildNodeTree(element) {
         return tree
     }
 
-    tree = {
-        ...tree,
-        name: getElementType(elementCopy.type),
-        node: findStateNode(elementCopy),
-        props: removeChildrenFromProps(elementCopy.memoizedProps),
-        state: getElementState(elementCopy.memoizedState),
-    }
-
-    // must verify if the elementCopy.type is a function and assume it's a react instance
-    // if it's a react instance then we must take the first child's node as the instance's HTML
-    // and continue adding the children based off the child's child
-    if (typeIsFunction(elementCopy.type)) {
-        elementCopy.child = elementCopy.child && elementCopy.child.child
-    }
+    tree.name = getElementType(elementCopy.type)
+    tree.node = findStateNode(elementCopy)
+    tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
+    tree.state = getElementState(elementCopy.memoizedState)
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
