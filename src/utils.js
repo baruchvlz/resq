@@ -23,7 +23,7 @@ function findStateNode (element) {
     }
 }
 
-function removeChildrenFromProps(props) {
+export function removeChildrenFromProps(props) {
     if (!props) {
         return props
     }
@@ -39,15 +39,33 @@ function removeChildrenFromProps(props) {
     return returnProps
 }
 
+export function getElementState(elementState) {
+    if (!elementState) {
+        return {}
+    }
+
+    const { baseState } = elementState
+
+    if (baseState) {
+        return baseState
+    }
+
+    return elementState
+}
+
 export function buildNodeTree(element) {
     let tree = { children: [] }
     if (!element) {
         return tree
     }
-    tree.name = getElementType(element.type)
-    tree.node = findStateNode(element)
-    tree.props = { ...removeChildrenFromProps(element.memoizedProps) }
-    tree.state = { ...element.memoizedState }
+
+    tree = {
+        ...tree,
+        name: getElementType(element.type),
+        node: findStateNode(element),
+        props: removeChildrenFromProps(element.memoizedProps),
+        state: getElementState(element.memoizedState),
+    }
 
     if (element.child) {
         tree.children.push(element.child)

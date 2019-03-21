@@ -19,7 +19,7 @@ describe('utils', () => {
         })
 
         it('should build tree', () => {
-            expect(buildNodeTree(vdom)).toMatchSnapshot()
+            expect(buildNodeTree(vdom)).toMatchObject(tree)
         })
     })
 
@@ -64,7 +64,6 @@ describe('utils', () => {
                 node: document.createElement('div'),
             },
         ])
-        expect(results).toMatchSnapshot()
     })
 
     describe('findSelectorInTree', () => {
@@ -80,7 +79,6 @@ describe('utils', () => {
                     node: document.createElement('span'),
                 },
             ])
-            expect(results).toMatchSnapshot()
         })
 
         it('should correctly use a custom search fn', () => {
@@ -100,7 +98,6 @@ describe('utils', () => {
                     node: document.createElement('span'),
                 },
             ])
-            expect(results).toMatchSnapshot()
         })
     })
 

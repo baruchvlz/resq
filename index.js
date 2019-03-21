@@ -3,7 +3,7 @@ import { waitToLoadReact } from './src/waitToLoadReact'
 
 export const resq$ = async (selector, { timeout, rootElSelector } = { timeout: 5000 }) => {
     let root
-    if (!global.reactVersion) {
+    if (!global.isReactLoaded) {
         try {
             root = await waitToLoadReact(timeout, rootElSelector)
         } catch (error) {
@@ -16,7 +16,7 @@ export const resq$ = async (selector, { timeout, rootElSelector } = { timeout: 5
 
 export const resq$$ = async (selector, { timeout, rootElSelector } = { timeout: 5000 }) => {
     let root
-    if (!global.reactVersion) {
+    if (!global.isReactLoaded) {
         try {
             root = await waitToLoadReact(timeout, rootElSelector)
         } catch (error) {
