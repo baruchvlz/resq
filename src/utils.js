@@ -1,13 +1,11 @@
 import deepEqual from 'fast-deep-equal'
 
-export function getElementType(type) {
-    if (typeof type === 'string') {
-        return type
-    }
+function typeIsFunction(type) {
+    return typeof type === 'function'
+}
 
-    if (typeof type === 'function') {
-        return type.name
-    }
+export function getElementType(type) {
+    return typeIsFunction(type) ? type.name : type
 }
 
 function findStateNode (element) {
@@ -55,22 +53,30 @@ export function getElementState(elementState) {
 
 export function buildNodeTree(element) {
     let tree = { children: [] }
+    let elementCopy = { ...element }
     if (!element) {
         return tree
     }
 
     tree = {
         ...tree,
-        name: getElementType(element.type),
-        node: findStateNode(element),
-        props: removeChildrenFromProps(element.memoizedProps),
-        state: getElementState(element.memoizedState),
+        name: getElementType(elementCopy.type),
+        node: findStateNode(elementCopy),
+        props: removeChildrenFromProps(elementCopy.memoizedProps),
+        state: getElementState(elementCopy.memoizedState),
     }
 
-    if (element.child) {
-        tree.children.push(element.child)
+    // must verify if the elementCopy.type is a function and assume it's a react instance
+    // if it's a react instance then we must take the first child's node as the instance's HTML
+    // and continue adding the children based off the child's child
+    if (typeIsFunction(elementCopy.type)) {
+        elementCopy.child = elementCopy.child && elementCopy.child.child
+    }
 
-        let child = element.child
+    if (elementCopy.child) {
+        tree.children.push(elementCopy.child)
+
+        let child = elementCopy.child
 
         while (child.sibling) {
             tree.children.push(child.sibling)

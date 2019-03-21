@@ -31,14 +31,8 @@ describe('utils', () => {
             results = findInTree(results, child => child.name === selector)
         })
 
-        expect(results.length).toBe(4)
+        expect(results.length).toBe(3)
         expect(results).toMatchObject([
-            {
-                name: 'div',
-                props: { testProp: 'some prop' },
-                state: {},
-                node: document.createElement('div'),
-            },
             {
                 name: 'div',
                 props: { testProp: 'some prop' },

@@ -1,5 +1,5 @@
 export const vdom = {
-    type: null,
+    type: undefined,
     child: {
         type: function TestWrapper() {},
         memoizedProps: {
@@ -12,12 +12,10 @@ export const vdom = {
         },
         child: {
             type: 'div',
-            memoizedProps: {
-                testProp: 'some prop',
-            },
+            memoizedProps: {},
             memoizedState: {},
             stateNode: document.createElement('div'),
-            sibling: {
+            child: {
                 type: 'span',
                 memoizedProps: {
                     testProp: 'some prop',
@@ -28,6 +26,7 @@ export const vdom = {
                     type: 'div',
                     memoizedProps: {
                         testProp: 'some prop',
+                        children: [{}],
                     },
                     memoizedState: {
                         testState: true,
@@ -64,12 +63,6 @@ export const tree = {
             props: { myProps: 'test prop' },
             state: { initialized: true },
             children: [
-                {
-                    name: 'div',
-                    props: { testProp: 'some prop' },
-                    state: {},
-                    node: document.createElement('div'),
-                },
                 {
                     name: 'span',
                     props: { testProp: 'some prop' },
