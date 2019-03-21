@@ -1,4 +1,3 @@
-
 ## Installation
 
 ```
@@ -10,6 +9,13 @@ Or
 ```
 $ yarn add resq
 ```
+
+---
+
+## Live Example
+
+ https://codesandbox.io/s/m7xn1vw5m9
+
 ---
 ## Usage
 
@@ -102,7 +108,6 @@ ReactDOM.render(
     document.querySelector('#root')
 )
 ```
-View it live: https://repl.it/@baruchvlz/resq
 
 ---
 

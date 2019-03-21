@@ -85,43 +85,19 @@ describe('utils', () => {
 
         it('should correctly use a custom search fn', () => {
             const results = findSelectorInTree(
-                'TestWrapper span'.split(' '),
+                'TestWrapper div'.split(' '),
                 tree,
                 false,
-                (child) => child.name !== 'span',
+                (child) => child.name !== 'div',
             )
 
-            expect(results.length).toBe(4)
+            expect(results.length).toBe(1)
             expect(results).toMatchObject([
                 {
-                    name: 'div',
+                    name: 'span',
                     props: { testProp: 'some prop' },
                     state: {},
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'div',
-                    props: { testProp: 'some prop' },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'div',
-                    props: { },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
-                },
-                {
-                    name: 'div',
-                    props: { },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
+                    node: document.createElement('span'),
                 },
             ])
             expect(results).toMatchSnapshot()
