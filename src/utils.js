@@ -14,7 +14,7 @@ function findStateNode (element) {
     }
 
     if (typeof element.type === 'function') {
-        return element
+        return null
     }
 }
 

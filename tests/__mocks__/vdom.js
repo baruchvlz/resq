@@ -99,58 +99,7 @@ export const tree = {
                     ],
                 },
             ],
-            node: {
-                type: function TestWrapper() {},
-                memoizedProps: {
-                    myProps: 'test prop',
-                },
-                memoizedState: {
-                    baseState: {
-                        initialized: true,
-                    },
-                },
-                child: {
-                    type: 'div',
-                    memoizedProps: {},
-                    memoizedState: {},
-                    stateNode: document.createElement('div'),
-                    child: {
-                        type: 'span',
-                        memoizedProps: {
-                            testProp: 'some prop',
-                        },
-                        memoizedState: {},
-                        stateNode: document.createElement('span'),
-                        sibling: {
-                            type: 'div',
-                            memoizedProps: {
-                                testProp: 'some prop',
-                                children: [{}],
-                            },
-                            memoizedState: {
-                                testState: true,
-                            },
-                            stateNode: document.createElement('div'),
-                            sibling: {
-                                type: 'div',
-                                memoizedProps: {},
-                                memoizedState: {
-                                    testState: true,
-                                },
-                                stateNode: document.createElement('div'),
-                                sibling: {
-                                    type: 'div',
-                                    memoizedProps: {},
-                                    memoizedState: {
-                                        testState: true,
-                                    },
-                                    stateNode: document.createElement('div'),
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+            node: null,
         },
     ],
     props: undefined,

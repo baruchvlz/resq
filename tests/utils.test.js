@@ -23,8 +23,7 @@ describe('utils', () => {
         })
 
         it('should build tree', () => {
-            // expect(buildNodeTree(vdom)).toMatchObject(tree)
-            expect(buildNodeTree(vdom)).toMatchSnapshot()
+            expect(buildNodeTree(vdom)).toMatchObject(tree)
         })
     })
 
