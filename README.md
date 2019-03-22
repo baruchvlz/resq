@@ -14,7 +14,7 @@ $ yarn add resq
 
 ## Live Example
 
- https://codesandbox.io/s/m7xn1vw5m9
+ https://stackblitz.com/edit/resq-example
 
 ---
 ## Usage
