@@ -19,13 +19,15 @@ function findStateNode (element) {
 }
 
 export function removeChildrenFromProps(props) {
-    if (!props) {
+    // if the props is a string, we can assume that it's just the text inside a html element
+    if (!props || typeof props === 'string') {
         return props
     }
 
     const returnProps = {}
 
     for(let key in props) {
+        // remove children prop since it'll be an array in the RESQNode instance
         if (key !== 'children') {
             returnProps[key] = props[key]
         }
