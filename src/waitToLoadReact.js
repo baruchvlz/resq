@@ -1,4 +1,8 @@
-export function waitToLoadReact(timeout, rootElSelector) {
+/**
+ * @internal
+ */
+
+export function waitToLoadReact(timeout = 5000, rootElSelector) {
     const findReactRoot = () => {
         const walker = document.createTreeWalker(document)
 
@@ -13,14 +17,16 @@ export function waitToLoadReact(timeout, rootElSelector) {
         }
     }
 
-    return (() => new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let timedout = false
 
         const tryToFindApp = () => {
             const reactRoot = findReactRoot()
 
             if (reactRoot) {
-                return resolve(reactRoot._reactRootContainer._internalRoot.current)
+                global.isReactLoaded = true
+                global.rootReactElement = reactRoot._reactRootContainer._internalRoot.current
+                return resolve()
             }
 
             if (timedout) {
@@ -37,5 +43,5 @@ export function waitToLoadReact(timeout, rootElSelector) {
 
             reject('Timed out')
         }, timeout)
-    }))()
+    })
 }

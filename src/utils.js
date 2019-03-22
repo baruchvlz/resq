@@ -1,13 +1,11 @@
 import deepEqual from 'fast-deep-equal'
 
-export function getElementType(type) {
-    if (typeof type === 'string') {
-        return type
-    }
+function typeIsFunction(type) {
+    return typeof type === 'function'
+}
 
-    if (typeof type === 'function') {
-        return type.name
-    }
+export function getElementType(type) {
+    return typeIsFunction(type) ? type.name : type
 }
 
 function findStateNode (element) {
@@ -15,22 +13,21 @@ function findStateNode (element) {
         return element.stateNode
     }
 
-    if (typeof element.type === 'function' &&
-        element.child &&
-        element.child.stateNode instanceof HTMLElement
-    ) {
-        return element.child.stateNode
+    if (typeof element.type === 'function') {
+        return null
     }
 }
 
-function removeChildrenFromProps(props) {
-    if (!props) {
+export function removeChildrenFromProps(props) {
+    // if the props is a string, we can assume that it's just the text inside a html element
+    if (!props || typeof props === 'string') {
         return props
     }
 
     const returnProps = {}
 
     for(let key in props) {
+        // remove children prop since it'll be an array in the RESQNode instance
         if (key !== 'children') {
             returnProps[key] = props[key]
         }
@@ -39,20 +36,36 @@ function removeChildrenFromProps(props) {
     return returnProps
 }
 
+export function getElementState(elementState) {
+    if (!elementState) {
+        return {}
+    }
+
+    const { baseState } = elementState
+
+    if (baseState) {
+        return baseState
+    }
+
+    return elementState
+}
+
 export function buildNodeTree(element) {
     let tree = { children: [] }
+    let elementCopy = { ...element }
     if (!element) {
         return tree
     }
-    tree.name = getElementType(element.type)
-    tree.node = findStateNode(element)
-    tree.props = { ...removeChildrenFromProps(element.memoizedProps) }
-    tree.state = { ...element.memoizedState }
 
-    if (element.child) {
-        tree.children.push(element.child)
+    tree.name = getElementType(elementCopy.type)
+    tree.node = findStateNode(elementCopy)
+    tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
+    tree.state = getElementState(elementCopy.memoizedState)
 
-        let child = element.child
+    if (elementCopy.child) {
+        tree.children.push(elementCopy.child)
+
+        let child = elementCopy.child
 
         while (child.sibling) {
             tree.children.push(child.sibling)

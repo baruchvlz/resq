@@ -8,11 +8,6 @@ export default {
             format: 'cjs',
             name: 'resq',
         },
-        {
-            file: 'dist/index.umd.js',
-            format: 'umd',
-            name: 'resq',
-        },
     ],
     plugins: [
         babel({
