@@ -7,6 +7,10 @@ import {
 } from '../src/utils'
 import { tree, vdom } from './__mocks__/vdom'
 
+beforeAll(() => {
+    global.isReactLoaded = true
+})
+
 describe('utils', () => {
     test('getElementType', () => {
         expect(getElementType('test')).toBe('test')
@@ -19,6 +23,7 @@ describe('utils', () => {
         })
 
         it('should build tree', () => {
+            // expect(buildNodeTree(vdom)).toMatchObject(tree)
             expect(buildNodeTree(vdom)).toMatchSnapshot()
         })
     })
@@ -35,7 +40,7 @@ describe('utils', () => {
         expect(results).toMatchObject([
             {
                 name: 'div',
-                props: { testProp: 'some prop' },
+                props: {},
                 state: {},
                 node: document.createElement('div'),
             },
@@ -64,7 +69,6 @@ describe('utils', () => {
                 node: document.createElement('div'),
             },
         ])
-        expect(results).toMatchSnapshot()
     })
 
     describe('findSelectorInTree', () => {
@@ -80,7 +84,6 @@ describe('utils', () => {
                     node: document.createElement('span'),
                 },
             ])
-            expect(results).toMatchSnapshot()
         })
 
         it('should correctly use a custom search fn', () => {
@@ -100,7 +103,6 @@ describe('utils', () => {
                     node: document.createElement('span'),
                 },
             ])
-            expect(results).toMatchSnapshot()
         })
     })
 

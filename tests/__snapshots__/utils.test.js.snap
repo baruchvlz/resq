@@ -6,16 +6,16 @@ Object {
     Object {
       "children": Array [
         Object {
-          "children": Array [],
-          "name": "div",
-          "node": <div />,
-          "props": Object {
-            "testProp": "some prop",
-          },
-          "state": Object {},
-        },
-        Object {
           "children": Array [
+            Object {
+              "children": Array [],
+              "name": "span",
+              "node": <span />,
+              "props": Object {
+                "testProp": "some prop",
+              },
+              "state": Object {},
+            },
             Object {
               "children": Array [],
               "name": "div",
@@ -46,16 +46,67 @@ Object {
               },
             },
           ],
-          "name": "span",
-          "node": <span />,
-          "props": Object {
-            "testProp": "some prop",
-          },
+          "name": "div",
+          "node": <div />,
+          "props": Object {},
           "state": Object {},
         },
       ],
       "name": "TestWrapper",
-      "node": <div />,
+      "node": Object {
+        "child": Object {
+          "child": Object {
+            "memoizedProps": Object {
+              "testProp": "some prop",
+            },
+            "memoizedState": Object {},
+            "sibling": Object {
+              "memoizedProps": Object {
+                "children": Array [
+                  Object {},
+                ],
+                "testProp": "some prop",
+              },
+              "memoizedState": Object {
+                "testState": true,
+              },
+              "sibling": Object {
+                "memoizedProps": Object {},
+                "memoizedState": Object {
+                  "testState": true,
+                },
+                "sibling": Object {
+                  "memoizedProps": Object {},
+                  "memoizedState": Object {
+                    "testState": true,
+                  },
+                  "stateNode": <div />,
+                  "type": "div",
+                },
+                "stateNode": <div />,
+                "type": "div",
+              },
+              "stateNode": <div />,
+              "type": "div",
+            },
+            "stateNode": <span />,
+            "type": "span",
+          },
+          "memoizedProps": Object {},
+          "memoizedState": Object {},
+          "stateNode": <div />,
+          "type": "div",
+        },
+        "memoizedProps": Object {
+          "myProps": "test prop",
+        },
+        "memoizedState": Object {
+          "baseState": Object {
+            "initialized": true,
+          },
+        },
+        "type": [Function],
+      },
       "props": Object {
         "myProps": "test prop",
       },
@@ -66,108 +117,7 @@ Object {
   ],
   "name": undefined,
   "node": undefined,
-  "props": Object {},
+  "props": undefined,
   "state": Object {},
 }
-`;
-
-exports[`utils findInTree 1`] = `
-Array [
-  Object {
-    "children": Array [
-      Object {
-        "name": "span",
-        "node": <span />,
-        "props": Object {
-          "testProp": "some prop",
-        },
-        "state": Object {},
-      },
-      Object {
-        "name": "div",
-        "node": <div />,
-        "props": Object {
-          "testProp": "some prop",
-        },
-        "state": Object {
-          "testState": true,
-        },
-      },
-      Object {
-        "name": "div",
-        "node": <div />,
-        "props": Object {},
-        "state": Object {
-          "testState": true,
-        },
-      },
-      Object {
-        "name": "div",
-        "node": <div />,
-        "props": Object {},
-        "state": Object {
-          "testState": true,
-        },
-      },
-    ],
-    "name": "div",
-    "node": <div />,
-    "props": Object {
-      "testProp": "some prop",
-    },
-    "state": Object {},
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {
-      "testProp": "some prop",
-    },
-    "state": Object {
-      "testState": true,
-    },
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {},
-    "state": Object {
-      "testState": true,
-    },
-  },
-  Object {
-    "name": "div",
-    "node": <div />,
-    "props": Object {},
-    "state": Object {
-      "testState": true,
-    },
-  },
-]
-`;
-
-exports[`utils findSelectorInTree should correctly use a custom search fn 1`] = `
-Array [
-  Object {
-    "name": "span",
-    "node": <span />,
-    "props": Object {
-      "testProp": "some prop",
-    },
-    "state": Object {},
-  },
-]
-`;
-
-exports[`utils findSelectorInTree should return all intances of nested selectors 1`] = `
-Array [
-  Object {
-    "name": "span",
-    "node": <span />,
-    "props": Object {
-      "testProp": "some prop",
-    },
-    "state": Object {},
-  },
-]
 `;

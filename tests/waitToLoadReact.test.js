@@ -12,28 +12,27 @@ afterEach(() => {
 })
 
 describe('waitToLoadReact', () => {
-    it('should find react root element', () => {
+    it('should find react root element', async () => {
         global.document.createTreeWalker = () => ({
             currentNode: {
                 _reactRootContainer: { _internalRoot: { current: vdom } },
             },
             nextNode: () => true,
         })
+        await waitToLoadReact(10)
 
-        waitToLoadReact(10).then((root) => {
-            expect(root).toMatchObject(vdom)
-        })
+        expect(global.rootReactElement).toMatchObject(vdom)
     })
 
-    it('should find react root element if user pases selector', () => {
+    it('should find react root element if user pases selector', async () => {
         global.document.querySelector = jest.fn().mockReturnValue({
             _reactRootContainer: { _internalRoot: { current: vdom } },
         })
 
-        waitToLoadReact(10, '#root').then((root) => {
-            expect(global.document.querySelector).toHaveBeenCalledWith('#root')
-            expect(root).toMatchObject(vdom)
-        })
+        await waitToLoadReact(10, '#test')
+
+        expect(global.document.querySelector).toHaveBeenCalledWith('#test')
+        expect(global.rootReactElement).toMatchObject(vdom)
     })
 
     it('should timeout if React app is not found', () => {

@@ -15,8 +15,6 @@ describe('RESQ', () => {
 
     it('should select one element', () => {
         const resq = new RESQ('TestWrapper span', vdom)
-        resq.rootComponent = vdom
-
         const $ = resq.find()
 
         expect($).toMatchObject(
@@ -31,13 +29,12 @@ describe('RESQ', () => {
 
     it('should select multiple elements', () => {
         const resq = new RESQ('TestWrapper div', vdom)
-
         const $$ = resq.findAll()
 
         expect($$).toMatchObject([
             {
                 name: 'div',
-                props: { testProp: 'some prop' },
+                props: {},
                 state: {},
                 node: document.createElement('div'),
             },
@@ -69,8 +66,6 @@ describe('RESQ', () => {
     describe('byProps', () => {
         it('should return the first instance of component filtered by prop', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $ = resq.find()
             const result = $.byProps({ testProp: 'some prop' })
 
@@ -84,20 +79,11 @@ describe('RESQ', () => {
 
         it('should return all components filtered by prop', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $$ = resq.findAll()
 
             const result = $$.byProps({ testProp: 'some prop' })
 
-            expect(result.length).toBe(2)
             expect(result).toMatchObject([
-                {
-                    name: 'div',
-                    props: { testProp: 'some prop' },
-                    state: {},
-                    node: document.createElement('div'),
-                },
                 {
                     name: 'div',
                     props: { testProp: 'some prop' },
@@ -111,8 +97,6 @@ describe('RESQ', () => {
     describe('byState', () => {
         it('should return the first instance of component filtered by state', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $ = resq.find()
             const result = $.byState({ testState: true })
 
@@ -126,10 +110,7 @@ describe('RESQ', () => {
 
         it('should return all components filtered by state', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $$ = resq.findAll()
-
             const result = $$.byState({ testState: true })
 
             expect(result.length).toBe(3)
@@ -163,8 +144,6 @@ describe('RESQ', () => {
     describe('should be able to use both filtering functions', () => {
         it('should filter for one instance', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $ = resq.find()
             const result = $.byProps({}).byState({ testState: true })
 
@@ -178,8 +157,6 @@ describe('RESQ', () => {
 
         it('should filter for multiple instances', () => {
             const resq = new RESQ('TestWrapper div', vdom)
-            resq.rootComponent = vdom
-
             const $$ = resq.findAll()
             const result = $$.byState({ testState: true }).byProps({})
 
