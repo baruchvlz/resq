@@ -1,4 +1,4 @@
-# resq$$(selector: string) => Array<ReactSelectorQueryNode>
+# resq$$(selector: string) => ReactSelectorQueryNodes
 
 This function is used to all the elements that match the query
 
