@@ -3,6 +3,9 @@
  */
 
 export function waitToLoadReact(timeout = 5000, rootElSelector) {
+    if (global.isReactLoaded) {
+        return Promise.resolve()
+    }
     const findReactRoot = () => {
         const walker = document.createTreeWalker(document)
 

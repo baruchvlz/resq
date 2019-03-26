@@ -3,6 +3,7 @@ import { waitToLoadReact } from '../src/waitToLoadReact'
 import { vdom } from './__mocks__/vdom'
 
 afterEach(() => {
+    global.isReactLoaded = false
     global.document = {}
     global.document.createTreeWalker = () => ({
         currentNode: {},
