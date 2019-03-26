@@ -48,7 +48,8 @@
         "setup": "run-s rollup",
         "presetup": "npm run test",
         "dev": "rollup -c -w",
-        "rollup": "rollup -c"
+        "rollup": "rollup -c",
+        "prepush": "npm run test --coverage"
     },
     "jest": {
         "transform": {
@@ -57,6 +58,14 @@
         "testPathIgnorePatterns": [
             "node_modules",
             "dist"
-        ]
+        ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 91,
+                "functions": 96,
+                "lines": 96,
+                "statements": 96
+            }
+        }
     }
 }
