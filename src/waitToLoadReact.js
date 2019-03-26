@@ -1,7 +1,3 @@
-/**
- * @internal
- */
-
 export function waitToLoadReact(timeout = 5000, rootElSelector) {
     if (global.isReactLoaded) {
         return Promise.resolve()
