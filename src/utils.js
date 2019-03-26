@@ -10,7 +10,7 @@ export function getElementType(type) {
 }
 
 export function isFragmentInstance(element) {
-    return (element.child.length > 1)
+    return (element.children.length > 1)
 }
 
 function findStateNode (element) {
@@ -90,9 +90,6 @@ export function buildNodeTree(element) {
     tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
     tree.state = getElementState(elementCopy.memoizedState)
 
-    if (typeIsFunction(elementCopy.type)) {
-        tree.isFragment = isFragmentInstance(elementCopy)
-    }
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
@@ -106,6 +103,10 @@ export function buildNodeTree(element) {
     }
 
     tree.children = tree.children.map(child => buildNodeTree(child))
+
+    if (typeIsFunction(elementCopy.type)) {
+        tree.isFragment = isFragmentInstance(tree)
+    }
     return tree
 }
 
