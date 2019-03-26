@@ -10,7 +10,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 function MyComponent (props) {
-    getElementNode('MyComponent')
     return (
         <div>
             Hello from MyComponent
