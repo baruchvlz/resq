@@ -1,5 +1,6 @@
 import deepEqual from 'fast-deep-equal'
 
+// One liner helper functions
 function typeIsFunction(type) {
     return typeof type === 'function'
 }
@@ -8,16 +9,21 @@ export function getElementType(type) {
     return typeIsFunction(type) ? type.name : type
 }
 
-function findStateNode (element) {
-    if (element.stateNode instanceof HTMLElement) {
-        return element.stateNode
-    }
-
-    if (typeof element.type === 'function') {
-        return null
-    }
+export function isFragmentInstance(element) {
+    return (element.child.length > 1)
 }
 
+function findStateNode (element) {
+    return (element.stateNode instanceof HTMLElement) ? element.stateNode : null
+}
+
+/**
+ * @name removeChildrenFromProps
+ * @parameter Object | String
+ * @return Object | String
+ * @description Remove the `children` property from the props since they will be available
+ *              in the node
+ */
 export function removeChildrenFromProps(props) {
     // if the props is a string, we can assume that it's just the text inside a html element
     if (!props || typeof props === 'string') {
@@ -36,6 +42,14 @@ export function removeChildrenFromProps(props) {
     return returnProps
 }
 
+/**
+ * @name getElementState
+ * @parameter Object
+ * @return Object
+ * @description Class components store the state in `memoizedState`, but functional components
+ *              using hooks store them in `memoizedState.baseState`
+ */
+
 export function getElementState(elementState) {
     if (!elementState) {
         return {}
@@ -50,6 +64,20 @@ export function getElementState(elementState) {
     return elementState
 }
 
+/**
+ * @name buildNodeTree
+ * @parameter Object
+ * @return Object
+ * @description Build a node tree based on React virtual dom
+ * @example
+    {
+      name: 'MyComponent',
+      props: { hello: 'world' },
+      children: [],
+      state: { init: true },
+      isFragment: false,
+    }
+ */
 export function buildNodeTree(element) {
     let tree = { children: [] }
     let elementCopy = { ...element }
@@ -61,6 +89,10 @@ export function buildNodeTree(element) {
     tree.node = findStateNode(elementCopy)
     tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
     tree.state = getElementState(elementCopy.memoizedState)
+
+    if (typeIsFunction(elementCopy.type)) {
+        tree.isFragment = isFragmentInstance(elementCopy)
+    }
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
@@ -76,6 +108,15 @@ export function buildNodeTree(element) {
     tree.children = tree.children.map(child => buildNodeTree(child))
     return tree
 }
+
+/**
+ * @name findInTree
+ * @parameter Object
+ * @parameter Function
+ * @parameter Boolean - default false
+ * @return Array<Object>
+ * @description Iterate over the tree parameter and return matches from the passed function
+ */
 
 export function findInTree(tree, searchFn, selectFirst = false) {
     let returnArray = []
@@ -98,6 +139,16 @@ export function findInTree(tree, searchFn, selectFirst = false) {
     return returnArray
 }
 
+/**
+ * @name findSelectorInTree
+ * @parameter Array<String>
+ * @parameter Object
+ * @parmater Boolean - default false
+ * @optional @parameter Function
+ * @return Object
+ * @description Base iterator function for the library. Iterates over selectors and searches
+ *              node tree
+ */
 export function findSelectorInTree(selectors, tree, selectFirst = false, searchFn) {
     let treeArray = [tree]
 
@@ -114,6 +165,14 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
     return treeArray
 }
 
+/**
+ * @name filterNodesBy
+ * @parameter Array<Object>
+ * @parameter String
+ * @parameter Object
+ * @return Array<Objects>
+ * @description Filter nodes by deep matching the node[key] to the obj
+ */
 export function filterNodesBy(nodes, key, obj) {
     const filtered = []
 
