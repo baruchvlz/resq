@@ -55,6 +55,7 @@ export const tree = {
             name: 'TestWrapper',
             props: { myProps: 'test prop' },
             state: { initialized: true },
+            isFragment: false,
             children: [
                 {
                     name: 'div',
@@ -98,5 +99,5 @@ export const tree = {
     ],
     props: undefined,
     state: {},
-    node: undefined,
+    node: null,
 }
