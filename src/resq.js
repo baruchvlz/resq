@@ -1,6 +1,6 @@
 import { filterNodesBy, findSelectorInTree, buildNodeTree } from './utils'
 
-class RESQNodes extends Array {
+class ReactSelectorQueryNodes extends Array {
     constructor(nodes) {
         super(...nodes)
 
@@ -9,18 +9,18 @@ class RESQNodes extends Array {
     byProps(props) {
         const filtered = filterNodesBy(this, 'props', props)
 
-        return new RESQNodes(filtered)
+        return new ReactSelectorQueryNodes(filtered)
 
     }
 
     byState(state) {
         const filtered = filterNodesBy(this, 'state', state)
 
-        return new RESQNodes(filtered)
+        return new ReactSelectorQueryNodes(filtered)
     }
 }
 
-class RESQNode extends Object {
+class ReactSelectorQueryNode extends Object {
     constructor(item, nodes) {
         super(item)
         this._nodes = nodes
@@ -33,17 +33,17 @@ class RESQNode extends Object {
     byProps(props) {
         const filtered = filterNodesBy(this._nodes, 'props', props)[0]
 
-        return new RESQNode(filtered, this._nodes)
+        return new ReactSelectorQueryNode(filtered, this._nodes)
     }
 
     byState(state) {
         const filtered = filterNodesBy(this._nodes, 'state', state)[0]
 
-        return new RESQNode(filtered, this._nodes)
+        return new ReactSelectorQueryNode(filtered, this._nodes)
     }
 }
 
-export default class RESQ {
+export default class ReactSelectorQuery {
     constructor(selector, root) {
         this.selectors = selector.split(' ').filter(el => !!el).map(el => el.trim())
         this.rootComponent = root
@@ -51,12 +51,14 @@ export default class RESQ {
     }
 
     find() {
-        this.nodes = new RESQNodes(findSelectorInTree(this.selectors, this.tree, true))
+        this.nodes = new ReactSelectorQueryNodes(
+            findSelectorInTree(this.selectors, this.tree, true),
+        )
 
-        return new RESQNode(this.nodes[0], this.nodes)
+        return new ReactSelectorQueryNode(this.nodes[0], this.nodes)
     }
 
     findAll() {
-        return new RESQNodes(findSelectorInTree(this.selectors, this.tree))
+        return new ReactSelectorQueryNodes(findSelectorInTree(this.selectors, this.tree))
     }
 }
