@@ -1,20 +1,20 @@
-import ReactSelector from './src/resq'
+import ReactSelectorQuery from './src/resq'
 import { waitToLoadReact } from './src/waitToLoadReact'
 
-export const resq$ = (selector) => {
+function doQuery(selector, method = 'find') {
     if (!global.isReactLoaded) {
         return 'Could not find the root element of your application'
     }
 
-    return new ReactSelector(selector, global.rootReactElement).find()
+    return new ReactSelectorQuery(selector, global.rootReactElement)[method]()
+}
+
+export const resq$ = (selector) => {
+    return doQuery(selector)
 }
 
 export const resq$$ = (selector) => {
-    if (!global.isReactLoaded) {
-        return 'Could not find the root element of your application'
-    }
-
-    return new ReactSelector(selector, global.rootReactElement).findAll()
+    return doQuery(selector, 'findAll')
 }
 
 export { waitToLoadReact }
