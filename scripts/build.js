@@ -5,7 +5,7 @@ const uglifyjs = require('uglify-js')
 
 const { log } = console
 
-const run = async () => {
+function run() {
     const distPath = path.join(__dirname, '..', 'dist')
 
     log('Building library')
@@ -22,22 +22,19 @@ const run = async () => {
             const index = fs.readFileSync(filePath, 'utf-8')
             const uglify = uglifyjs.minify(index, { mangle: false })
 
-            setTimeout(() => {
-                fs.writeFile(filePath, uglify.code, 'utf-8', err => {
-                    if(err) {
-                        log(err)
-                        return
-                    }
+            fs.writeFile(filePath, uglify.code, 'utf-8', (err) => {
+                if(err) {
+                    log(err)
+                    return
+                }
 
-                    log(`File ${file} successfully uglified`)
-                })
-            }, 2000)
+                log(`File ${file} successfully uglified`)
+            })
         })
 
     } catch (error) {
         throw new Error(error)
     } finally {
-
         log('')
         log('Done building')
     }
