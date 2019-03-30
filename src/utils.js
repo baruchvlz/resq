@@ -177,13 +177,13 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
 export function filterNodesBy(nodes, key, obj) {
     const filtered = []
 
-    const interator = el => {
+    const iterator = el => {
         if (deepEqual(obj, el[key])) {
             filtered.push(el)
         }
     }
 
-    nodes.forEach(interator)
+    nodes.forEach(iterator)
 
     return filtered
 }
