@@ -83,4 +83,5 @@ $ yarn add resq
 
 - Using [resq$](https://github.com/baruchvlz/resq/blob/master/docs/resq$.md) to select first instance of query
 - Using [resq$$](https://github.com/baruchvlz/resq/blob/master/docs/resq$$.md) to select all matching elements in query
+- Filter results with `byProps` and `byState` [doc](https://github.com/baruchvlz/resq/blob/master/docs/filtering.md)
 - Understanding how to select [React.Fragments vs Wrapped JSX](https://github.com/baruchvlz/resq/blob/master/docs/selecting-fragments.md)
