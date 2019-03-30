@@ -60,3 +60,7 @@ test('MyComponent:', () => {
 })
 
 ```
+
+#### stackblitz example
+
+https://stackblitz.com/edit/resq-multiple
