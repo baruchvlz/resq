@@ -201,4 +201,8 @@ describe('utils', () => {
             expect(match(o1, o3)).toBeTruthy()
         })
     })
+
+    describe('buildNodeFragment', () => {
+        it('should ')
+    })
 })

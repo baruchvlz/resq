@@ -4,20 +4,32 @@ const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function typeIsFunction(type) {
+function isCompositeElement(type) {
     return typeof type === 'function'
 }
 
+function isHTML(node) {
+    return node instanceof HTMLElement
+}
+
 export function getElementType(type) {
-    return typeIsFunction(type) ? type.name : type
+    return isCompositeElement(type) ? type.name : type
 }
 
 export function isFragmentInstance(element) {
     return (element.children.length > 1)
 }
 
-function findStateNode (element) {
-    return (element.stateNode instanceof HTMLElement) ? element.stateNode : null
+export function findStateNode (element) {
+    if (isHTML(element.stateNode)) {
+        return element.stateNode
+    }
+
+    if (element.child && isHTML(element.child.stateNode)) {
+        return element.child.stateNode
+    }
+
+    return null
 }
 
 
@@ -112,6 +124,22 @@ export function getElementState(elementState) {
     return elementState
 }
 
+export function buildNodeFragment(tree) {
+    const fragment = document.createElement('div')
+
+    tree.children.forEach(child => {
+        if (!child.node) {
+            child.children.forEach(grandChild => {
+                fragment.appendChild(grandChild.node.cloneNode(true))
+            })
+        } else {
+            fragment.appendChild(child.node.cloneNode(true))
+        }
+    })
+
+    return fragment
+}
+
 /**
  * @name buildNodeTree
  * @parameter Object
@@ -134,10 +162,9 @@ export function buildNodeTree(element) {
     }
 
     tree.name = getElementType(elementCopy.type)
-    tree.node = findStateNode(elementCopy)
     tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
     tree.state = getElementState(elementCopy.memoizedState)
-
+    tree.node = findStateNode(elementCopy)
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
@@ -152,21 +179,15 @@ export function buildNodeTree(element) {
 
     tree.children = tree.children.map(child => buildNodeTree(child))
 
-    if (typeIsFunction(elementCopy.type) && isFragmentInstance(tree)) {
-        const fragment = new DocumentFragment()
-
-        tree.children.forEach(child => {
-            if (!child.node) {
-                child.children.forEach(grandChild => {
-                    fragment.appendChild(grandChild.node.cloneNode())
-                })
-            } else {
-                fragment.appendChild(child.node.cloneNode())
-            }
-        })
-
-        tree.node = fragment
+    if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
+        tree.node = buildNodeFragment(tree)
     }
+
+    // is the props are a string, assume it's a text node
+    if (typeof tree.props === 'string') {
+        tree.node = document.createTextNode(tree.props)
+    }
+
     return tree
 }
 
