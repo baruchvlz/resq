@@ -152,8 +152,20 @@ export function buildNodeTree(element) {
 
     tree.children = tree.children.map(child => buildNodeTree(child))
 
-    if (typeIsFunction(elementCopy.type)) {
-        tree.isFragment = isFragmentInstance(tree)
+    if (typeIsFunction(elementCopy.type) && isFragmentInstance(tree)) {
+        const fragment = new DocumentFragment()
+
+        tree.children.forEach(child => {
+            if (!child.node) {
+                child.children.forEach(grandChild => {
+                    fragment.appendChild(grandChild.node.cloneNode())
+                })
+            } else {
+                fragment.appendChild(child.node.cloneNode())
+            }
+        })
+
+        tree.node = fragment
     }
     return tree
 }
