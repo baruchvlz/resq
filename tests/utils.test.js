@@ -4,6 +4,8 @@ import {
     findInTree,
     findSelectorInTree,
     getElementType,
+    verifyIfArrays,
+    match,
 } from '../src/utils'
 import { tree, vdom } from './__mocks__/vdom'
 
@@ -111,5 +113,60 @@ describe('utils', () => {
 
         expect(results.length).toBe(1)
         expect(results).toMatchObject(tree.children)
+    })
+
+    describe('verifyIfArrays', () => {
+        it('should return false if not arrays or arrays not same length', () => {
+            expect(verifyIfArrays(1, [2])).toBeFalsy()
+            expect(verifyIfArrays([1], 2)).toBeFalsy()
+        })
+
+        it('should return true if arrays have equal values', () => {
+            expect(verifyIfArrays(['a'], ['a', 'b'])).toBeTruthy()
+            expect(verifyIfArrays(['2', '3', '4', '5'], ['3', '4'])).toBeTruthy()
+            expect(verifyIfArrays([5], [1, 2, 3, 4, 5])).toBeTruthy()
+        })
+
+        it('should retun false if arrays do not have matching elements', () => {
+            expect(verifyIfArrays([1, 2, 3], [4, 5, 6])).toBeFalsy()
+            expect(verifyIfArrays(['a', 'b'], ['c', 'd'])).toBeFalsy()
+        })
+    })
+
+    describe('match', () => {
+        it('should add two numbers', () => {
+            const o1 = { bar: true }
+            const o2 = { bar: false }
+
+            expect(match(o1, o2)).toBeFalsy()
+        })
+
+        it('should do simple matches', () => {
+            const m = [
+                { a: {}, b: {} },
+                { a: { bar: 123 }, b: { bar: 123 } },
+                { a: { bar: true }, b: { bar: true } },
+                { a: { bar: 'abc' }, b: { bar: 'abc' } },
+                { a: { bar: ['a'] }, b: { bar: ['a'] } },
+                { a: { bar: { foo: true } }, b: { bar: { foo: true } } },
+            ]
+
+            m.forEach(k => expect(match(k.a, k.b)).toBeTruthy())
+        })
+
+        it('should work for insane deep values', () => {
+            const o1 = {
+                foo: { bar: { abc: { maybe: { works: true } } } },
+            }
+            const o2 = {
+                foo: { bar: { abc: { maybe: { works: false } } } },
+            }
+            const o3 = {
+                foo: { bar: { abc: { maybe: { works: true } } } },
+            }
+
+            expect(match(o1, o2)).toBeFalsy()
+            expect(match(o1, o3)).toBeTruthy()
+        })
     })
 })

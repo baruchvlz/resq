@@ -1,4 +1,5 @@
-import deepEqual from 'fast-deep-equal'
+const { isArray } = Array
+const { keys } = Object
 
 // One liner helper functions
 function typeIsFunction(type) {
@@ -15,6 +16,41 @@ export function isFragmentInstance(element) {
 
 function findStateNode (element) {
     return (element.stateNode instanceof HTMLElement) ? element.stateNode : null
+}
+
+
+function isNativeObject(obj) {
+    return (typeof obj === 'object' && !isArray(obj))
+}
+
+export function verifyIfArrays(arr1, arr2) {
+    if (!isArray(arr1) || !isArray(arr2)) {
+        return false
+    }
+
+    return arr1.some(r => arr2.includes(r))
+}
+
+export function match(obj1, obj2) {
+    let results = []
+
+    if (!keys(obj1).length && !keys(obj2).length) {
+        return true
+    }
+
+    for (let k in obj1) {
+        if (obj2.hasOwnProperty(k)) {
+            if (isNativeObject(obj1[k]) && isNativeObject(obj2[k])) {
+                results = results.concat(match(obj1[k], obj2[k]))
+            }
+
+            if (obj1[k] === obj2[k] || verifyIfArrays(obj1[k], obj2[k])) {
+                results.push(obj2)
+            }
+        }
+    }
+
+    return results.filter(el => el).length
 }
 
 /**
@@ -178,7 +214,7 @@ export function filterNodesBy(nodes, key, obj) {
     const filtered = []
 
     const iterator = el => {
-        if (deepEqual(obj, el[key])) {
+        if (match(obj, el[key])) {
             filtered.push(el)
         }
     }
