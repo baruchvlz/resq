@@ -21,8 +21,7 @@
         "url": "https://github.com/baruchvlz/resq"
     },
     "dependencies": {
-        "@babel/runtime": "7.4.0",
-        "fast-deep-equal": "2.0.1"
+        "@babel/runtime": "7.4.0"
     },
     "files": [
         "dist/index.*.js"
