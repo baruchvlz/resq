@@ -13,6 +13,13 @@ afterEach(() => {
 })
 
 describe('waitToLoadReact', () => {
+    it ('should return if react is already loaded', async () => {
+        global.isReactLoaded = true
+
+        const res = await waitToLoadReact(10)
+        expect(res).toBe('React already loaded')
+    })
+
     it('should find react root element', async () => {
         global.document.createTreeWalker = () => ({
             currentNode: {
