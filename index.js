@@ -9,11 +9,11 @@ function doQuery(selector, method = 'find') {
     return new ReactSelectorQuery(selector, global.rootReactElement)[method]()
 }
 
-export const resq$ = (selector) => {
+export function resq$(selector) {
     return doQuery(selector)
 }
 
-export const resq$$ = (selector) => {
+export function resq$$(selector) {
     return doQuery(selector, 'findAll')
 }
 
