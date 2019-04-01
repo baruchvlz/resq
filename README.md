@@ -1,5 +1,7 @@
 # resq (REact Selector Query)
 
+**NOTE** Library only works with applications using React v16.x
+
 This library tries to implement something similar to `querySelector` and `querySelectorAll`, but through the React VirtualDOM. You can query for React composite elements or HTML elements.
 
 Though the main use of this library is for E2E testing, it can be used in any almost any scenario
