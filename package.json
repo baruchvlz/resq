@@ -13,43 +13,36 @@
     "author": "Baruch Velez <baruchvelez@gmail.com>",
     "license": "MIT",
     "main": "dist/index.js",
-    "umd:main": "dist/index.umd.js",
     "bugs": {
         "url": "https://github.com/baruchvlz/resq/issues"
     },
     "repository": {
         "url": "https://github.com/baruchvlz/resq"
     },
-    "dependencies": {
-        "@babel/runtime": "7.4.0"
-    },
     "files": [
-        "dist/index.*.js"
+        "dist/resq.bundle.js"
     ],
     "devDependencies": {
         "@babel/cli": "7.2.3",
         "@babel/core": "7.4.0",
         "@babel/plugin-transform-runtime": "7.4.0",
         "@babel/preset-env": "7.4.1",
+        "@babel/runtime": "^7.4.2",
         "babel-eslint": "10.0.1",
         "babel-jest": "24.5.0",
-        "commitizen": "^3.0.7",
-        "cz-conventional-changelog": "^2.1.0",
         "eslint": "5.15.3",
         "eslint-plugin-jest": "22.4.1",
         "jest": "24.5.0",
         "npm-run-all": "4.1.5",
-        "rollup": "1.7.0",
-        "rollup-plugin-babel": "4.3.2"
+        "rimraf": "^2.6.3",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0"
     },
     "scripts": {
         "test": "jest ./tests --verbose",
         "lint": "eslint . --fix",
-        "build": "node ./scripts/build.js",
-        "setup": "run-s rollup",
-        "presetup": "npm run test",
-        "dev": "rollup -c -w",
-        "rollup": "rollup -c",
+        "prebuild": "rimraf dist",
+        "build": "webpack",
         "prepush": "npm run test --coverage",
         "commit": "git-cz"
     },
@@ -68,11 +61,6 @@
                 "lines": 96,
                 "statements": 96
             }
-        }
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
         }
     }
 }

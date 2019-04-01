@@ -116,7 +116,7 @@ export function getElementState(elementState) {
  */
 export function buildNodeTree(element) {
     let tree = { children: [] }
-    let elementCopy = { ...element }
+    let elementCopy = Object.assign({}, element)
     if (!element) {
         return tree
     }
