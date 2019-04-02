@@ -140,16 +140,19 @@ describe('utils', () => {
     })
 
     describe('match', () => {
-        it('should add two numbers', () => {
+        it('should return false if objects do not match', () => {
             const o1 = { bar: true }
             const o2 = { bar: false }
 
             expect(match(o1, o2)).toBeFalsy()
+            expect(match({ a: 1 }, {})).toBeFalsy()
         })
 
         it('should do simple matches', () => {
             const m = [
+                { a: undefined, b: undefined },
                 { a: {}, b: {} },
+                { a: {}, b: { bar: 123 } },
                 { a: { bar: 123 }, b: { bar: 123 } },
                 { a: { bar: true }, b: { bar: true } },
                 { a: { bar: 'abc' }, b: { bar: 'abc' } },

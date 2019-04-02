@@ -31,26 +31,36 @@ export function verifyIfArrays(arr1, arr2) {
     return arr1.some(r => arr2.includes(r))
 }
 
-export function match(obj1, obj2) {
+/**
+  * @name match
+  * @param macther Object - this is the object that will be looped
+  * @param verify Object - this is the object to match against
+  * @return boolean
+  */
+export function match(matcher = {}, verify = {}) {
     let results = []
 
-    if (!keys(obj1).length && !keys(obj2).length) {
+    if (!keys(matcher).length && !keys(verify).length) {
         return true
     }
 
-    for (let k in obj1) {
-        if (obj2.hasOwnProperty(k)) {
-            if (isNativeObject(obj1[k]) && isNativeObject(obj2[k])) {
-                results = results.concat(match(obj1[k], obj2[k]))
+    if (!keys(matcher).length) {
+        return true
+    }
+
+    for (let k in matcher) {
+        if (verify.hasOwnProperty(k)) {
+            if (isNativeObject(matcher[k]) && isNativeObject(verify[k])) {
+                results = results.concat(match(matcher[k], verify[k]))
             }
 
-            if (obj1[k] === obj2[k] || verifyIfArrays(obj1[k], obj2[k])) {
-                results.push(obj2)
+            if (matcher[k] === verify[k] || verifyIfArrays(matcher[k], verify[k])) {
+                results.push(verify)
             }
         }
     }
 
-    return results.filter(el => el).length
+    return !!(results.filter(el => el).length)
 }
 
 /**
