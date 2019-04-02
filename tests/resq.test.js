@@ -36,12 +36,6 @@ describe('ReactSelectorQuery', () => {
             },
             {
                 name: 'div',
-                props: { testProp: 'some prop' },
-                state: { testState: true },
-                node: document.createElement('div'),
-            },
-            {
-                name: 'div',
                 props: { },
                 state: {
                     testState: true,
@@ -61,30 +55,39 @@ describe('ReactSelectorQuery', () => {
 
     describe('byProps', () => {
         it('should return the first instance of component filtered by prop', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper span', vdom)
             const $ = resq.find()
             const result = $.byProps({ testProp: 'some prop' })
 
+            delete result._nodes
+
             expect(result).toMatchObject({
-                name: 'div',
+                name: 'span',
                 props: { testProp: 'some prop' },
                 state: {},
-                node: document.createElement('div'),
+                node: document.createElement('span'),
             })
         })
 
         it('should return all components filtered by prop', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper span', vdom)
             const $$ = resq.findAll()
 
             const result = $$.byProps({ testProp: 'some prop' })
 
             expect(result).toMatchObject([
                 {
-                    name: 'div',
+                    name: 'span',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'span',
                     props: { testProp: 'some prop' },
                     state: { testState: true },
-                    node: document.createElement('div'),
+                    node: document.createElement('span'),
                 },
             ])
         })
@@ -98,7 +101,7 @@ describe('ReactSelectorQuery', () => {
 
             expect(result).toMatchObject({
                 name: 'div',
-                props: { testProp: 'some prop' },
+                props: { },
                 state: { testState: true },
                 node: document.createElement('div'),
             })
@@ -109,14 +112,8 @@ describe('ReactSelectorQuery', () => {
             const $$ = resq.findAll()
             const result = $$.byState({ testState: true })
 
-            expect(result.length).toBe(3)
+            expect(result.length).toBe(2)
             expect(result).toMatchObject([
-                {
-                    name: 'div',
-                    props: { testProp: 'some prop' },
-                    state: { testState: true },
-                    node: document.createElement('div'),
-                },
                 {
                     name: 'div',
                     props: { },

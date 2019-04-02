@@ -23,13 +23,13 @@ export const vdom = {
                 memoizedState: {},
                 stateNode: document.createElement('span'),
                 sibling: {
-                    type: 'div',
+                    type: 'span',
                     memoizedProps: {
                         testProp: 'some prop',
                         children: [{}],
                     },
                     memoizedState: { testState: true },
-                    stateNode: document.createElement('div'),
+                    stateNode: document.createElement('span'),
                     sibling: {
                         type: 'div',
                         memoizedProps: {},
@@ -71,10 +71,10 @@ export const tree = {
                             children: [],
                         },
                         {
-                            name: 'div',
+                            name: 'span',
                             props: { testProp: 'some prop' },
                             state: { testState: true },
-                            node: document.createElement('div'),
+                            node: document.createElement('span'),
                             children: [],
                         },
                         {
