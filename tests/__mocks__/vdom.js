@@ -33,7 +33,7 @@ export const vdom = {
                     sibling: {
                         type: 'div',
                         memoizedProps: {},
-                        memoizedState: { testState: true },
+                        memoizedState: { testState: true, otherState: 'foo' },
                         stateNode: document.createElement('div'),
                         sibling: {
                             type: 'div',
@@ -80,7 +80,7 @@ export const tree = {
                         {
                             name: 'div',
                             props: { },
-                            state: { testState: true },
+                            state: { testState: true, otherState: 'foo' },
                             node: document.createElement('div'),
                             children: [],
                         },

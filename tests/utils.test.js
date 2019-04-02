@@ -113,12 +113,34 @@ describe('utils', () => {
         })
     })
 
-    test('filterNodesBy', () => {
-        const nodes = findSelectorInTree(['TestWrapper'], tree)
-        const results = filterNodesBy(nodes, 'props', { myProps: 'test prop' })
+    describe('filterNodesBy', () => {
+        it('should non-strictly match objects', () => {
+            const nodes = findSelectorInTree(['TestWrapper'], tree)
+            const results = filterNodesBy(nodes, 'props', { myProps: 'test prop' })
 
-        expect(results.length).toBe(1)
-        expect(results).toMatchObject(tree.children)
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject(tree.children)
+        })
+        it('should strictly match objects when `exact` flag is true', () => {
+            const nodes = findSelectorInTree(['TestWrapper', 'div'], tree)
+            const results = filterNodesBy(
+                nodes,
+                'state',
+                { testState: true, otherState: 'foo' },
+                true,
+            )
+
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: 'div',
+                    props: { },
+                    state: { testState: true, otherState: 'foo' },
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+        })
     })
 
     describe('verifyIfArrays', () => {
@@ -149,7 +171,7 @@ describe('utils', () => {
         })
 
         it('should do simple matches', () => {
-            const m = [
+            const matcher = [
                 { a: undefined, b: undefined },
                 { a: {}, b: {} },
                 { a: {}, b: { bar: 123 } },
@@ -157,10 +179,11 @@ describe('utils', () => {
                 { a: { bar: true }, b: { bar: true } },
                 { a: { bar: 'abc' }, b: { bar: 'abc' } },
                 { a: { bar: ['a'] }, b: { bar: ['a'] } },
+                { a: { bar: 123, foo: 321 }, b: { bar: 123 } },
                 { a: { bar: { foo: true } }, b: { bar: { foo: true } } },
             ]
 
-            m.forEach(k => expect(match(k.a, k.b)).toBeTruthy())
+            matcher.forEach(m => expect(match(m.a, m.b)).toBeTruthy())
         })
 
         it('should work for insane deep values', () => {

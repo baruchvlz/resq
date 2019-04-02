@@ -6,15 +6,15 @@ class ReactSelectorQueryNodes extends Array {
 
     }
 
-    byProps(props) {
-        const filtered = filterNodesBy(this, 'props', props)
+    byProps(props, exact = false) {
+        const filtered = filterNodesBy(this, 'props', props, exact)
 
         return new ReactSelectorQueryNodes(filtered)
 
     }
 
-    byState(state) {
-        const filtered = filterNodesBy(this, 'state', state)
+    byState(state, exact = false) {
+        const filtered = filterNodesBy(this, 'state', state, exact)
 
         return new ReactSelectorQueryNodes(filtered)
     }
@@ -30,14 +30,14 @@ class ReactSelectorQueryNode extends Object {
         }
     }
 
-    byProps(props) {
-        const filtered = filterNodesBy(this._nodes, 'props', props)[0]
+    byProps(props, exact = false) {
+        const filtered = filterNodesBy(this._nodes, 'props', props, exact)[0]
 
         return new ReactSelectorQueryNode(filtered, this._nodes)
     }
 
-    byState(state) {
-        const filtered = filterNodesBy(this._nodes, 'state', state)[0]
+    byState(state, exact = false) {
+        const filtered = filterNodesBy(this._nodes, 'state', state, exact)[0]
 
         return new ReactSelectorQueryNode(filtered, this._nodes)
     }
