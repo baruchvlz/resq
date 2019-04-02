@@ -1,6 +1,9 @@
-# resq (REact Selector Query)
+# resq (REact Selector Query) https://img.shields.io/npm/v/resq.svg
 
-**NOTE** Library only works with applications using React v16.x
+## Requirements
+
+- React v16 or higher
+- Node 8 or higher
 
 This library tries to implement something similar to `querySelector` and `querySelectorAll`, but through the React VirtualDOM. You can query for React composite elements or HTML elements.
 
