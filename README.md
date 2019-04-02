@@ -1,4 +1,4 @@
-# resq (REact Selector Query) ![npm](https://img.shields.io/npm/v/faster-dom.svg)
+# resq (REact Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg)
 
 ## Requirements
 
