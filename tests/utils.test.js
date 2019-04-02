@@ -37,20 +37,12 @@ describe('utils', () => {
             results = findInTree(results, child => child.name === selector)
         })
 
-        expect(results.length).toBe(4)
+        expect(results.length).toBe(3)
         expect(results).toMatchObject([
             {
                 name: 'div',
                 props: {},
                 state: {},
-                node: document.createElement('div'),
-            },
-            {
-                name: 'div',
-                props: { testProp: 'some prop' },
-                state: {
-                    testState: true,
-                },
                 node: document.createElement('div'),
             },
             {
@@ -76,13 +68,20 @@ describe('utils', () => {
         it('should return all intances of nested selectors', () => {
             const results = findSelectorInTree('TestWrapper span'.split(' '), tree)
 
-            expect(results.length).toBe(1)
+            expect(results.length).toBe(2)
             expect(results).toMatchObject([
                 {
                     name: 'span',
                     props: { testProp: 'some prop' },
                     state: {},
                     node: document.createElement('span'),
+                },
+                {
+                    name: 'span',
+                    props: { testProp: 'some prop' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
                 },
             ])
         })
@@ -95,13 +94,20 @@ describe('utils', () => {
                 (child) => child.name !== 'div',
             )
 
-            expect(results.length).toBe(1)
+            expect(results.length).toBe(2)
             expect(results).toMatchObject([
                 {
                     name: 'span',
                     props: { testProp: 'some prop' },
                     state: {},
                     node: document.createElement('span'),
+                },
+                {
+                    name: 'span',
+                    props: { testProp: 'some prop' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
                 },
             ])
         })
@@ -134,16 +140,19 @@ describe('utils', () => {
     })
 
     describe('match', () => {
-        it('should add two numbers', () => {
+        it('should return false if objects do not match', () => {
             const o1 = { bar: true }
             const o2 = { bar: false }
 
             expect(match(o1, o2)).toBeFalsy()
+            expect(match({ a: 1 }, {})).toBeFalsy()
         })
 
         it('should do simple matches', () => {
             const m = [
+                { a: undefined, b: undefined },
                 { a: {}, b: {} },
+                { a: {}, b: { bar: 123 } },
                 { a: { bar: 123 }, b: { bar: 123 } },
                 { a: { bar: true }, b: { bar: true } },
                 { a: { bar: 'abc' }, b: { bar: 'abc' } },

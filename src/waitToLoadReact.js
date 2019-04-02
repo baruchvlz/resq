@@ -27,7 +27,7 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
                 global.rootReactElement = reactRoot._reactRootContainer._internalRoot.current
                 return resolve()
             }
-
+            /* istanbul ignore next */
             if (timedout) {
                 return
             }
@@ -37,6 +37,7 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
 
         tryToFindApp()
 
+        /* istanbul ignore next */
         setTimeout(() => {
             timedout = true
 
