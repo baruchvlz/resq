@@ -69,7 +69,7 @@ ReactDOM.render(<App />, document.querySelector("#root"));
 
 ## Live Example
 
- https://stackblitz.com/edit/resq-example
+ https://stackblitz.com/edit/resq
 
 
 ## Installation
