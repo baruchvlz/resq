@@ -39,7 +39,7 @@
         "webpack-cli": "^3.3.0"
     },
     "scripts": {
-        "test": "jest ./tests --verbose",
+        "test": "jest ./tests --verbose --coverage",
         "lint": "eslint . --fix",
         "prebuild": "rimraf dist",
         "build": "webpack",
