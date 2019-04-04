@@ -1,4 +1,4 @@
-# resq (REact Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg)
+# resq (REact Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg) [![Build Status](https://travis-ci.org/baruchvlz/resq.svg?branch=master)](https://travis-ci.org/baruchvlz/resq)
 
 ## Requirements
 
