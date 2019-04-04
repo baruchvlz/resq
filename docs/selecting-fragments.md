@@ -66,7 +66,7 @@ test('MyComponent:', () => {
         node:<div>Another div</div>,
         state: {},
         props: {},
-        chlidren: []
+        children: []
         name: 'div'
     })
 })
