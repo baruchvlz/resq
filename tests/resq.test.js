@@ -42,14 +42,6 @@ describe('ReactSelectorQuery', () => {
                 },
                 node: document.createElement('div'),
             },
-            {
-                name: 'div',
-                props: { },
-                state: {
-                    testState: true,
-                },
-                node: document.createElement('div'),
-            },
         ])
     })
 
@@ -112,16 +104,8 @@ describe('ReactSelectorQuery', () => {
             const $$ = resq.findAll()
             const result = $$.byState({ testState: true })
 
-            expect(result.length).toBe(2)
+            expect(result.length).toBe(1)
             expect(result).toMatchObject([
-                {
-                    name: 'div',
-                    props: { },
-                    state: {
-                        testState: true,
-                    },
-                    node: document.createElement('div'),
-                },
                 {
                     name: 'div',
                     props: { },
@@ -154,12 +138,6 @@ describe('ReactSelectorQuery', () => {
             const result = $$.byState({ testState: true }).byProps({})
 
             expect(result).toMatchObject([
-                {
-                    name: 'div',
-                    props: {},
-                    state: { testState: true },
-                    node: document.createElement('div'),
-                },
                 {
                     name: 'div',
                     props: {},

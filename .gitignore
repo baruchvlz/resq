@@ -25,5 +25,6 @@ yarn-error.log*
 dist/
 babel/
 
-#webstorm
+# IDEs
 .idea
+.theia

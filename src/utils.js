@@ -16,7 +16,7 @@ export function getElementType(type) {
     return isCompositeElement(type) ? type.name : type
 }
 
-export function isFragmentInstance(element) {
+function isFragmentInstance(element) {
     return (element.children.length > 1)
 }
 
@@ -79,7 +79,7 @@ export function match(matcher = {}, verify = {}) {
 
 /**
  * @name removeChildrenFromProps
- * @parameter Object | String
+ * @param Object | String
  * @return Object | String
  * @description Remove the `children` property from the props since they will be available
  *              in the node
@@ -104,7 +104,7 @@ export function removeChildrenFromProps(props) {
 
 /**
  * @name getElementState
- * @parameter Object
+ * @param Object
  * @return Object
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
@@ -123,26 +123,19 @@ export function getElementState(elementState) {
 
     return elementState
 }
-
-export function buildNodeFragment(tree) {
-    const fragment = document.createElement('div')
-
-    tree.children.forEach(child => {
-        if (!child.node) {
-            child.children.forEach(grandChild => {
-                fragment.appendChild(grandChild.node.cloneNode(true))
-            })
-        } else {
-            fragment.appendChild(child.node.cloneNode(true))
-        }
-    })
-
-    return fragment
+/**
+ * @name buildFragmentNodeArray
+ * @param Object
+ * @return Array<HTMLElement | empty>
+ * @description Creates an array of the tree's children HTML nodes
+ */
+export function buildFragmentNodeArray(tree) {
+    return tree.children.map(child => child.node || false).filter(child => !!child)
 }
 
 /**
  * @name buildNodeTree
- * @parameter Object
+ * @param Object
  * @return Object
  * @description Build a node tree based on React virtual dom
  * @example
@@ -180,7 +173,7 @@ export function buildNodeTree(element) {
     tree.children = tree.children.map(child => buildNodeTree(child))
 
     if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
-        tree.node = buildNodeFragment(tree)
+        tree.node = buildFragmentNodeArray(tree)
     }
 
     // is the props are a string, assume it's a text node
@@ -193,11 +186,11 @@ export function buildNodeTree(element) {
 
 /**
  * @name findInTree
- * @parameter Object
- * @parameter Function
- * @parameter Boolean - default false
+ * @param Object
+ * @param Function
+ * @param Boolean - default false
  * @return Array<Object>
- * @description Iterate over the tree parameter and return matches from the passed function
+ * @description Iterate over the tree param and return matches from the passed function
  */
 
 export function findInTree(tree, searchFn, selectFirst = false) {
@@ -223,10 +216,10 @@ export function findInTree(tree, searchFn, selectFirst = false) {
 
 /**
  * @name findSelectorInTree
- * @parameter Array<String>
- * @parameter Object
+ * @param Array<String>
+ * @param Object
  * @parmater Boolean - default false
- * @optional @parameter Function
+ * @optional @param Function
  * @return Object
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
@@ -249,9 +242,9 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
 
 /**
  * @name filterNodesBy
- * @parameter Array<Object>
- * @parameter String
- * @parameter Object
+ * @param Array<Object>
+ * @param String
+ * @param Object
  * @return Array<Objects>
  * @description Filter nodes by deep matching the node[key] to the obj
  */
