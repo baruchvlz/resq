@@ -8,7 +8,7 @@ import {
     match,
     buildFragmentNodeArray,
 } from '../src/utils'
-import { tree, vdom } from './__mocks__/vdom'
+import { tree, vdom, fragmentVDOM, fragmentTree } from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
@@ -27,6 +27,10 @@ describe('utils', () => {
 
         it('should build tree', () => {
             expect(buildNodeTree(vdom)).toMatchObject(tree)
+        })
+
+        it('should build tree for fragments', () => {
+            expect(buildNodeTree(fragmentVDOM)).toMatchObject(fragmentTree)
         })
     })
 
@@ -104,7 +108,7 @@ describe('utils', () => {
                 },
                 {
                     name: undefined,
-                    props: "Foo bar",
+                    props: 'Foo bar',
                     state: { testState: true },
                     node: document.createTextNode('Foo bar'),
                     children: [],
@@ -207,7 +211,7 @@ describe('utils', () => {
             const tree = {
                 isFragment: true,
                 name: 'MyFragmentComponent',
-                children: [...Array(3)].map(() => ({ node: document.createElement('div') }))
+                children: [...Array(3)].map(() => ({ node: document.createElement('div') })),
             }
 
             expect(buildFragmentNodeArray(tree)).toMatchObject([

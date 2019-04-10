@@ -130,7 +130,7 @@ export function getElementState(elementState) {
  * @description Creates an array of the tree's children HTML nodes
  */
 export function buildFragmentNodeArray(tree) {
-    return tree.children.map(child => child.node || false).filter(child => !!child)
+    return tree.children.map(child => child.node).filter(child => !!child)
 }
 
 /**
@@ -218,8 +218,8 @@ export function findInTree(tree, searchFn, selectFirst = false) {
  * @name findSelectorInTree
  * @param Array<String>
  * @param Object
- * @parmater Boolean - default false
- * @optional @param Function
+ * @param Boolean - default false
+ * @param Function
  * @return Object
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
