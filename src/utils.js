@@ -252,10 +252,7 @@ export function filterNodesBy(nodes, key, obj, exact = false) {
     const filtered = []
 
     const iterator = el => {
-        if (
-            (exact && deepEqual(obj, el[key])) ||
-            (!exact && match(obj, el[key]))
-        ) {
+        if ((exact && deepEqual(obj, el[key])) ||  (!exact && match(obj, el[key]))) {
             filtered.push(el)
         }
     }

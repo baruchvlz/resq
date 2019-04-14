@@ -90,10 +90,14 @@ test('MyComponent:', () => {
     const resq = resq$('MyComponent')
 
     expect(resq).toMatchObject({
-        node: null,
+        // these are the HTMLElements inside the fragment
+        node: [
+            <text />,
+            <div />,
+        ],
         state: {},
         props: {},
-        chlidren: [{}, {}] // 1) Hello from MyComponent 2)<div>Another div</div>
+        chlidren: [{}, {}]
         name: 'MyComponent'
     })
 })
