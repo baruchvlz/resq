@@ -125,10 +125,16 @@ export const fragmentVDOM = {
                     },
                     memoizedState: { testState: true },
                     stateNode: document.createElement('span'),
+                    sibling: {
+                        type: undefined,
+                        memoizedProps: {},
+                        children: [{}],
+                        stateNode: document.createTextNode('text'),
+                    },
                 },
             },
         },
-    }
+    },
 }
 
 export const fragmentTree = {
@@ -140,6 +146,7 @@ export const fragmentTree = {
                 document.createElement('div'),
                 document.createElement('span'),
                 document.createElement('span'),
+                document.createTextNode('text'),
             ],
             children: [
                 {
@@ -162,7 +169,14 @@ export const fragmentTree = {
                     node: document.createElement('span'),
                     children: [],
                 },
-            ]
-        }
-    ]
+                {
+                    name: undefined,
+                    props: {},
+                    state: {},
+                    node: document.createTextNode('text'),
+                    children: [],
+                },
+            ],
+        },
+    ],
 }

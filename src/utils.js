@@ -8,8 +8,8 @@ function isCompositeElement(type) {
     return typeof type === 'function'
 }
 
-function isHTML(node) {
-    return node instanceof HTMLElement
+function isHTMLOrText(node) {
+    return node instanceof HTMLElement || node instanceof Text
 }
 
 export function getElementType(type) {
@@ -21,11 +21,11 @@ function isFragmentInstance(element) {
 }
 
 export function findStateNode (element) {
-    if (isHTML(element.stateNode)) {
+    if (isHTMLOrText(element.stateNode)) {
         return element.stateNode
     }
 
-    if (element.child && isHTML(element.child.stateNode)) {
+    if (element.child && isHTMLOrText(element.child.stateNode)) {
         return element.child.stateNode
     }
 
@@ -174,11 +174,6 @@ export function buildNodeTree(element) {
 
     if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
         tree.node = buildFragmentNodeArray(tree)
-    }
-
-    // is the props are a string, assume it's a text node
-    if (typeof tree.props === 'string') {
-        tree.node = document.createTextNode(tree.props)
     }
 
     return tree
