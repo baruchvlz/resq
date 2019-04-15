@@ -41,6 +41,7 @@
     },
     "scripts": {
         "test": "jest ./tests --verbose --coverage",
+        "test:dev": "jest ./tests --coverage --watch",
         "lint": "eslint . --fix",
         "prebuild": "rimraf dist",
         "build": "webpack",
