@@ -37,7 +37,7 @@ function isNativeObject(obj) {
     return (typeof obj === 'object' && !isArray(obj))
 }
 
-export function verifyIfArrays(arr1, arr2) {
+export function verifyIfArraysMatch(arr1, arr2) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
     }
@@ -54,10 +54,6 @@ export function verifyIfArrays(arr1, arr2) {
 export function match(matcher = {}, verify = {}) {
     let results = []
 
-    if (!keys(matcher).length && !keys(verify).length) {
-        return true
-    }
-
     if (!keys(matcher).length) {
         return true
     }
@@ -68,7 +64,7 @@ export function match(matcher = {}, verify = {}) {
                 results = results.concat(match(matcher[k], verify[k]))
             }
 
-            if (matcher[k] === verify[k] || verifyIfArrays(matcher[k], verify[k])) {
+            if (matcher[k] === verify[k] || verifyIfArraysMatch(matcher[k], verify[k])) {
                 results.push(verify)
             }
         }
@@ -90,14 +86,9 @@ export function removeChildrenFromProps(props) {
         return props
     }
 
-    const returnProps = {}
+    const returnProps = { ...props }
 
-    for(let key in props) {
-        // remove children prop since it'll be an array in the RESQNode instance
-        if (key !== 'children') {
-            returnProps[key] = props[key]
-        }
-    }
+    delete returnProps.children
 
     return returnProps
 }
@@ -105,14 +96,14 @@ export function removeChildrenFromProps(props) {
 /**
  * @name getElementState
  * @param Object
- * @return Object
+ * @return Object | undefined
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
  */
 
 export function getElementState(elementState) {
     if (!elementState) {
-        return {}
+        return undefined
     }
 
     const { baseState } = elementState
@@ -243,7 +234,7 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
  * @return Array<Objects>
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes, key, obj, exact = false) {
+export function filterNodesBy(nodes, key, obj, { exact } = { exact: false }) {
     const filtered = []
 
     const iterator = el => {

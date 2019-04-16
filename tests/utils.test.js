@@ -4,7 +4,7 @@ import {
     findInTree,
     findSelectorInTree,
     getElementType,
-    verifyIfArrays,
+    verifyIfArraysMatch,
     match,
     buildFragmentNodeArray,
 } from '../src/utils'
@@ -131,7 +131,7 @@ describe('utils', () => {
                 nodes,
                 'state',
                 { testState: true, otherState: 'foo' },
-                true,
+                { exact: true },
             )
 
             expect(results.length).toBe(1)
@@ -147,21 +147,21 @@ describe('utils', () => {
         })
     })
 
-    describe('verifyIfArrays', () => {
+    describe('verifyIfArraysMatch', () => {
         it('should return false if not arrays or arrays not same length', () => {
-            expect(verifyIfArrays(1, [2])).toBeFalsy()
-            expect(verifyIfArrays([1], 2)).toBeFalsy()
+            expect(verifyIfArraysMatch(1, [2])).toBeFalsy()
+            expect(verifyIfArraysMatch([1], 2)).toBeFalsy()
         })
 
         it('should return true if arrays have equal values', () => {
-            expect(verifyIfArrays(['a'], ['a', 'b'])).toBeTruthy()
-            expect(verifyIfArrays(['2', '3', '4', '5'], ['3', '4'])).toBeTruthy()
-            expect(verifyIfArrays([5], [1, 2, 3, 4, 5])).toBeTruthy()
+            expect(verifyIfArraysMatch(['a'], ['a', 'b'])).toBeTruthy()
+            expect(verifyIfArraysMatch(['2', '3', '4', '5'], ['3', '4'])).toBeTruthy()
+            expect(verifyIfArraysMatch([5], [1, 2, 3, 4, 5])).toBeTruthy()
         })
 
         it('should retun false if arrays do not have matching elements', () => {
-            expect(verifyIfArrays([1, 2, 3], [4, 5, 6])).toBeFalsy()
-            expect(verifyIfArrays(['a', 'b'], ['c', 'd'])).toBeFalsy()
+            expect(verifyIfArraysMatch([1, 2, 3], [4, 5, 6])).toBeFalsy()
+            expect(verifyIfArraysMatch(['a', 'b'], ['c', 'd'])).toBeFalsy()
         })
     })
 
@@ -172,6 +172,7 @@ describe('utils', () => {
 
             expect(match(o1, o2)).toBeFalsy()
             expect(match({ a: 1 }, {})).toBeFalsy()
+            expect(match({}, { a: 1 })).toBeTruthy()
         })
 
         it('should do simple matches', () => {
