@@ -6,8 +6,9 @@ import {
     getElementType,
     verifyIfArrays,
     match,
+    buildFragmentNodeArray,
 } from '../src/utils'
-import { tree, vdom } from './__mocks__/vdom'
+import { tree, vdom, fragmentVDOM, fragmentTree } from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
@@ -27,6 +28,10 @@ describe('utils', () => {
         it('should build tree', () => {
             expect(buildNodeTree(vdom)).toMatchObject(tree)
         })
+
+        it('should build tree for fragments', () => {
+            expect(buildNodeTree(fragmentVDOM)).toMatchObject(fragmentTree)
+        })
     })
 
     test('findInTree', () => {
@@ -37,20 +42,12 @@ describe('utils', () => {
             results = findInTree(results, child => child.name === selector)
         })
 
-        expect(results.length).toBe(3)
+        expect(results.length).toBe(2)
         expect(results).toMatchObject([
             {
                 name: 'div',
                 props: {},
                 state: {},
-                node: document.createElement('div'),
-            },
-            {
-                name: 'div',
-                props: { },
-                state: {
-                    testState: true,
-                },
                 node: document.createElement('div'),
             },
             {
@@ -94,7 +91,7 @@ describe('utils', () => {
                 (child) => child.name !== 'div',
             )
 
-            expect(results.length).toBe(2)
+            expect(results.length).toBe(3)
             expect(results).toMatchObject([
                 {
                     name: 'span',
@@ -107,6 +104,13 @@ describe('utils', () => {
                     props: { testProp: 'some prop' },
                     state: { testState: true },
                     node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: undefined,
+                    props: 'Foo bar',
+                    state: { testState: true },
+                    node: document.createTextNode('Foo bar'),
                     children: [],
                 },
             ])
@@ -199,6 +203,22 @@ describe('utils', () => {
 
             expect(match(o1, o2)).toBeFalsy()
             expect(match(o1, o3)).toBeTruthy()
+        })
+    })
+
+    describe('buildFragmentNodeArray', () => {
+        it('should return array of nodes for fragment elements', () => {
+            const tree = {
+                isFragment: true,
+                name: 'MyFragmentComponent',
+                children: [...Array(3)].map(() => ({ node: document.createElement('div') })),
+            }
+
+            expect(buildFragmentNodeArray(tree)).toMatchObject([
+                document.createElement('div'),
+                document.createElement('div'),
+                document.createElement('div'),
+            ])
         })
     })
 })

@@ -4,20 +4,32 @@ const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function typeIsFunction(type) {
+function isCompositeElement(type) {
     return typeof type === 'function'
 }
 
-export function getElementType(type) {
-    return typeIsFunction(type) ? type.name : type
+function isHTMLOrText(node) {
+    return node instanceof HTMLElement || node instanceof Text
 }
 
-export function isFragmentInstance(element) {
+export function getElementType(type) {
+    return isCompositeElement(type) ? type.name : type
+}
+
+function isFragmentInstance(element) {
     return (element.children.length > 1)
 }
 
-function findStateNode (element) {
-    return (element.stateNode instanceof HTMLElement) ? element.stateNode : null
+export function findStateNode (element) {
+    if (isHTMLOrText(element.stateNode)) {
+        return element.stateNode
+    }
+
+    if (element.child && isHTMLOrText(element.child.stateNode)) {
+        return element.child.stateNode
+    }
+
+    return null
 }
 
 
@@ -67,7 +79,7 @@ export function match(matcher = {}, verify = {}) {
 
 /**
  * @name removeChildrenFromProps
- * @parameter Object | String
+ * @param Object | String
  * @return Object | String
  * @description Remove the `children` property from the props since they will be available
  *              in the node
@@ -92,7 +104,7 @@ export function removeChildrenFromProps(props) {
 
 /**
  * @name getElementState
- * @parameter Object
+ * @param Object
  * @return Object
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
@@ -111,10 +123,19 @@ export function getElementState(elementState) {
 
     return elementState
 }
+/**
+ * @name buildFragmentNodeArray
+ * @param Object
+ * @return Array<HTMLElement | empty>
+ * @description Creates an array of the tree's children HTML nodes
+ */
+export function buildFragmentNodeArray(tree) {
+    return tree.children.map(child => child.node).filter(child => !!child)
+}
 
 /**
  * @name buildNodeTree
- * @parameter Object
+ * @param Object
  * @return Object
  * @description Build a node tree based on React virtual dom
  * @example
@@ -134,10 +155,9 @@ export function buildNodeTree(element) {
     }
 
     tree.name = getElementType(elementCopy.type)
-    tree.node = findStateNode(elementCopy)
     tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
     tree.state = getElementState(elementCopy.memoizedState)
-
+    tree.node = findStateNode(elementCopy)
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
@@ -152,19 +172,20 @@ export function buildNodeTree(element) {
 
     tree.children = tree.children.map(child => buildNodeTree(child))
 
-    if (typeIsFunction(elementCopy.type)) {
-        tree.isFragment = isFragmentInstance(tree)
+    if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
+        tree.node = buildFragmentNodeArray(tree)
     }
+
     return tree
 }
 
 /**
  * @name findInTree
- * @parameter Object
- * @parameter Function
- * @parameter Boolean - default false
+ * @param Object
+ * @param Function
+ * @param Boolean - default false
  * @return Array<Object>
- * @description Iterate over the tree parameter and return matches from the passed function
+ * @description Iterate over the tree param and return matches from the passed function
  */
 
 export function findInTree(tree, searchFn, selectFirst = false) {
@@ -190,10 +211,10 @@ export function findInTree(tree, searchFn, selectFirst = false) {
 
 /**
  * @name findSelectorInTree
- * @parameter Array<String>
- * @parameter Object
- * @parmater Boolean - default false
- * @optional @parameter Function
+ * @param Array<String>
+ * @param Object
+ * @param Boolean - default false
+ * @param Function
  * @return Object
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
@@ -216,9 +237,9 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
 
 /**
  * @name filterNodesBy
- * @parameter Array<Object>
- * @parameter String
- * @parameter Object
+ * @param Array<Object>
+ * @param String
+ * @param Object
  * @return Array<Objects>
  * @description Filter nodes by deep matching the node[key] to the obj
  */
@@ -226,10 +247,7 @@ export function filterNodesBy(nodes, key, obj, exact = false) {
     const filtered = []
 
     const iterator = el => {
-        if (
-            (exact && deepEqual(obj, el[key])) ||
-            (!exact && match(obj, el[key]))
-        ) {
+        if ((exact && deepEqual(obj, el[key])) ||  (!exact && match(obj, el[key]))) {
             filtered.push(el)
         }
     }
