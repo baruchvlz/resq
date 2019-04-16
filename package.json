@@ -46,6 +46,7 @@
         "prebuild": "rimraf dist",
         "build": "webpack",
         "prepush": "npm run test --coverage",
+        "prepublish": "yarn test && yarn build",
         "commit": "git-cz"
     },
     "jest": {
