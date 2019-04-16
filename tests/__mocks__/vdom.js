@@ -130,6 +130,21 @@ export const fragmentVDOM = {
                         memoizedProps: {},
                         children: [{}],
                         stateNode: document.createTextNode('text'),
+                        sibling: {
+                            type: function NestedFragmentComponent() {},
+                            child: {
+                                type: 'div',
+                                memoizedProps: {},
+                                memoizedState: {},
+                                stateNode: document.createElement('div'),
+                                sibling: {
+                                    type: 'div',
+                                    memoizedProps: {},
+                                    memoizedState: {},
+                                    stateNode: document.createElement('div'),
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -142,11 +157,16 @@ export const fragmentTree = {
     children: [
         {
             name: 'FragmentComponent',
+            isFragment: true,
             node: [
                 document.createElement('div'),
                 document.createElement('span'),
                 document.createElement('span'),
                 document.createTextNode('text'),
+                [
+                    document.createElement('div'),
+                    document.createElement('div'),
+                ],
             ],
             children: [
                 {
@@ -175,6 +195,28 @@ export const fragmentTree = {
                     state: {},
                     node: document.createTextNode('text'),
                     children: [],
+                },
+                {
+                    name: 'NestedFragmentComponent',
+                    isFragment: true,
+                    node: [
+                        document.createElement('div'),
+                        document.createElement('div'),
+                    ],
+                    children: [
+                        {
+                            name: 'div',
+                            props: {},
+                            state: {},
+                            node: document.createElement('div'),
+                        },
+                        {
+                            name: 'div',
+                            props: {},
+                            state: {},
+                            node: document.createElement('div'),
+                        },
+                    ],
                 },
             ],
         },

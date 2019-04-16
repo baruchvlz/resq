@@ -148,7 +148,6 @@ export function buildNodeTree(element) {
     tree.name = getElementType(elementCopy.type)
     tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
     tree.state = getElementState(elementCopy.memoizedState)
-    tree.node = findStateNode(elementCopy)
 
     if (elementCopy.child) {
         tree.children.push(elementCopy.child)
@@ -165,6 +164,9 @@ export function buildNodeTree(element) {
 
     if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
         tree.node = buildFragmentNodeArray(tree)
+        tree.isFragment = true
+    } else {
+        tree.node = findStateNode(elementCopy)
     }
 
     return tree
