@@ -236,7 +236,7 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
  * @return Array<Objects>
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes, key, obj, { exact } = { exact: false }) {
+export function filterNodesBy(nodes, key, obj, exact = false) {
     const filtered = []
 
     const iterator = el => {

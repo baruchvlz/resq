@@ -131,7 +131,7 @@ describe('utils', () => {
                 nodes,
                 'state',
                 { testState: true, otherState: 'foo' },
-                { exact: true },
+                true,
             )
 
             expect(results.length).toBe(1)
