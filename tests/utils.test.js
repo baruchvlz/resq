@@ -8,7 +8,7 @@ import {
     match,
     buildFragmentNodeArray,
 } from '../src/utils'
-import { tree, vdom, fragmentVDOM, fragmentTree } from './__mocks__/vdom'
+import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState } from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
@@ -125,6 +125,7 @@ describe('utils', () => {
             expect(results.length).toBe(1)
             expect(results).toMatchObject(tree.children)
         })
+
         it('should strictly match objects when `exact` flag is true', () => {
             const nodes = findSelectorInTree(['TestWrapper', 'div'], tree)
             const results = filterNodesBy(
@@ -145,6 +146,66 @@ describe('utils', () => {
                 },
             ])
         })
+
+        it('should work for any type of state', () => {
+            const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
+            const arrayState = filterNodesBy(nodes, 'state', [1, 2, 3])
+            const numberState = filterNodesBy(nodes, 'state', 123)
+            const stringState = filterNodesBy(nodes, 'state', 'some state')
+            const booleanState = filterNodesBy(nodes, 'state', true)
+
+            expect(booleanState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop' },
+                    state: true,
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(arrayState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { },
+                    state: [1, 2, 3],
+                    node: document.createElement('div'),
+                    children: [],
+                },
+                {
+                    name: 'div',
+                    props: { },
+                    state: [1, 2, 3, 4, 5],
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(numberState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { },
+                    state: 123,
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(stringState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop' },
+                    state: 'some state',
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+        })
+
+        it('should not match functions', () => {
+            global.console.warn = jest.fn()
+            const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
+
+            expect(filterNodesBy(nodes, 'state', () => {})).toMatchObject([])
+            expect(global.console.warn).toHaveBeenCalled()
+        })
     })
 
     describe('verifyIfArraysMatch', () => {
@@ -162,6 +223,12 @@ describe('utils', () => {
         it('should retun false if arrays do not have matching elements', () => {
             expect(verifyIfArraysMatch([1, 2, 3], [4, 5, 6])).toBeFalsy()
             expect(verifyIfArraysMatch(['a', 'b'], ['c', 'd'])).toBeFalsy()
+        })
+
+        it('should exactly match arrays', () => {
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 3], true)).toBeTruthy()
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 4], true)).toBeFalsy()
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 3, 4, 5], true)).toBeFalsy()
         })
     })
 

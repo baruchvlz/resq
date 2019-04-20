@@ -222,3 +222,63 @@ export const fragmentTree = {
         },
     ],
 }
+
+export const treeWithNonObjectState = {
+    name: undefined,
+    children: [
+        {
+            name: 'TestWrapper',
+            props: { myProps: 'test prop' },
+            state: { initialized: true },
+            children: [
+                {
+                    name: 'div',
+                    props: {},
+                    state: {},
+                    node: document.createElement('div'),
+                    children: [
+                        {
+                            name: 'div',
+                            props: { testProp: 'some prop' },
+                            state: 'some state',
+                            node: document.createElement('div'),
+                            children: [],
+                        },
+                        {
+                            name: 'div',
+                            props: { testProp: 'some prop' },
+                            state: true,
+                            node: document.createElement('div'),
+                            children: [],
+                        },
+                        {
+                            name: 'div',
+                            props: { },
+                            state: [1, 2, 3],
+                            node: document.createElement('div'),
+                            children: [],
+                        },
+                        {
+                            name: 'div',
+                            props: { },
+                            state: [1, 2, 3, 4, 5],
+                            node: document.createElement('div'),
+                            children: [],
+                        },
+                        {
+                            name: 'div',
+                            props: { },
+                            state: 123,
+                            node: document.createElement('div'),
+                            children: [],
+                        },
+                    ],
+                },
+            ],
+            node: document.createElement('div'),
+        },
+    ],
+    props: undefined,
+    state: {},
+    node: null,
+}
