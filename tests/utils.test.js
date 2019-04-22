@@ -1,12 +1,11 @@
 import {
+    buildFragmentNodeArray,
     buildNodeTree,
     filterNodesBy,
     findInTree,
     findSelectorInTree,
-    getElementType,
     verifyIfArraysMatch,
-    match,
-    buildFragmentNodeArray,
+    verifyIfObjectsMatch,
 } from '../src/utils'
 import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState } from './__mocks__/vdom'
 
@@ -15,11 +14,6 @@ beforeAll(() => {
 })
 
 describe('utils', () => {
-    test('getElementType', () => {
-        expect(getElementType('test')).toBe('test')
-        expect(getElementType(function testFn() {})).toBe('testFn')
-    })
-
     describe('buildNodeTree', () => {
         it('should return empty tree', () => {
             expect(buildNodeTree()).toMatchObject({ children: [] })
@@ -232,14 +226,14 @@ describe('utils', () => {
         })
     })
 
-    describe('match', () => {
+    describe('verifyIfObjectsMatch', () => {
         it('should return false if objects do not match', () => {
             const o1 = { bar: true }
             const o2 = { bar: false }
 
-            expect(match(o1, o2)).toBeFalsy()
-            expect(match({ a: 1 }, {})).toBeFalsy()
-            expect(match({}, { a: 1 })).toBeTruthy()
+            expect(verifyIfObjectsMatch(o1, o2)).toBeFalsy()
+            expect(verifyIfObjectsMatch({ a: 1 }, {})).toBeFalsy()
+            expect(verifyIfObjectsMatch({}, { a: 1 })).toBeTruthy()
         })
 
         it('should do simple matches', () => {
@@ -255,7 +249,7 @@ describe('utils', () => {
                 { a: { bar: { foo: true } }, b: { bar: { foo: true } } },
             ]
 
-            matcher.forEach(m => expect(match(m.a, m.b)).toBeTruthy())
+            matcher.forEach(m => expect(verifyIfObjectsMatch(m.a, m.b)).toBeTruthy())
         })
 
         it('should work for insane deep values', () => {
@@ -269,8 +263,8 @@ describe('utils', () => {
                 foo: { bar: { abc: { maybe: { works: true } } } },
             }
 
-            expect(match(o1, o2)).toBeFalsy()
-            expect(match(o1, o3)).toBeTruthy()
+            expect(verifyIfObjectsMatch(o1, o2)).toBeFalsy()
+            expect(verifyIfObjectsMatch(o1, o3)).toBeTruthy()
         })
     })
 

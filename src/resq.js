@@ -2,6 +2,10 @@ import { filterNodesBy, findSelectorInTree, buildNodeTree } from './utils'
 
 class ReactSelectorQueryNodes extends Array {
     constructor(nodes) {
+        if (!nodes) {
+            nodes = []
+        }
+
         super(...nodes)
     }
 
