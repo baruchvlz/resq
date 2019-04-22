@@ -4,7 +4,7 @@ const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function isCompositeElement(type) {
+function isFunction(type) {
     return typeof type === 'function'
 }
 
@@ -12,15 +12,19 @@ function isHTMLOrText(node) {
     return node instanceof HTMLElement || node instanceof Text
 }
 
-export function getElementType(type) {
-    return isCompositeElement(type) ? type.name : type
+function getElementName(type) {
+    return isFunction(type) ? type.name : type
 }
 
 function isFragmentInstance(element) {
     return (element.children.length > 1)
 }
 
-export function findStateNode (element) {
+function isNativeObject(obj) {
+    return (typeof obj === 'object' && !isArray(obj))
+}
+
+function findStateNode (element) {
     if (isHTMLOrText(element.stateNode)) {
         return element.stateNode
     }
@@ -32,47 +36,6 @@ export function findStateNode (element) {
     return null
 }
 
-
-function isNativeObject(obj) {
-    return (typeof obj === 'object' && !isArray(obj))
-}
-
-export function verifyIfArraysMatch(arr1, arr2) {
-    if (!isArray(arr1) || !isArray(arr2)) {
-        return false
-    }
-
-    return arr1.some(r => arr2.includes(r))
-}
-
-/**
-  * @name match
-  * @param macther Object - this is the object that will be looped
-  * @param verify Object - this is the object to match against
-  * @return boolean
-  */
-export function match(matcher = {}, verify = {}) {
-    let results = []
-
-    if (!keys(matcher).length) {
-        return true
-    }
-
-    for (let k in matcher) {
-        if (verify.hasOwnProperty(k)) {
-            if (isNativeObject(matcher[k]) && isNativeObject(verify[k])) {
-                results = results.concat(match(matcher[k], verify[k]))
-            }
-
-            if (matcher[k] === verify[k] || verifyIfArraysMatch(matcher[k], verify[k])) {
-                results.push(verify)
-            }
-        }
-    }
-
-    return !!(results.filter(el => el).length)
-}
-
 /**
  * @name removeChildrenFromProps
  * @param Object | String
@@ -80,7 +43,7 @@ export function match(matcher = {}, verify = {}) {
  * @description Remove the `children` property from the props since they will be available
  *              in the node
  */
-export function removeChildrenFromProps(props) {
+function removeChildrenFromProps(props) {
     // if the props is a string, we can assume that it's just the text inside a html element
     if (!props || typeof props === 'string') {
         return props
@@ -94,6 +57,63 @@ export function removeChildrenFromProps(props) {
 }
 
 /**
+  * @name verifyIfArraysMatch
+  * @param macther Array - this is the Array that will be looped
+  * @param verify Array - this is the Array to match against
+  * @param exact - deep equal matcher
+  * @return boolean
+  */
+
+export function verifyIfArraysMatch(arr1, arr2, exact = false) {
+    if (!isArray(arr1) || !isArray(arr2)) {
+        return false
+    }
+
+    if (exact) {
+        if (arr1.length !== arr2.length) {
+            return false
+        }
+
+        return !(arr1.find(item => !arr2.includes(item)))
+    }
+
+    return arr1.some(item => arr2.includes(item))
+}
+
+/**
+  * @name verifyIfObjectsMatch
+  * @param macther Object - this is the object that will be looped
+  * @param verify Object - this is the object to match against
+  * @param exact - deep equal matcher
+  * @return boolean
+  */
+export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
+    let results = []
+
+    if (!keys(matcher).length) {
+        return true
+    }
+
+    if (exact) {
+        return deepEqual(matcher, verify)
+    }
+
+    keys(matcher).forEach((key) => {
+        if (verify.hasOwnProperty(key)) {
+            if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
+                results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
+            }
+
+            if (matcher[key] === verify[key] || verifyIfArraysMatch(matcher[key], verify[key])) {
+                results.push(verify)
+            }
+        }
+    })
+
+    return !!(results.filter(el => el).length)
+}
+
+/**
  * @name getElementState
  * @param Object
  * @return Object | undefined
@@ -101,7 +121,7 @@ export function removeChildrenFromProps(props) {
  *              using hooks store them in `memoizedState.baseState`
  */
 
-export function getElementState(elementState) {
+function getElementState(elementState) {
     if (!elementState) {
         return undefined
     }
@@ -140,19 +160,19 @@ export function buildFragmentNodeArray(tree) {
  */
 export function buildNodeTree(element) {
     let tree = { children: [] }
-    let elementCopy = Object.assign({}, element)
+
     if (!element) {
         return tree
     }
 
-    tree.name = getElementType(elementCopy.type)
-    tree.props = removeChildrenFromProps(elementCopy.memoizedProps)
-    tree.state = getElementState(elementCopy.memoizedState)
+    tree.name = getElementName(element.type)
+    tree.props = removeChildrenFromProps(element.memoizedProps)
+    tree.state = getElementState(element.memoizedState)
 
-    if (elementCopy.child) {
-        tree.children.push(elementCopy.child)
+    let { child } = element
 
-        let child = elementCopy.child
+    if (child) {
+        tree.children.push(child)
 
         while (child.sibling) {
             tree.children.push(child.sibling)
@@ -162,11 +182,11 @@ export function buildNodeTree(element) {
 
     tree.children = tree.children.map(child => buildNodeTree(child))
 
-    if (isCompositeElement(elementCopy.type) && isFragmentInstance(tree)) {
+    if (isFunction(element.type) && isFragmentInstance(tree)) {
         tree.node = buildFragmentNodeArray(tree)
         tree.isFragment = true
     } else {
-        tree.node = findStateNode(elementCopy)
+        tree.node = findStateNode(element)
     }
 
     return tree
@@ -181,21 +201,20 @@ export function buildNodeTree(element) {
  * @description Iterate over the tree param and return matches from the passed function
  */
 
-export function findInTree(tree, searchFn, selectFirst = false) {
+export function findInTree(stack, searchFn, selectFirst = false) {
     let returnArray = []
-    let stack = tree
 
     while (stack.length || (selectFirst && !returnArray.length)) {
-        const node = stack.shift()
+        const { children } = stack.shift()
 
-        if(node.children && node.children.length) {
-            for(let child of node.children) {
+        if(children && children.length) {
+            children.forEach((child) => {
                 if (searchFn(child)) {
                     returnArray.push(child)
                 }
 
                 stack.push(child)
-            }
+            })
         }
     }
 
@@ -216,7 +235,7 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
     let treeArray = [tree]
 
     selectors.forEach((selector) => {
-        treeArray = findInTree(treeArray, child => {
+        treeArray = findInTree(treeArray, (child) => {
             if (searchFn && typeof searchFn === 'function') {
                 return searchFn(child)
             }
@@ -232,20 +251,20 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
  * @name filterNodesBy
  * @param Array<Object>
  * @param String
- * @param Object
+ * @param Any
  * @return Array<Objects>
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes, key, obj, exact = false) {
-    const filtered = []
-
-    const iterator = el => {
-        if ((exact && deepEqual(obj, el[key])) ||  (!exact && match(obj, el[key]))) {
-            filtered.push(el)
-        }
+export function filterNodesBy(nodes, key, matcher, exact = false) {
+    if (isFunction(matcher)) {
+        // eslint-disable-next-line no-console
+        console.warn('Functions are not supported as filter matchers')
+        return []
     }
 
-    nodes.forEach(iterator)
-
-    return filtered
+    return nodes.filter(node => 
+        (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
+        (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
+        (node[key] === matcher)
+    ) 
 }

@@ -1,25 +1,19 @@
 import {
+    buildFragmentNodeArray,
     buildNodeTree,
     filterNodesBy,
     findInTree,
     findSelectorInTree,
-    getElementType,
     verifyIfArraysMatch,
-    match,
-    buildFragmentNodeArray,
+    verifyIfObjectsMatch,
 } from '../src/utils'
-import { tree, vdom, fragmentVDOM, fragmentTree } from './__mocks__/vdom'
+import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState } from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
 })
 
 describe('utils', () => {
-    test('getElementType', () => {
-        expect(getElementType('test')).toBe('test')
-        expect(getElementType(function testFn() {})).toBe('testFn')
-    })
-
     describe('buildNodeTree', () => {
         it('should return empty tree', () => {
             expect(buildNodeTree()).toMatchObject({ children: [] })
@@ -125,6 +119,7 @@ describe('utils', () => {
             expect(results.length).toBe(1)
             expect(results).toMatchObject(tree.children)
         })
+
         it('should strictly match objects when `exact` flag is true', () => {
             const nodes = findSelectorInTree(['TestWrapper', 'div'], tree)
             const results = filterNodesBy(
@@ -145,6 +140,66 @@ describe('utils', () => {
                 },
             ])
         })
+
+        it('should work for any type of state', () => {
+            const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
+            const arrayState = filterNodesBy(nodes, 'state', [1, 2, 3])
+            const numberState = filterNodesBy(nodes, 'state', 123)
+            const stringState = filterNodesBy(nodes, 'state', 'some state')
+            const booleanState = filterNodesBy(nodes, 'state', true)
+
+            expect(booleanState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop' },
+                    state: true,
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(arrayState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { },
+                    state: [1, 2, 3],
+                    node: document.createElement('div'),
+                    children: [],
+                },
+                {
+                    name: 'div',
+                    props: { },
+                    state: [1, 2, 3, 4, 5],
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(numberState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { },
+                    state: 123,
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+            expect(stringState).toMatchObject([
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop' },
+                    state: 'some state',
+                    node: document.createElement('div'),
+                    children: [],
+                },
+            ])
+        })
+
+        it('should not match functions', () => {
+            global.console.warn = jest.fn()
+            const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
+
+            expect(filterNodesBy(nodes, 'state', () => {})).toMatchObject([])
+            expect(global.console.warn).toHaveBeenCalled()
+        })
     })
 
     describe('verifyIfArraysMatch', () => {
@@ -163,16 +218,22 @@ describe('utils', () => {
             expect(verifyIfArraysMatch([1, 2, 3], [4, 5, 6])).toBeFalsy()
             expect(verifyIfArraysMatch(['a', 'b'], ['c', 'd'])).toBeFalsy()
         })
+
+        it('should exactly match arrays', () => {
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 3], true)).toBeTruthy()
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 4], true)).toBeFalsy()
+            expect(verifyIfArraysMatch([1, 2, 3], [1, 2, 3, 4, 5], true)).toBeFalsy()
+        })
     })
 
-    describe('match', () => {
+    describe('verifyIfObjectsMatch', () => {
         it('should return false if objects do not match', () => {
             const o1 = { bar: true }
             const o2 = { bar: false }
 
-            expect(match(o1, o2)).toBeFalsy()
-            expect(match({ a: 1 }, {})).toBeFalsy()
-            expect(match({}, { a: 1 })).toBeTruthy()
+            expect(verifyIfObjectsMatch(o1, o2)).toBeFalsy()
+            expect(verifyIfObjectsMatch({ a: 1 }, {})).toBeFalsy()
+            expect(verifyIfObjectsMatch({}, { a: 1 })).toBeTruthy()
         })
 
         it('should do simple matches', () => {
@@ -188,7 +249,7 @@ describe('utils', () => {
                 { a: { bar: { foo: true } }, b: { bar: { foo: true } } },
             ]
 
-            matcher.forEach(m => expect(match(m.a, m.b)).toBeTruthy())
+            matcher.forEach(m => expect(verifyIfObjectsMatch(m.a, m.b)).toBeTruthy())
         })
 
         it('should work for insane deep values', () => {
@@ -202,8 +263,8 @@ describe('utils', () => {
                 foo: { bar: { abc: { maybe: { works: true } } } },
             }
 
-            expect(match(o1, o2)).toBeFalsy()
-            expect(match(o1, o3)).toBeTruthy()
+            expect(verifyIfObjectsMatch(o1, o2)).toBeFalsy()
+            expect(verifyIfObjectsMatch(o1, o3)).toBeTruthy()
         })
     })
 
