@@ -1,20 +1,27 @@
 import ReactSelectorQuery from './src/resq'
 import { waitToLoadReact } from './src/waitToLoadReact'
+import { findReactInstance } from './src/utils'
 
-function doQuery(selector, method = 'find') {
+function doQuery(selector, method, element) {
     if (!global.isReactLoaded) {
         throw new Error('Could not find the root element of your application')
     }
 
-    return new ReactSelectorQuery(selector, global.rootReactElement)[method]()
+    let reactInstance = global.rootReactElement
+
+    if (element instanceof HTMLElement) {
+        reactInstance = findReactInstance(element)
+    }
+
+    return new ReactSelectorQuery(selector, reactInstance)[method]()
 }
 
-export function resq$(selector) {
-    return doQuery(selector)
+export function resq$(selector, element) {
+    return doQuery(selector, 'find', element)
 }
 
-export function resq$$(selector) {
-    return doQuery(selector, 'findAll')
+export function resq$$(selector, element) {
+    return doQuery(selector, 'findAll', element)
 }
 
 export { waitToLoadReact }

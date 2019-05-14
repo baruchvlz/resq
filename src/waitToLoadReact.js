@@ -1,7 +1,10 @@
+import { findReactInstance } from './utils'
+
 export function waitToLoadReact(timeout = 5000, rootElSelector) {
     if (global.isReactLoaded) {
         return Promise.resolve('React already loaded')
     }
+
     const findReactRoot = () => {
         const walker = document.createTreeWalker(document)
 
@@ -24,7 +27,7 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
 
             if (reactRoot) {
                 global.isReactLoaded = true
-                global.rootReactElement = reactRoot._reactRootContainer._internalRoot.current
+                global.rootReactElement = findReactInstance(reactRoot)
                 return resolve()
             }
             /* istanbul ignore next */

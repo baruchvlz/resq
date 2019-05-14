@@ -57,13 +57,33 @@ function removeChildrenFromProps(props) {
 }
 
 /**
+ * @name getElementState
+ * @param Object
+ * @return Object | undefined
+ * @description Class components store the state in `memoizedState`, but functional components
+ *              using hooks store them in `memoizedState.baseState`
+ */
+function getElementState(elementState) {
+    if (!elementState) {
+        return undefined
+    }
+
+    const { baseState } = elementState
+
+    if (baseState) {
+        return baseState
+    }
+
+    return elementState
+}
+
+/**
   * @name verifyIfArraysMatch
   * @param macther Array - this is the Array that will be looped
   * @param verify Array - this is the Array to match against
   * @param exact - deep equal matcher
   * @return boolean
   */
-
 export function verifyIfArraysMatch(arr1, arr2, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
@@ -113,27 +133,6 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
     return !!(results.filter(el => el).length)
 }
 
-/**
- * @name getElementState
- * @param Object
- * @return Object | undefined
- * @description Class components store the state in `memoizedState`, but functional components
- *              using hooks store them in `memoizedState.baseState`
- */
-
-function getElementState(elementState) {
-    if (!elementState) {
-        return undefined
-    }
-
-    const { baseState } = elementState
-
-    if (baseState) {
-        return baseState
-    }
-
-    return elementState
-}
 /**
  * @name buildFragmentNodeArray
  * @param Object
@@ -267,4 +266,16 @@ export function filterNodesBy(nodes, key, matcher, exact = false) {
         (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
         (node[key] === matcher)
     ) 
+}
+
+export function findReactInstance(element) {
+    if (element.hasOwnProperty('_reactRootContainer')) {
+        return element._reactRootContainer._internalRoot.current
+    }
+
+    const instanceId = Object.keys(element).find(key => key.startsWith('__reactInternalInstance'))
+
+    if (instanceId) {
+        return element[instanceId]
+    }
 }
