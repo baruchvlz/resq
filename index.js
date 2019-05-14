@@ -13,6 +13,10 @@ function doQuery(selector, method, element) {
         reactInstance = findReactInstance(element)
     }
 
+    if (!reactInstance) {
+        throw new Error('Could not find instance of React in given element')
+    }
+
     return new ReactSelectorQuery(selector, reactInstance)[method]()
 }
 
