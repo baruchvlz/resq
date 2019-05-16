@@ -6,6 +6,7 @@ import {
     findSelectorInTree,
     verifyIfArraysMatch,
     verifyIfObjectsMatch,
+    findReactInstance,
 } from '../src/utils'
 import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState } from './__mocks__/vdom'
 
@@ -281,6 +282,20 @@ describe('utils', () => {
                 document.createElement('div'),
                 document.createElement('div'),
             ])
+        })
+    })
+
+    describe('findReactInstance', () => {
+        it('should return instance of passed HTML has one', () => {
+            const element = {
+                __reactInternalInstance$test1234: true,
+            }
+
+            expect(findReactInstance(element)).toBeTruthy()
+        })
+
+        it('should return undefined if no instance is found', () => {
+            expect(findReactInstance(document.createElement('div'))).toBeFalsy()
         })
     })
 })

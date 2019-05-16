@@ -38,8 +38,8 @@ function findStateNode (element) {
 
 /**
  * @name removeChildrenFromProps
- * @param Object | String
- * @return Object | String
+ * @param {Object | String}
+ * @return {Object | String}
  * @description Remove the `children` property from the props since they will be available
  *              in the node
  */
@@ -57,13 +57,33 @@ function removeChildrenFromProps(props) {
 }
 
 /**
-  * @name verifyIfArraysMatch
-  * @param macther Array - this is the Array that will be looped
-  * @param verify Array - this is the Array to match against
-  * @param exact - deep equal matcher
-  * @return boolean
-  */
+ * @name getElementState
+ * @param {Object}
+ * @return {Object} | undefined
+ * @description Class components store the state in `memoizedState`, but functional components
+ *              using hooks store them in `memoizedState.baseState`
+ */
+function getElementState(elementState) {
+    if (!elementState) {
+        return undefined
+    }
 
+    const { baseState } = elementState
+
+    if (baseState) {
+        return baseState
+    }
+
+    return elementState
+}
+
+/**
+  * @name verifyIfArraysMatch
+  * @param {Array} macther - this is the Array that will be looped
+  * @param {Array} verify - this is the Array to match against
+  * @param {Boolean} exact - deep equal matcher
+  * @return {boolean}
+  */
 export function verifyIfArraysMatch(arr1, arr2, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
@@ -82,9 +102,9 @@ export function verifyIfArraysMatch(arr1, arr2, exact = false) {
 
 /**
   * @name verifyIfObjectsMatch
-  * @param macther Object - this is the object that will be looped
-  * @param verify Object - this is the object to match against
-  * @param exact - deep equal matcher
+  * @param {Object} macther - this is the object that will be looped
+  * @param {Object} verify - this is the object to match against
+  * @param {Boolean} exact - deep equal matcher
   * @return boolean
   */
 export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
@@ -114,30 +134,9 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
 }
 
 /**
- * @name getElementState
- * @param Object
- * @return Object | undefined
- * @description Class components store the state in `memoizedState`, but functional components
- *              using hooks store them in `memoizedState.baseState`
- */
-
-function getElementState(elementState) {
-    if (!elementState) {
-        return undefined
-    }
-
-    const { baseState } = elementState
-
-    if (baseState) {
-        return baseState
-    }
-
-    return elementState
-}
-/**
  * @name buildFragmentNodeArray
- * @param Object
- * @return Array<HTMLElement | empty>
+ * @param {Object}
+ * @return {Array<HTMLElement | empty>}
  * @description Creates an array of the tree's children HTML nodes
  */
 export function buildFragmentNodeArray(tree) {
@@ -146,8 +145,8 @@ export function buildFragmentNodeArray(tree) {
 
 /**
  * @name buildNodeTree
- * @param Object
- * @return Object
+ * @param {Object}
+ * @return {Object}
  * @description Build a node tree based on React virtual dom
  * @example
     {
@@ -194,10 +193,10 @@ export function buildNodeTree(element) {
 
 /**
  * @name findInTree
- * @param Object
- * @param Function
- * @param Boolean - default false
- * @return Array<Object>
+ * @param {Object}
+ * @param {Function}
+ * @param {Boolean} - default false
+ * @return {Array<Object>}
  * @description Iterate over the tree param and return matches from the passed function
  */
 
@@ -223,11 +222,11 @@ export function findInTree(stack, searchFn, selectFirst = false) {
 
 /**
  * @name findSelectorInTree
- * @param Array<String>
- * @param Object
- * @param Boolean - default false
- * @param Function
- * @return Object
+ * @param {Array<String>}
+ * @param {Object}
+ * @param {Boolean} - default false
+ * @param {Function}
+ * @return {Object}
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
  */
@@ -249,10 +248,10 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
 
 /**
  * @name filterNodesBy
- * @param Array<Object>
- * @param String
- * @param Any
- * @return Array<Objects>
+ * @param {Array<Object>}
+ * @param {String}
+ * @param {*}
+ * @return {Array<Objects>}
  * @description Filter nodes by deep matching the node[key] to the obj
  */
 export function filterNodesBy(nodes, key, matcher, exact = false) {
@@ -267,4 +266,21 @@ export function filterNodesBy(nodes, key, matcher, exact = false) {
         (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
         (node[key] === matcher)
     ) 
+}
+
+/**
+ * @name findReactInstance
+ * @param {Object} element
+ * @return {FiberNode} 
+ */
+export function findReactInstance(element) {
+    if (element.hasOwnProperty('_reactRootContainer')) {
+        return element._reactRootContainer._internalRoot.current
+    }
+
+    const instanceId = Object.keys(element).find(key => key.startsWith('__reactInternalInstance'))
+
+    if (instanceId) {
+        return element[instanceId]
+    }
 }
