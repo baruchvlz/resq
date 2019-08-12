@@ -101,6 +101,76 @@ export const tree = {
     node: null,
 }
 
+export const treeWithStyledComponents = {
+    name: undefined,
+    children: [
+        {
+            name: 'TestWrapper',
+            props: { myProps: 'test prop' },
+            state: { initialized: true },
+            children: [
+                {
+                    name: {
+                        componentStyle: {
+                            rules: [],
+                            isStatic: false,
+                            componentId: 'styled__Button-sc-1fuu6r1-1',
+                        },
+                        displayName: 'styled__Button',
+                        styledComponentId: 'styled__Button-sc-1fuu6r1-1',
+                    },
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: null,
+                    children: [
+                        {
+                            name: 'button',
+                            props: {},
+                            state: {},
+                            node: document.createElement('button'),
+                            children: [],
+                        },
+                    ],
+                },
+                {
+                    name: {
+                        componentStyle: {
+                            rules: [],
+                            isStatic: false,
+                            componentId: 'styled__Div-sc-1fuu6r1-1',
+                        },
+                        displayName: 'styled__Div',
+                        styledComponentId: 'styled__Div-sc-1fuu6r1-1',
+                    },
+                    props: { testProp: 'another prop' },
+                    state: {},
+                    node: null,
+                    children: [
+                        {
+                            name: 'wrapper',
+                            props: {},
+                            state: {},
+                            node: null,
+                            children: [
+                                {
+                                    name: 'div',
+                                    props: {},
+                                    state: {},
+                                    node: document.createElement('div'),
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+            node: document.createElement('div'),
+        },
+    ],
+    props: undefined,
+    state: {},
+    node: null,
+}
+
 export const fragmentVDOM = {
     type: undefined,
     child: {
