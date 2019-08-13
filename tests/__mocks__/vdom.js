@@ -157,6 +157,14 @@ export const treeWithStyledComponents = {
                                     props: {},
                                     state: {},
                                     node: document.createElement('div'),
+                                    children: [
+                                        {
+                                            name: 'MyButton',
+                                            props: {someProp: 'some prop value'},
+                                            state: {},
+                                            node: document.createElement('button'),
+                                        },
+                                    ],
                                 },
                             ],
                         },

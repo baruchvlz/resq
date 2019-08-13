@@ -224,7 +224,7 @@ export function findInTree(stack, searchFn, selectFirst = false) {
             children.forEach((child) => {
                 if (searchFn(child)) {
                     if (!child.node && Array.isArray(child.children)) {
-                        child.node = findNode(child.children)
+                        child.node = findNode(child.children.concat([]))
                     }
 
                     returnArray.push(child)
