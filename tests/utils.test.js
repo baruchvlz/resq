@@ -8,7 +8,7 @@ import {
     verifyIfObjectsMatch,
     findReactInstance,
 } from '../src/utils'
-import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState } from './__mocks__/vdom'
+import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState, treeWithStyledComponents } from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
@@ -110,6 +110,107 @@ describe('utils', () => {
                 },
             ])
         })
+    })
+
+    it('should correctly find a styled component', () => {
+        const results = findSelectorInTree(
+            ['styled__Button'],
+            treeWithStyledComponents,
+        )
+
+        expect(results.length).toBe(1)
+        expect(results).toMatchObject([
+            {
+                name: {
+                    componentStyle: {
+                        rules: [],
+                        isStatic: false,
+                        componentId: 'styled__Button-sc-1fuu6r1-1',
+                    },
+                    displayName: 'styled__Button',
+                    styledComponentId: 'styled__Button-sc-1fuu6r1-1',
+                },
+                props: { testProp: 'some prop' },
+                state: {},
+                node: document.createElement('button'),
+            },
+        ])
+    })
+
+    it('should correctly find a nested styled component', () => {
+        const results = findSelectorInTree(
+            ['TestWrapper', 'styled__Button'],
+            treeWithStyledComponents,
+        )
+
+        expect(results.length).toBe(1)
+        expect(results).toMatchObject([
+            {
+                name: {
+                    componentStyle: {
+                        rules: [],
+                        isStatic: false,
+                        componentId: 'styled__Button-sc-1fuu6r1-1',
+                    },
+                    displayName: 'styled__Button',
+                    styledComponentId: 'styled__Button-sc-1fuu6r1-1',
+                },
+                props: { testProp: 'some prop' },
+                state: {},
+                node: document.createElement('div'),
+            },
+        ])
+    })
+
+    it('should correctly find a child of styled component', () => {
+        const results = findSelectorInTree(
+            ['TestWrapper', 'styled__Div', 'MyButton'],
+            treeWithStyledComponents,
+        )
+
+        expect(results.length).toBe(1)
+        expect(results).toMatchObject([
+            {
+                name: 'MyButton',
+                props: { someProp: 'some prop value' },
+                state: {},
+                node: document.createElement('button'),
+            },
+        ])
+    })
+
+    it('should correctly find a nested node', () => {
+        const results = findSelectorInTree(
+            ['styled__Div'],
+            treeWithStyledComponents,
+        )
+
+        expect(results.length).toBe(1)
+        expect(results).toMatchObject([
+            {
+                name: {
+                    componentStyle: {
+                        rules: [],
+                        isStatic: false,
+                        componentId: 'styled__Div-sc-1fuu6r1-1',
+                    },
+                    displayName: 'styled__Div',
+                    styledComponentId: 'styled__Div-sc-1fuu6r1-1',
+                },
+                props: { testProp: 'another prop' },
+                state: {},
+                node: document.createElement('div'),
+            },
+        ])
+    })
+
+    it('should correctly not find a node', () => {
+        const results = findSelectorInTree(
+            ['AnyComponentDoesnotExist'],
+            treeWithStyledComponents,
+        )
+
+        expect(results.length).toBe(0)
     })
 
     describe('filterNodesBy', () => {

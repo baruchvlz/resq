@@ -1,7 +1,7 @@
 import deepEqual from 'fast-deep-equal'
 
-const { isArray } = Array
-const { keys } = Object
+const {isArray} = Array
+const {keys} = Object
 
 // One liner helper functions
 function isFunction(type) {
@@ -24,7 +24,7 @@ function isNativeObject(obj) {
     return (typeof obj === 'object' && !isArray(obj))
 }
 
-function findStateNode (element) {
+function findStateNode(element) {
     if (isHTMLOrText(element.stateNode)) {
         return element.stateNode
     }
@@ -49,7 +49,7 @@ function removeChildrenFromProps(props) {
         return props
     }
 
-    const returnProps = { ...props }
+    const returnProps = {...props}
 
     delete returnProps.children
 
@@ -68,7 +68,7 @@ function getElementState(elementState) {
         return undefined
     }
 
-    const { baseState } = elementState
+    const {baseState} = elementState
 
     if (baseState) {
         return baseState
@@ -78,12 +78,12 @@ function getElementState(elementState) {
 }
 
 /**
-  * @name verifyIfArraysMatch
-  * @param {Array} macther - this is the Array that will be looped
-  * @param {Array} verify - this is the Array to match against
-  * @param {Boolean} exact - deep equal matcher
-  * @return {boolean}
-  */
+ * @name verifyIfArraysMatch
+ * @param {Array} macther - this is the Array that will be looped
+ * @param {Array} verify - this is the Array to match against
+ * @param {Boolean} exact - deep equal matcher
+ * @return {boolean}
+ */
 export function verifyIfArraysMatch(arr1, arr2, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
@@ -101,12 +101,12 @@ export function verifyIfArraysMatch(arr1, arr2, exact = false) {
 }
 
 /**
-  * @name verifyIfObjectsMatch
-  * @param {Object} macther - this is the object that will be looped
-  * @param {Object} verify - this is the object to match against
-  * @param {Boolean} exact - deep equal matcher
-  * @return boolean
-  */
+ * @name verifyIfObjectsMatch
+ * @param {Object} macther - this is the object that will be looped
+ * @param {Object} verify - this is the object to match against
+ * @param {Boolean} exact - deep equal matcher
+ * @return boolean
+ */
 export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
     let results = []
 
@@ -149,7 +149,7 @@ export function buildFragmentNodeArray(tree) {
  * @return {Object}
  * @description Build a node tree based on React virtual dom
  * @example
-    {
+ {
       name: 'MyComponent',
       props: { hello: 'world' },
       children: [],
@@ -158,7 +158,7 @@ export function buildFragmentNodeArray(tree) {
     }
  */
 export function buildNodeTree(element) {
-    let tree = { children: [] }
+    let tree = {children: []}
 
     if (!element) {
         return tree
@@ -168,7 +168,7 @@ export function buildNodeTree(element) {
     tree.props = removeChildrenFromProps(element.memoizedProps)
     tree.state = getElementState(element.memoizedState)
 
-    let { child } = element
+    let {child} = element
 
     if (child) {
         tree.children.push(child)
@@ -191,6 +191,20 @@ export function buildNodeTree(element) {
     return tree
 }
 
+function findNode(children) {
+    while (children.length) {
+        const child = children.shift()
+
+        if (child.node) {
+            return child.node
+        }
+
+        if (child.children && Array.isArray(child.children)) {
+            children.push(...child.children)
+        }
+    }
+}
+
 /**
  * @name findInTree
  * @param {Object}
@@ -203,12 +217,16 @@ export function buildNodeTree(element) {
 export function findInTree(stack, searchFn, selectFirst = false) {
     let returnArray = []
 
-    while (stack.length || (selectFirst && !returnArray.length)) {
-        const { children } = stack.shift()
+    while (stack.length) {
+        const {children} = stack.shift()
 
-        if(children && children.length) {
+        if (children && Array.isArray(children)) {
             children.forEach((child) => {
                 if (searchFn(child)) {
+                    if (!child.node && Array.isArray(child.children)) {
+                        child.node = findNode(child.children.concat([]))
+                    }
+
                     returnArray.push(child)
                 }
 
@@ -231,19 +249,21 @@ export function findInTree(stack, searchFn, selectFirst = false) {
  *              node tree
  */
 export function findSelectorInTree(selectors, tree, selectFirst = false, searchFn) {
-    let treeArray = [tree]
+    return selectors.reduce((res, selector) => {
+        return res.concat(findInTree(
+            res,
+            searchFn && typeof searchFn === 'function' ? searchFn : (child) => {
+                if (typeof child.name === 'string') {
+                    return child.name === selector
+                } else if (child.name !== null && typeof child.name === 'object') {
+                    return child.name.displayName === selector
+                }
 
-    selectors.forEach((selector) => {
-        treeArray = findInTree(treeArray, (child) => {
-            if (searchFn && typeof searchFn === 'function') {
-                return searchFn(child)
-            }
-
-            return child.name === selector
-        }, selectFirst)
-    })
-
-    return treeArray
+                return false
+            },
+            selectFirst
+        ))
+    }, [tree])
 }
 
 /**
@@ -261,17 +281,17 @@ export function filterNodesBy(nodes, key, matcher, exact = false) {
         return []
     }
 
-    return nodes.filter(node => 
+    return nodes.filter(node =>
         (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
         (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
         (node[key] === matcher)
-    ) 
+    )
 }
 
 /**
  * @name findReactInstance
  * @param {Object} element
- * @return {FiberNode} 
+ * @return {FiberNode}
  */
 export function findReactInstance(element) {
     if (element.hasOwnProperty('_reactRootContainer')) {
