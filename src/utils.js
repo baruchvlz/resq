@@ -238,7 +238,14 @@ export function findInTree(stack, searchFn) {
     return returnArray
 }
 
-function matchSelector(selector, nodeName) {
+/**
+ * @name matchSelector
+ * @param {string} selector
+ * @param {string} nodeName
+ * @return {boolean}
+ * @description Check is node name match to selector
+ */
+export function matchSelector(selector, nodeName) {
     const escapeRegex = (nodeName) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
     return new RegExp('^' + selector.split('*').map(escapeRegex).join('.+') + '$').test(nodeName)
 }

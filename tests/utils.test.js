@@ -7,6 +7,7 @@ import {
     verifyIfArraysMatch,
     verifyIfObjectsMatch,
     findReactInstance,
+    matchSelector,
 } from '../src/utils'
 
 import {
@@ -219,6 +220,70 @@ describe('utils', () => {
             )
 
             expect(results.length).toBe(0)
+        })
+    })
+
+    describe('matchSelector', () => {
+        [
+            {
+                selector: 'simpleNodeName',
+                nodeName: 'simpleNodeName',
+                match: true,
+            },
+            {
+                selector: 'simpleNode',
+                nodeName: 'simpleNodeName',
+                match: false,
+            },
+            {
+                selector: 'simpleNodeName',
+                nodeName: 'simpleNode',
+                match: false,
+            },
+            {
+                selector: 'simpleWildcardNode*',
+                nodeName: 'simpleWildcardNode',
+                match: false,
+            },
+            {
+                selector: 'simpleWildcardNode*',
+                nodeName: 'simpleWildcardNodeName',
+                match: true,
+            },
+            {
+                selector: 'simple*Node*',
+                nodeName: 'simpleWildcardNodeName',
+                match: true,
+            },
+            {
+                selector: '*Node*',
+                nodeName: 'simpleWildcardNodeName',
+                match: true,
+            },
+            {
+                selector: 'node_with(special_characters)',
+                nodeName: 'node_with(special_characters)',
+                match: true,
+            },
+            {
+                selector: 'node_with*',
+                nodeName: 'node_with(special_characters)',
+                match: true,
+            },
+            {
+                selector: '*',
+                nodeName: 'node_with(special_characters)',
+                match: true,
+            },
+        ].forEach(({match, nodeName, selector}) => {
+            it(`Should${match ? '' : 'n\'t'} match node "${nodeName}" to selector "${selector}"`, () => {
+                if (match) {
+                    expect(matchSelector(selector, nodeName)).toBeTruthy()
+
+                } else {
+                    expect(matchSelector(selector, nodeName)).toBeFalsy()
+                }
+            })
         })
     })
 
