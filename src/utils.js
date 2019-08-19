@@ -238,6 +238,11 @@ export function findInTree(stack, searchFn) {
     return returnArray
 }
 
+function matchSelector(selector, nodeName) {
+    const escapeRegex = (nodeName) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
+    return new RegExp('^' + selector.split('*').map(escapeRegex).join('.+') + '$').test(nodeName)
+}
+
 /**
  * @name findSelectorInTree
  * @param {Array<String>}
@@ -254,9 +259,9 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
             res,
             searchFn && typeof searchFn === 'function' ? searchFn : (child) => {
                 if (typeof child.name === 'string') {
-                    return child.name === selector
+                    return matchSelector(selector, child.name)
                 } else if (child.name !== null && typeof child.name === 'object') {
-                    return child.name.displayName === selector
+                    return matchSelector(selector, child.name.displayName)
                 }
 
                 return false

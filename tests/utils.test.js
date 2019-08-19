@@ -8,6 +8,7 @@ import {
     verifyIfObjectsMatch,
     findReactInstance,
 } from '../src/utils'
+
 import {
     tree,
     vdom,
@@ -15,6 +16,7 @@ import {
     fragmentTree,
     treeWithNonObjectState,
     treeWithStyledComponents,
+    treeForWildcards,
 } from './__mocks__/vdom'
 
 beforeAll(() => {
@@ -117,107 +119,250 @@ describe('utils', () => {
                 },
             ])
         })
-    })
 
-    it('should correctly find a styled component', () => {
-        const results = findSelectorInTree(
-            ['styled__Button'],
-            treeWithStyledComponents,
-        )
+        it('should correctly find a styled component', () => {
+            const results = findSelectorInTree(
+                ['styled__Button'],
+                treeWithStyledComponents,
+            )
 
-        expect(results.length).toBe(1)
-        expect(results).toMatchObject([
-            {
-                name: {
-                    componentStyle: {
-                        rules: [],
-                        isStatic: false,
-                        componentId: 'styled__Button-sc-1fuu6r1-1',
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: {
+                        componentStyle: {
+                            rules: [],
+                            isStatic: false,
+                            componentId: 'styled__Button-sc-1fuu6r1-1',
+                        },
+                        displayName: 'styled__Button',
+                        styledComponentId: 'styled__Button-sc-1fuu6r1-1',
                     },
-                    displayName: 'styled__Button',
-                    styledComponentId: 'styled__Button-sc-1fuu6r1-1',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('button'),
                 },
-                props: { testProp: 'some prop' },
-                state: {},
-                node: document.createElement('button'),
-            },
-        ])
-    })
+            ])
+        })
 
-    it('should correctly find a nested styled component', () => {
-        const results = findSelectorInTree(
-            ['TestWrapper', 'styled__Button'],
-            treeWithStyledComponents,
-        )
+        it('should correctly find a nested styled component', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', 'styled__Button'],
+                treeWithStyledComponents,
+            )
 
-        expect(results.length).toBe(1)
-        expect(results).toMatchObject([
-            {
-                name: {
-                    componentStyle: {
-                        rules: [],
-                        isStatic: false,
-                        componentId: 'styled__Button-sc-1fuu6r1-1',
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: {
+                        componentStyle: {
+                            rules: [],
+                            isStatic: false,
+                            componentId: 'styled__Button-sc-1fuu6r1-1',
+                        },
+                        displayName: 'styled__Button',
+                        styledComponentId: 'styled__Button-sc-1fuu6r1-1',
                     },
-                    displayName: 'styled__Button',
-                    styledComponentId: 'styled__Button-sc-1fuu6r1-1',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('div'),
                 },
-                props: { testProp: 'some prop' },
-                state: {},
-                node: document.createElement('div'),
-            },
-        ])
-    })
+            ])
+        })
 
-    it('should correctly find a child of styled component', () => {
-        const results = findSelectorInTree(
-            ['TestWrapper', 'styled__Div', 'MyButton'],
-            treeWithStyledComponents,
-        )
+        it('should correctly find a child of styled component', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', 'styled__Div', 'MyButton'],
+                treeWithStyledComponents,
+            )
 
-        expect(results.length).toBe(1)
-        expect(results).toMatchObject([
-            {
-                name: 'MyButton',
-                props: { someProp: 'some prop value' },
-                state: {},
-                node: document.createElement('button'),
-            },
-        ])
-    })
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: 'MyButton',
+                    props: { someProp: 'some prop value' },
+                    state: {},
+                    node: document.createElement('button'),
+                },
+            ])
+        })
 
-    it('should correctly find a nested node', () => {
-        const results = findSelectorInTree(
-            ['styled__Div'],
-            treeWithStyledComponents,
-        )
+        it('should correctly find a nested node', () => {
+            const results = findSelectorInTree(
+                ['styled__Div'],
+                treeWithStyledComponents,
+            )
 
-        expect(results.length).toBe(1)
-        expect(results).toMatchObject([
-            {
-                name: {
-                    componentStyle: {
-                        rules: [],
-                        isStatic: false,
-                        componentId: 'styled__Div-sc-1fuu6r1-1',
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: {
+                        componentStyle: {
+                            rules: [],
+                            isStatic: false,
+                            componentId: 'styled__Div-sc-1fuu6r1-1',
+                        },
+                        displayName: 'styled__Div',
+                        styledComponentId: 'styled__Div-sc-1fuu6r1-1',
                     },
-                    displayName: 'styled__Div',
-                    styledComponentId: 'styled__Div-sc-1fuu6r1-1',
+                    props: { testProp: 'another prop' },
+                    state: {},
+                    node: document.createElement('div'),
                 },
-                props: { testProp: 'another prop' },
-                state: {},
-                node: document.createElement('div'),
-            },
-        ])
+            ])
+        })
+
+        it('should correctly not find a node', () => {
+            const results = findSelectorInTree(
+                ['AnyComponentDoesnotExist'],
+                treeWithStyledComponents,
+            )
+
+            expect(results.length).toBe(0)
+        })
     })
 
-    it('should correctly not find a node', () => {
-        const results = findSelectorInTree(
-            ['AnyComponentDoesnotExist'],
-            treeWithStyledComponents,
-        )
+    describe('findSelectorInTree with wildcards', () => {
+        it('should correctly find nodes by wildcard in the end of selector', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', 'Test*'],
+                treeForWildcards,
+            )
 
-        expect(results.length).toBe(0)
+            expect(results.length).toBe(2)
+            expect(results).toMatchObject([
+                {
+                    name: 'TestName',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'TestName-2',
+                    props: { testProp: 'some prop 1' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+            ])
+        })
+
+        it('should correctly find nodes by wildcard in the start of selector', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', '*Test'],
+                treeForWildcards,
+            )
+
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: 'NameTest',
+                    props: { testProp: 'some prop 2' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
+                },
+            ])
+        })
+
+        it('should correctly find nodes by wildcard in the middle of selector', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', '*am*'],
+                treeForWildcards,
+            )
+
+            expect(results.length).toBe(3)
+            expect(results).toMatchObject([
+                {
+                    name: 'TestName',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'TestName-2',
+                    props: { testProp: 'some prop 1' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'NameTest',
+                    props: { testProp: 'some prop 2' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
+                },
+            ])
+        })
+
+        it('should correctly find all nodes by wildcards', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', '*'],
+                treeForWildcards,
+            )
+
+            expect(results.length).toBe(5)
+            expect(results).toMatchObject([
+                {
+                    name: 'TestName',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'TestName-2',
+                    props: { testProp: 'some prop 1' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'NameTest',
+                    props: { testProp: 'some prop 2' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'Nested',
+                    props: { testProp: 'some prop 3' },
+                    state: { },
+                    node: document.createElement('div'),
+                    children: [
+                        {
+                            name: 'div',
+                            props: { testProp: 'some prop 4' },
+                            node: document.createElement('div'),
+                        },
+                    ],
+                },
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop 4' },
+                    node: document.createElement('div'),
+                },
+            ])
+        })
+
+        it('should correctly find nodes behind wildcard node', () => {
+            const results = findSelectorInTree(
+                ['TestWrapper', '*', 'div'],
+                treeForWildcards,
+            )
+
+            expect(results.length).toBe(1)
+            expect(results).toMatchObject([
+                {
+                    name: 'div',
+                    props: { testProp: 'some prop 4' },
+                    node: document.createElement('div'),
+                },
+            ])
+        })
     })
 
     describe('filterNodesBy', () => {
