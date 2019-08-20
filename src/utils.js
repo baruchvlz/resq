@@ -49,7 +49,7 @@ function removeChildrenFromProps(props) {
         return props
     }
 
-    const returnProps = {...props}
+    const returnProps = { ...props }
 
     delete returnProps.children
 
@@ -68,7 +68,7 @@ function getElementState(elementState) {
         return undefined
     }
 
-    const {baseState} = elementState
+    const { baseState } = elementState
 
     if (baseState) {
         return baseState
@@ -158,7 +158,7 @@ export function buildFragmentNodeArray(tree) {
     }
  */
 export function buildNodeTree(element) {
-    let tree = {children: []}
+    let tree = { children: [] }
 
     if (!element) {
         return tree
@@ -168,7 +168,7 @@ export function buildNodeTree(element) {
     tree.props = removeChildrenFromProps(element.memoizedProps)
     tree.state = getElementState(element.memoizedState)
 
-    let {child} = element
+    let { child } = element
 
     if (child) {
         tree.children.push(child)
@@ -214,7 +214,7 @@ function findNode(children) {
  * @description Iterate over the tree param and return matches from the passed function
  */
 
-export function findInTree(stack, searchFn, selectFirst = false) {
+export function findInTree(stack, searchFn) {
     let returnArray = []
 
     while (stack.length) {

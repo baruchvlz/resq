@@ -8,7 +8,14 @@ import {
     verifyIfObjectsMatch,
     findReactInstance,
 } from '../src/utils'
-import { tree, vdom, fragmentVDOM, fragmentTree, treeWithNonObjectState, treeWithStyledComponents } from './__mocks__/vdom'
+import {
+    tree,
+    vdom,
+    fragmentVDOM,
+    fragmentTree,
+    treeWithNonObjectState,
+    treeWithStyledComponents,
+} from './__mocks__/vdom'
 
 beforeAll(() => {
     global.isReactLoaded = true
