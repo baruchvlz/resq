@@ -35,10 +35,11 @@ interface RESQNode {
 
 ```
 
-* [Basic Usage](https://github.com/baruchvlz/resq/blob/master/README.md#basic-usage)
-* [Async selection](https://github.com/baruchvlz/resq/blob/readme/README.md#async-selection)
-* [Styled Components & MaterialUI](https://github.com/baruchvlz/resq/blob/readme/README.md#styled-components--materialui)
-* [Filtering selection](https://github.com/baruchvlz/resq/blob/readme/README.md#filtering-selection)
+* [Basic Usage](README.md#basic-usage)
+* [Wildcard selection](README.md#wildcard-selection)
+* [Async selection](README.md#async-selection)
+* [Styled Components & MaterialUI](README.md#styled-components--materialui)
+* [Filtering selection](README.md#filtering-selection)
 
 #### Basic Usage
 Take this React App:
@@ -76,9 +77,80 @@ resq$('MyComponent', root);
 */
 ```
 
+#### Wildcard selection
+
+You can select your components by partial name use a wildcard selectors:
+
+```jsx
+// imports
+
+const MyComponent = () => (
+    <div>My Component</div>
+)
+
+const MyAnotherComponent = () => (
+    <div>My Another Component</div>
+)
+
+const App = () => (
+    <div>
+        <MyComponent />
+        <MyAnotherComponent />
+    </div>
+)
+
+ReactDOM.render(<App />, document.getElementById('root'))
+```
+
+Selecting both components by wildcard:
+```js
+import { resq$$ } from 'resq'
+
+const root = document.getElementById('root');
+resq$$('My*', root);
+/*
+[
+    {
+        name: 'MyComponent',
+        node: <div />,
+        isFragment: false,
+        state: {},
+        props: {},
+        children: []
+    },
+    {
+        name: 'MyAnotherComponent',
+        node: <div />,
+        isFragment: false,
+        state: {},
+        props: {},
+        children: []
+    },
+]
+*/
+```
+
+Selecting `MyAnotherComponent` by wildcard:
+```js
+import { resq$ } from 'resq'
+
+const root = document.getElementById('root');
+resq$('My*Component', root);
+/*
+{
+    name: 'MyAnotherComponent',
+    node: <div />,
+    isFragment: false,
+    state: {},
+    props: {},
+    children: []
+}
+*/
+```
+
 #### Async selection
 
-Going by the same example as in [basic usage](), if you don't want to pass the root element to the function, you can do it this way:
+Going by the same example as in [basic usage](README.md#basic-usage), if you don't want to pass the root element to the function, you can do it this way:
 
 ```js
 import { resq$, waitToLoadReact } from 'resq'

@@ -101,6 +101,57 @@ export const tree = {
     node: null,
 }
 
+export const treeForWildcards = {
+    name: undefined,
+    children: [
+        {
+            name: 'TestWrapper',
+            props: { myProps: 'test prop' },
+            state: { initialized: true },
+            children: [
+                {
+                    name: 'TestName',
+                    props: { testProp: 'some prop' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'TestName-2',
+                    props: { testProp: 'some prop 1' },
+                    state: {},
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'NameTest',
+                    props: { testProp: 'some prop 2' },
+                    state: { testState: true },
+                    node: document.createElement('span'),
+                    children: [],
+                },
+                {
+                    name: 'Nested',
+                    props: { testProp: 'some prop 3' },
+                    state: { },
+                    node: document.createElement('div'),
+                    children: [
+                        {
+                            name: 'div',
+                            props: { testProp: 'some prop 4' },
+                            node: document.createElement('div'),
+                        },
+                    ],
+                },
+            ],
+            node: document.createElement('div'),
+        },
+    ],
+    props: undefined,
+    state: {},
+    node: null,
+}
+
 export const treeWithStyledComponents = {
     name: undefined,
     children: [
