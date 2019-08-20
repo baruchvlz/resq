@@ -39,8 +39,6 @@ interface RESQNode {
 * [Async selection](https://github.com/baruchvlz/resq/blob/readme/README.md#async-selection)
 * [Styled Components & MaterialUI](https://github.com/baruchvlz/resq/blob/readme/README.md#styled-components--materialui)
 * [Filtering selection](https://github.com/baruchvlz/resq/blob/readme/README.md#filtering-selection)
-* [Selecting React.Fragments](https://github.com/baruchvlz/resq/blob/readme/README.md#selecting-reactfragment)
-* [resq$ vs resq$$](https://github.com/baruchvlz/resq/blob/readme/README.md#resq-vs-resq)
 
 #### Basic Usage
 Take this React App:
