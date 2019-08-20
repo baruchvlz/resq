@@ -276,14 +276,15 @@ describe('utils', () => {
                 match: true,
             },
         ].forEach(({match, nodeName, selector}) => {
-            it(`Should${match ? '' : 'n\'t'} match node "${nodeName}" to selector "${selector}"`, () => {
-                if (match) {
-                    expect(matchSelector(selector, nodeName)).toBeTruthy()
+            it(`Should${match ? '' : 'n\'t'} match node "${nodeName}" to selector "${selector}"`,
+                () => {
+                    if (match) {
+                        expect(matchSelector(selector, nodeName)).toBeTruthy()
 
-                } else {
-                    expect(matchSelector(selector, nodeName)).toBeFalsy()
-                }
-            })
+                    } else {
+                        expect(matchSelector(selector, nodeName)).toBeFalsy()
+                    }
+                })
         })
     })
 
