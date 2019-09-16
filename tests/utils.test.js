@@ -267,9 +267,9 @@ describe('utils', () => {
                 match: true,
             },
             {
-                selector: 'special_characters',
+                selector: 'special_characters*',
                 nodeName: 'node_with(special_characters)',
-                match: true,
+                match: false,
             },
             {
                 selector: '*',
