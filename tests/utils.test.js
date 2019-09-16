@@ -8,6 +8,7 @@ import {
     verifyIfObjectsMatch,
     findReactInstance,
     matchSelector,
+    stripHOCsFromName,
 } from '../src/utils'
 
 import {
@@ -261,12 +262,12 @@ describe('utils', () => {
                 match: true,
             },
             {
-                selector: 'node_with(special_characters)',
+                selector: 'special_characters',
                 nodeName: 'node_with(special_characters)',
                 match: true,
             },
             {
-                selector: 'node_with*',
+                selector: 'special_characters',
                 nodeName: 'node_with(special_characters)',
                 match: true,
             },
@@ -615,6 +616,19 @@ describe('utils', () => {
 
         it('should return undefined if no instance is found', () => {
             expect(findReactInstance(document.createElement('div'))).toBeFalsy()
+        })
+    })
+
+    describe('stripHOCsFromName', () => {
+        it('should correctly strip HoC', () => {
+            expect(stripHOCsFromName('Test(HoC(MyComponent)')).toBe('MyComponent')
+        })
+        it('should throw if passing a non string', () => {
+            try {
+                stripHOCsFromName({})
+            } catch (e) {
+                expect(e).toBeTruthy()
+            }
         })
     })
 })
