@@ -3,7 +3,7 @@ import { waitToLoadReact } from './src/waitToLoadReact'
 import { findReactInstance } from './src/utils'
 
 function doQuery(selector, method, element) {
-    if (!global.isReactLoaded) {
+    if (!element && !global.isReactLoaded) {
         throw new Error('Could not find the root element of your application')
     }
 
