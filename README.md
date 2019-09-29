@@ -1,4 +1,4 @@
-# resq (REact Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg) [![Build Status](https://travis-ci.org/baruchvlz/resq.svg?branch=master)](https://travis-ci.org/baruchvlz/resq) [![codecov](https://codecov.io/gh/baruchvlz/resq/branch/master/graph/badge.svg)](https://codecov.io/gh/baruchvlz/resq)
+# resq (React Element Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg) [![Build Status](https://travis-ci.org/baruchvlz/resq.svg?branch=master)](https://travis-ci.org/baruchvlz/resq) [![codecov](https://codecov.io/gh/baruchvlz/resq/branch/master/graph/badge.svg)](https://codecov.io/gh/baruchvlz/resq)
 
 ## Requirements
 
@@ -21,7 +21,7 @@ $ yarn add resq
 To get the most out of the library, we recommend you use React Dev Tools to verify the component names you want to select. Granted for basic usage you don't need this as long as you know the component name beforehand, but for Styled components and MaterialUI components it will be of great help.
 
 
-#### Return object
+#### Type definition
 ```typescript
 
 interface RESQNode {
@@ -32,6 +32,9 @@ interface RESQNode {
     props: {},
     children: RESQNode[]
 }
+
+resq$(selector: string, element?: HTMLElement): RESQNode
+resq$$(selector: string, element?: HTMLElement): Array<RESQNode>
 
 ```
 
