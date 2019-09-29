@@ -238,24 +238,6 @@ export function findInTree(stack, searchFn) {
     return returnArray
 }
 
-export function stripHOCsFromName(name) {
-    if (!name || typeof name !== 'string') {
-        throw new Error('Missing or wrong type for "name" in stripHOCsFromName')
-    }
-
-    const splitParenthesis = name.split('(')
-
-    if (splitParenthesis.length === 1) {
-        return name
-    }
-
-    return name
-        .split('(')
-        .filter(s => s.indexOf(')') > -1)[0]
-        .replace(/\)*/gmi, '')
-        .trim()
-}
-
 /**
  * @name matchSelector
  * @param {string} selector
@@ -264,11 +246,8 @@ export function stripHOCsFromName(name) {
  * @description Check is node name match to selector
  */
 export function matchSelector(selector, nodeName) {
-    const strippedName = stripHOCsFromName(nodeName)
-    const escapeStr = (name) => name.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
-    const regex = new RegExp('^' + selector.split('*').map(escapeStr).join('.+') + '$')
-
-    return regex.test(strippedName)
+    const escapeRegex = (nodeName) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
+    return new RegExp('^' + selector.split('*').map(escapeRegex).join('.+') + '$').test(nodeName)
 }
 
 /**
