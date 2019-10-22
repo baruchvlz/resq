@@ -261,12 +261,12 @@ describe('utils', () => {
                 match: true,
             },
             {
-                selector: 'node_with(special_characters)',
+                selector: 'special_characters',
                 nodeName: 'node_with(special_characters)',
                 match: true,
             },
             {
-                selector: 'node_with*',
+                selector: 'special_chara*',
                 nodeName: 'node_with(special_characters)',
                 match: true,
             },
