@@ -37,13 +37,15 @@ function findStateNode(element) {
 }
 
 function stripHoCFromName(componentName) {
-    const splitName = componentName.split('(')
+    if (componentName) {
+        const splitName = componentName.split('(')
 
-    if (splitName.length === 1) {
-        return componentName
+        if (splitName.length === 1) {
+            return componentName
+        }
+
+        return splitName.find(e => e.includes(')')).replace(/\)*/g, '')
     }
-
-    return splitName.find(e => e.includes(')')).replace(/\)*/g, '')
 }
 
 /**

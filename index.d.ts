@@ -2,7 +2,7 @@ type NotFunc<T> = Exclude<T, Function>
 
 declare namespace RESQ {
     interface RESQNode {
-        name: 'MyComponent',
+        name: string,
         node: HTMLElement | null,
         isFragment: boolean,
         state: NotFunc<any>,
@@ -11,13 +11,13 @@ declare namespace RESQ {
         private _nodes: Array<RESQ>
     }
 
-    type waitToLoadReact = (timeInMs: number) => Promise
+    type waitToLoadReact = (timeInMs?: number, rootElSelector?: string) => Promise<null | string>
     type resq$ = (selector: string, element?: HTMLElement) => RESQNode
     type resq$$ = (selector: string, element?: HTMLElement) => Array<RESQNode>
 }
 
 declare var resq$: RESQ.resq$
-declare var resq$$: RESQ.resq$
+declare var resq$$: RESQ.resq$$
 declare module "resq" {
     export = RESQ
 }
