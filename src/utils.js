@@ -36,7 +36,7 @@ function findStateNode(element) {
     return null
 }
 
-function stripHoCFromName(componentName) {
+export function stripHoCFromName(componentName) {
     if (componentName) {
         const splitName = componentName.split('(')
 

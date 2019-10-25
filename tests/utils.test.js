@@ -8,6 +8,7 @@ import {
     verifyIfObjectsMatch,
     findReactInstance,
     matchSelector,
+    stripHoCFromName,
 } from '../src/utils'
 
 import {
@@ -615,6 +616,12 @@ describe('utils', () => {
 
         it('should return undefined if no instance is found', () => {
             expect(findReactInstance(document.createElement('div'))).toBeFalsy()
+        })
+    })
+
+    describe('stripHoCFromName', () => {
+        it('should not do anyting if component name is missing', () => {
+            expect(stripHoCFromName()).toBe(undefined)
         })
     })
 })
