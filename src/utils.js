@@ -36,6 +36,18 @@ function findStateNode(element) {
     return null
 }
 
+export function stripHoCFromName(componentName) {
+    if (componentName) {
+        const splitName = componentName.split('(')
+
+        if (splitName.length === 1) {
+            return componentName
+        }
+
+        return splitName.find(e => e.includes(')')).replace(/\)*/g, '')
+    }
+}
+
 /**
  * @name removeChildrenFromProps
  * @param {Object | String}
@@ -246,8 +258,12 @@ export function findInTree(stack, searchFn) {
  * @description Check is node name match to selector
  */
 export function matchSelector(selector, nodeName) {
+    const strippedName = stripHoCFromName(nodeName)
     const escapeRegex = (nodeName) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
-    return new RegExp('^' + selector.split('*').map(escapeRegex).join('.+') + '$').test(nodeName)
+
+    return new RegExp('^' + selector.split('*')
+        .map(escapeRegex).join('.+') + '$')
+        .test(strippedName)
 }
 
 /**

@@ -41,7 +41,6 @@ resq$$(selector: string, element?: HTMLElement): Array<RESQNode>
 * [Basic Usage](README.md#basic-usage)
 * [Wildcard selection](README.md#wildcard-selection)
 * [Async selection](README.md#async-selection)
-* [Styled Components & MaterialUI](README.md#styled-components--materialui)
 * [Filtering selection](README.md#filtering-selection)
 
 #### Basic Usage
@@ -171,38 +170,7 @@ async function getReactElement(name) {
 getReactElement('MyComponent')
 ```
 
-#### Styled Components & MaterialUI
-For selecting Styled components or MaterialUI components, we **strongly** recommend you use React DevTools to see the component structure in your browser in order to more easily understand the name of the components once the libraries compile them.
 
-Example app:
-
-```jsx
-// imports
-const App = () => (
-  <Container>
-      <Paper>
-          <Box component="span">
-            <Link>tick</Link>
-          </Box>
-      </Paper>
-    </Container>
-)
-
-ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <App/>
-  </ThemeProvider>,
-  document.querySelector('#root')
-)
-```
-
-To select the `Box` component:
-
-```js
-import { resq$ } from 'resq'
-
-resq$('Styled(MuiBox)', document.querySelector('#root'))
-```
 #### Filtering selection
 
 You can filter your selections `byState` or `byProps`. These are methods attached to the RESQNode return objects.
