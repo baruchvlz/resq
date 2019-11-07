@@ -8,7 +8,7 @@ declare namespace RESQ {
         state: NotFunc<any>,
         props: {},
         children: RESQNode[]
-        private _nodes: Array<RESQ>
+        _nodes: Array<RESQNode>
     }
 
     type waitToLoadReact = (timeInMs?: number, rootElSelector?: string) => Promise<null | string>
