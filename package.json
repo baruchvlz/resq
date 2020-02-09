@@ -20,7 +20,8 @@
         "url": "https://github.com/baruchvlz/resq"
     },
     "files": [
-        "dist/index.js"
+        "dist/index.js",
+        "index.d.ts"
     ],
     "devDependencies": {
         "@babel/cli": "7.2.3",
