@@ -30,3 +30,4 @@ babel/
 .theia
 
 /test-demo
+package-lock.json
