@@ -1,13 +1,17 @@
+import { getGlobalThis } from '@offirmo/globalthis-ponyfill'
+
 import ReactSelectorQuery from './src/resq'
 import { waitToLoadReact } from './src/waitToLoadReact'
 import { findReactInstance } from './src/utils'
 
+const globalThis = getGlobalThis()
+
 function doQuery(selector, method, element) {
-    if (!element && !global.isReactLoaded) {
+    if (!element && !globalThis.isReactLoaded) {
         throw new Error('Could not find the root element of your application')
     }
 
-    let reactInstance = global.rootReactElement
+    let reactInstance = globalThis.rootReactElement
 
     if (element instanceof HTMLElement) {
         reactInstance = findReactInstance(element)

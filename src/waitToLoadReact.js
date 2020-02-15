@@ -1,7 +1,11 @@
+import { getGlobalThis } from '@offirmo/globalthis-ponyfill'
+
 import { findReactInstance } from './utils'
 
+const globalThis = getGlobalThis()
+
 export function waitToLoadReact(timeout = 5000, rootElSelector) {
-    if (global.isReactLoaded) {
+    if (globalThis.isReactLoaded) {
         return Promise.resolve('React already loaded')
     }
 
@@ -26,8 +30,8 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
             const reactRoot = findReactRoot()
 
             if (reactRoot) {
-                global.isReactLoaded = true
-                global.rootReactElement = findReactInstance(reactRoot)
+                globalThis.isReactLoaded = true
+                globalThis.rootReactElement = findReactInstance(reactRoot)
                 return resolve()
             }
             /* istanbul ignore next */

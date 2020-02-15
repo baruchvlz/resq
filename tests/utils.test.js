@@ -1,3 +1,5 @@
+import { getGlobalThis } from '@offirmo/globalthis-ponyfill'
+
 import {
     buildFragmentNodeArray,
     buildNodeTree,
@@ -21,8 +23,10 @@ import {
     treeForWildcards,
 } from './__mocks__/vdom'
 
+const globalThis = getGlobalThis()
+
 beforeAll(() => {
-    global.isReactLoaded = true
+    globalThis.isReactLoaded = true
 })
 
 describe('utils', () => {
@@ -515,11 +519,11 @@ describe('utils', () => {
         })
 
         it('should not match functions', () => {
-            global.console.warn = jest.fn()
+            globalThis.console.warn = jest.fn()
             const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
 
             expect(filterNodesBy(nodes, 'state', () => {})).toMatchObject([])
-            expect(global.console.warn).toHaveBeenCalled()
+            expect(globalThis.console.warn).toHaveBeenCalled()
         })
     })
 
