@@ -131,7 +131,7 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
     }
 
     keys(matcher).forEach((key) => {
-        if (verify.hasOwnProperty(key)) {
+        if (verify !== null && verify.hasOwnProperty(key)) {
             if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
                 results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
             }
