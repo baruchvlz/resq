@@ -127,7 +127,7 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
     }
 
     if (verify === null) {
-        return false;
+        return false
     }
 
     if (exact) {
