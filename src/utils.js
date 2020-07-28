@@ -126,6 +126,10 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
         return true
     }
 
+    if (verify === null) {
+        return false
+    }
+
     if (exact) {
         return deepEqual(matcher, verify)
     }
