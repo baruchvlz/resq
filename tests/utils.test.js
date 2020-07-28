@@ -558,15 +558,15 @@ describe('utils', () => {
         })
 
         it('should return false if verify is null', () => {
-            const m1 = { };
-            const m2 = { bar: true };
-            const v1 = null;
-            const v2 = { bar: true };
+            const m1 = { }
+            const m2 = { bar: true }
+            const v1 = null
+            const v2 = { bar: true }
 
-            expect(verifyIfObjectsMatch(m2, v1)).toBeFalsy();
-            expect(verifyIfObjectsMatch(m2, v2)).toBeTruthy();
-            expect(verifyIfObjectsMatch(m1, v2)).toBeTruthy();
-            expect(verifyIfObjectsMatch(m1, v1)).toBeTruthy();
+            expect(verifyIfObjectsMatch(m2, v1)).toBeFalsy()
+            expect(verifyIfObjectsMatch(m2, v2)).toBeTruthy()
+            expect(verifyIfObjectsMatch(m1, v2)).toBeTruthy()
+            expect(verifyIfObjectsMatch(m1, v1)).toBeTruthy()
         })
 
         it('should do simple matches', () => {
