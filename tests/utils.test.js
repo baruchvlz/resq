@@ -599,6 +599,15 @@ describe('utils', () => {
             expect(verifyIfObjectsMatch(o1, o2)).toBeFalsy()
             expect(verifyIfObjectsMatch(o1, o3)).toBeTruthy()
         })
+
+        it('should match all values', () => {
+            const m1 = { a: 123, b: 'abc' }
+            const m2 = { a: 123, b: 'def' }
+            const v = { a: 123, b: 'abc', c: true }
+
+            expect(verifyIfObjectsMatch(m1, v)).toBeTruthy()
+            expect(verifyIfObjectsMatch(m2, v)).toBeFalsy()
+        })
     })
 
     describe('buildFragmentNodeArray', () => {
