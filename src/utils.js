@@ -126,7 +126,7 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
         return true
     }
 
-    if (verify === null) {
+    if (verify === null || !keys(verify).length) {
         return false
     }
 
@@ -134,19 +134,19 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
         return deepEqual(matcher, verify)
     }
 
-    keys(matcher).forEach((key) => {
-        if (verify.hasOwnProperty(key)) {
-            if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
-                results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
-            }
+    const matchingKeys = keys(matcher).filter(key => keys(verify).includes(key))
 
-            if (matcher[key] === verify[key] || verifyIfArraysMatch(matcher[key], verify[key])) {
-                results.push(verify)
-            }
+    matchingKeys.forEach((key) => {
+        if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
+            results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
+        }
+
+        if (matcher[key] === verify[key] || verifyIfArraysMatch(matcher[key], verify[key])) {
+            results.push(verify)
         }
     })
 
-    return !!(results.filter(el => el).length)
+    return results.filter(el => el).length === matchingKeys.length
 }
 
 /**
