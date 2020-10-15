@@ -1,7 +1,7 @@
 import deepEqual from 'fast-deep-equal'
 
-const {isArray} = Array
-const {keys} = Object
+const { isArray } = Array
+const { keys } = Object
 
 // One liner helper functions
 function isFunction(type) {
@@ -146,7 +146,7 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
         }
     })
 
-    return results.filter(el => el).length === matchingKeys.length
+    return results.length > 0 && results.filter(el => el).length === matchingKeys.length
 }
 
 /**
@@ -234,7 +234,7 @@ export function findInTree(stack, searchFn) {
     let returnArray = []
 
     while (stack.length) {
-        const {children} = stack.shift()
+        const { children } = stack.shift()
 
         if (children && Array.isArray(children)) {
             children.forEach((child) => {
