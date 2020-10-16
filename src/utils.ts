@@ -4,27 +4,27 @@ const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function isFunction(type) {
+function isFunction(type: any) {
     return typeof type === 'function'
 }
 
-function isHTMLOrText(node) {
+function isHTMLOrText(node: any) {
     return node instanceof HTMLElement || node instanceof Text
 }
 
-function getElementName(type) {
+function getElementName(type: any) {
     return isFunction(type) ? type.name : type
 }
 
-function isFragmentInstance(element) {
+function isFragmentInstance(element: any) {
     return (element.children.length > 1)
 }
 
-function isNativeObject(obj) {
+function isNativeObject(obj: any) {
     return (typeof obj === 'object' && !isArray(obj))
 }
 
-function findStateNode(element) {
+function findStateNode(element: any) {
     if (isHTMLOrText(element.stateNode)) {
         return element.stateNode
     }
@@ -36,7 +36,7 @@ function findStateNode(element) {
     return null
 }
 
-export function stripHoCFromName(componentName) {
+export function stripHoCFromName(componentName: any) {
     if (componentName) {
         const splitName = componentName.split('(')
 
@@ -44,7 +44,7 @@ export function stripHoCFromName(componentName) {
             return componentName
         }
 
-        return splitName.find(e => e.includes(')')).replace(/\)*/g, '')
+        return splitName.find((e: any) => e.includes(')')).replace(/\)*/g, '')
     }
 }
 
@@ -55,7 +55,7 @@ export function stripHoCFromName(componentName) {
  * @description Remove the `children` property from the props since they will be available
  *              in the node
  */
-function removeChildrenFromProps(props) {
+function removeChildrenFromProps(props: any) {
     // if the props is a string, we can assume that it's just the text inside a html element
     if (!props || typeof props === 'string') {
         return props
@@ -75,7 +75,7 @@ function removeChildrenFromProps(props) {
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
  */
-function getElementState(elementState) {
+function getElementState(elementState: any) {
     if (!elementState) {
         return undefined
     }
@@ -96,7 +96,7 @@ function getElementState(elementState) {
  * @param {Boolean} exact - deep equal matcher
  * @return {boolean}
  */
-export function verifyIfArraysMatch(arr1, arr2, exact = false) {
+export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
     }
@@ -106,9 +106,11 @@ export function verifyIfArraysMatch(arr1, arr2, exact = false) {
             return false
         }
 
-        return !(arr1.find(item => !arr2.includes(item)))
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'find' does not exist on type 'any[]'.
+        return !(arr1.find((item: any) => !arr2.includes(item)))
     }
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'includes' does not exist on type 'any[]'... Remove this comment to see the full error message
     return arr1.some(item => arr2.includes(item))
 }
 
@@ -120,7 +122,7 @@ export function verifyIfArraysMatch(arr1, arr2, exact = false) {
  * @return boolean
  */
 export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
-    let results = []
+    let results: any = []
 
     if (!keys(matcher).length) {
         return true
@@ -134,18 +136,23 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
         return deepEqual(matcher, verify)
     }
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'includes' does not exist on type 'string... Remove this comment to see the full error message
     const matchingKeys = keys(matcher).filter(key => keys(verify).includes(key))
 
     matchingKeys.forEach((key) => {
+        // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
         if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
+            // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
             results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
         }
 
+        // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
         if (matcher[key] === verify[key] || verifyIfArraysMatch(matcher[key], verify[key])) {
             results.push(verify)
         }
     })
 
+    // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'el' implicitly has an 'any' type.
     return results.length > 0 && results.filter(el => el).length === matchingKeys.length
 }
 
@@ -155,8 +162,8 @@ export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
  * @return {Array<HTMLElement | empty>}
  * @description Creates an array of the tree's children HTML nodes
  */
-export function buildFragmentNodeArray(tree) {
-    return tree.children.map(child => child.node).filter(child => !!child)
+export function buildFragmentNodeArray(tree: any) {
+    return tree.children.map((child: any) => child.node).filter((child: any) => !!child)
 }
 
 /**
@@ -173,41 +180,50 @@ export function buildFragmentNodeArray(tree) {
       isFragment: false,
     }
  */
-export function buildNodeTree(element) {
+export function buildNodeTree(element: any) {
     let tree = { children: [] }
 
     if (!element) {
         return tree
     }
 
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'name' does not exist on type '{ children... Remove this comment to see the full error message
     tree.name = getElementName(element.type)
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'props' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.props = removeChildrenFromProps(element.memoizedProps)
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'state' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.state = getElementState(element.memoizedState)
 
     let { child } = element
 
     if (child) {
+        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
         tree.children.push(child)
 
         while (child.sibling) {
+            // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
             tree.children.push(child.sibling)
             child = child.sibling
         }
     }
 
+    // @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: never[]; }' is not assignable to... Remove this comment to see the full error message
     tree.children = tree.children.map(child => buildNodeTree(child))
 
     if (isFunction(element.type) && isFragmentInstance(tree)) {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = buildFragmentNodeArray(tree)
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'isFragment' does not exist on type '{ ch... Remove this comment to see the full error message
         tree.isFragment = true
     } else {
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = findStateNode(element)
     }
 
     return tree
 }
 
-function findNode(children) {
+function findNode(children: any) {
     while (children.length) {
         const child = children.shift()
 
@@ -230,8 +246,8 @@ function findNode(children) {
  * @description Iterate over the tree param and return matches from the passed function
  */
 
-export function findInTree(stack, searchFn) {
-    let returnArray = []
+export function findInTree(stack: any, searchFn: any) {
+    let returnArray: any = []
 
     while (stack.length) {
         const { children } = stack.shift()
@@ -261,9 +277,9 @@ export function findInTree(stack, searchFn) {
  * @return {boolean}
  * @description Check is node name match to selector
  */
-export function matchSelector(selector, nodeName) {
+export function matchSelector(selector: any, nodeName: any) {
     const strippedName = stripHoCFromName(nodeName)
-    const escapeRegex = (nodeName) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
+    const escapeRegex = (nodeName: any) => nodeName.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')
 
     return new RegExp('^' + selector.split('*')
         .map(escapeRegex).join('.+') + '$')
@@ -280,11 +296,11 @@ export function matchSelector(selector, nodeName) {
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
  */
-export function findSelectorInTree(selectors, tree, selectFirst = false, searchFn) {
-    return selectors.reduce((res, selector) => {
+export function findSelectorInTree(selectors: any, tree: any, selectFirst = false, searchFn: any) {
+    return selectors.reduce((res: any, selector: any) => {
         return res.concat(findInTree(
             res,
-            searchFn && typeof searchFn === 'function' ? searchFn : (child) => {
+            searchFn && typeof searchFn === 'function' ? searchFn : (child: any) => {
                 if (typeof child.name === 'string') {
                     return matchSelector(selector, child.name)
                 } else if (child.name !== null && typeof child.name === 'object') {
@@ -293,6 +309,7 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
 
                 return false
             },
+            // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 3.
             selectFirst
         ))
     }, [tree])
@@ -306,17 +323,16 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
  * @return {Array<Objects>}
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes, key, matcher, exact = false) {
+export function filterNodesBy(nodes: any, key: any, matcher: any, exact = false) {
     if (isFunction(matcher)) {
         // eslint-disable-next-line no-console
         console.warn('Functions are not supported as filter matchers')
         return []
     }
 
-    return nodes.filter(node =>
-        (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
-        (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
-        (node[key] === matcher)
+    return nodes.filter((node: any) => (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
+    (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
+    (node[key] === matcher)
     )
 }
 
@@ -325,12 +341,13 @@ export function filterNodesBy(nodes, key, matcher, exact = false) {
  * @param {Object} element
  * @return {FiberNode}
  */
-export function findReactInstance(element) {
+export function findReactInstance(element: any) {
     if (element.hasOwnProperty('_reactRootContainer')) {
         return element._reactRootContainer._internalRoot.current
     }
 
-    const instanceId = Object.keys(element).find(key => key.startsWith('__reactInternalInstance'))
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'find' does not exist on type 'string[]'.
+    const instanceId = Object.keys(element).find((key: any) => key.startsWith('__reactInternalInstance'))
 
     if (instanceId) {
         return element[instanceId]
