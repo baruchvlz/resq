@@ -217,3 +217,15 @@ console.log(filtered)
 */
 
 ```
+
+**Deep Matching with `exact` flag**
+
+If you are in need of filtering `byProps` or `byState` and require the filter to match exactly every property and value in the object (or nested objects), you can pass the `exact` flag to the function:
+
+```js
+import { resq$ } from 'resq'
+
+const root = document.getElementById('root')
+const myComponent = resq$('MyComponent', root)
+const filtered = myComponent.byProps({ someBooleanProp: true }, { exact: true })
+```
