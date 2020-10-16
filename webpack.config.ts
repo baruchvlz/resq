@@ -1,12 +1,9 @@
-// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const path = require('path')
 
-// @ts-expect-error ts-migrate(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
 module.exports = {
     mode: 'production',
-    entry: './index.js',
+    entry: './index.ts',
     output: {
-        // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name '__dirname'.
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
         library: ['window', 'resq'],
@@ -15,13 +12,13 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.ts?$/,
+                use: 'ts-loader',
                 exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-
-                },
             },
         ],
     },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    }
 }
