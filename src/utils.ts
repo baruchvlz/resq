@@ -106,11 +106,9 @@ export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
             return false
         }
 
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'find' does not exist on type 'any[]'.
         return !(arr1.find((item: any) => !arr2.includes(item)))
     }
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'includes' does not exist on type 'any[]'... Remove this comment to see the full error message
     return arr1.some(item => arr2.includes(item))
 }
 
@@ -136,17 +134,13 @@ export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: 
         return deepEqual(matcher, verify)
     }
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'includes' does not exist on type 'string... Remove this comment to see the full error message
     const matchingKeys = keys(matcher).filter(key => keys(verify).includes(key))
 
     matchingKeys.forEach((key) => {
-        // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
         if (isNativeObject(matcher[key]) && isNativeObject(verify[key])) {
-            // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
             results = results.concat(verifyIfObjectsMatch(matcher[key], verify[key]))
         }
 
-        // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
         if (matcher[key] === verify[key] || verifyIfArraysMatch(matcher[key], verify[key])) {
             results.push(verify)
         }
@@ -346,7 +340,6 @@ export function findReactInstance(element: any) {
         return element._reactRootContainer._internalRoot.current
     }
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'find' does not exist on type 'string[]'.
     const instanceId = Object.keys(element).find((key: any) => key.startsWith('__reactInternalInstance'))
 
     if (instanceId) {
