@@ -121,7 +121,7 @@ export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
  * @param {Boolean} exact - deep equal matcher
  * @return boolean
  */
-export function verifyIfObjectsMatch(matcher = {}, verify = {}, exact = false) {
+export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: any | null = {}, exact = false) {
     let results: any = []
 
     if (!keys(matcher).length) {
