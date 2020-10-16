@@ -1,6 +1,6 @@
 module.exports = {
   coverageDirectory: "coverage",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },
