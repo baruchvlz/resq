@@ -22,7 +22,7 @@ import {
 } from './__mocks__/vdom'
 
 beforeAll(() => {
-    (global as any).isReactLoaded = true
+    window.isReactLoaded = true
 })
 
 describe('utils', () => {

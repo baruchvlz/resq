@@ -1,8 +1,7 @@
 import { findReactInstance } from './utils'
 
 export function waitToLoadReact(timeout = 5000, rootElSelector: any) {
-    // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'global'.
-    if (global.isReactLoaded) {
+    if (window.isReactLoaded) {
         return Promise.resolve('React already loaded')
     }
 
@@ -27,10 +26,8 @@ export function waitToLoadReact(timeout = 5000, rootElSelector: any) {
             const reactRoot = findReactRoot()
 
             if (reactRoot) {
-                // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'global'.
-                global.isReactLoaded = true
-                // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'global'.
-                global.rootReactElement = findReactInstance(reactRoot)
+                window.isReactLoaded = true
+                window.rootReactElement = findReactInstance(reactRoot)
                 return resolve()
             }
             /* istanbul ignore next */
