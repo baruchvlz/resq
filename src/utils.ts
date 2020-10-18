@@ -36,7 +36,7 @@ function findStateNode(element: any) {
     return null
 }
 
-export function stripHoCFromName(componentName: any) {
+export function stripHoCFromName(componentName?: string) {
     if (componentName) {
         const splitName = componentName.split('(')
 
@@ -44,7 +44,7 @@ export function stripHoCFromName(componentName: any) {
             return componentName
         }
 
-        return splitName.find((e: any) => e.includes(')')).replace(/\)*/g, '')
+        return splitName.find((e: any) => e.includes(')'))?.replace(/\)*/g, '')
     }
 }
 
@@ -277,7 +277,7 @@ export function matchSelector(selector: any, nodeName: any) {
 
     return new RegExp('^' + selector.split('*')
         .map(escapeRegex).join('.+') + '$')
-        .test(strippedName)
+        .test(strippedName!)
 }
 
 /**

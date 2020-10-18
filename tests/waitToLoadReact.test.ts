@@ -3,18 +3,21 @@ import { waitToLoadReact } from '../src/waitToLoadReact'
 import { vdom } from './__mocks__/vdom'
 
 afterEach(() => {
-    (global as any).isReactLoaded = false;
-    (global as any).document = {};
-    (global as any).document.createTreeWalker = () => ({
+    window.isReactLoaded = false;
+    (window as any).document = {};
+
+    window.document.createTreeWalker = () => ({
+        // @ts-expect-error
         currentNode: {},
+        // @ts-expect-error
         nextNode: () => false,
     });
-    global.document.querySelector = () => {};
+    window.document.querySelector = () => {};
 })
 
 describe('waitToLoadReact', () => {
     it ('should return if react is already loaded', async () => {
-        (global as any).isReactLoaded = true
+        window.isReactLoaded = true
 
         // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
         const res = await waitToLoadReact(10)
@@ -22,28 +25,29 @@ describe('waitToLoadReact', () => {
     })
 
     it('should find react root element', async () => {
-        (global as any).document.createTreeWalker = () => ({
+        window.document.createTreeWalker = () => ({
             currentNode: {
+                // @ts-expect-error
                 _reactRootContainer: { _internalRoot: { current: vdom } },
             },
+            // @ts-expect-error
             nextNode: () => true,
         })
         // @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
         await waitToLoadReact(10)
 
-        expect((global as any).rootReactElement).toMatchObject(vdom)
+        expect(window.rootReactElement).toMatchObject(vdom)
     })
 
     it('should find react root element if user pases selector', async () => {
-        global.document.querySelector = jest.fn().mockReturnValue({
+        window.document.querySelector = jest.fn().mockReturnValue({
             _reactRootContainer: { _internalRoot: { current: vdom } },
         })
 
         await waitToLoadReact(10, '#test')
 
-        expect(global.document.querySelector).toHaveBeenCalledWith('#test')
-        // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
-        expect(global.rootReactElement).toMatchObject(vdom)
+        expect(window.document.querySelector).toHaveBeenCalledWith('#test')
+        expect(window.rootReactElement).toMatchObject(vdom)
     })
 
     it('should timeout if React app is not found', () => {

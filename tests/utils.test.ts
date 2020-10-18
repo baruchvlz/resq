@@ -28,7 +28,7 @@ beforeAll(() => {
 describe('utils', () => {
     describe('buildNodeTree', () => {
         it('should return empty tree', () => {
-            // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
+            // @ts-expect-error
             expect(buildNodeTree()).toMatchObject({ children: [] })
         })
 
@@ -530,12 +530,12 @@ describe('utils', () => {
         })
 
         it('should not match functions', () => {
-            global.console.warn = jest.fn()
+            window.console.warn = jest.fn()
             // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
 
             expect(filterNodesBy(nodes, 'state', () => {})).toMatchObject([])
-            expect(global.console.warn).toHaveBeenCalled()
+            expect(window.console.warn).toHaveBeenCalled()
         })
     })
 
@@ -657,8 +657,7 @@ describe('utils', () => {
     })
 
     describe('stripHoCFromName', () => {
-        it('should not do anyting if component name is missing', () => {
-            // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'expect'.
+        it('should not do anything if component name is missing', () => {
             expect(stripHoCFromName()).toBe(undefined)
         })
     })
