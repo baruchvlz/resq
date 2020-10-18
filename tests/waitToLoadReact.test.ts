@@ -4,15 +4,15 @@ import { vdom } from './__mocks__/vdom'
 
 afterEach(() => {
     window.isReactLoaded = false;
-    (window as any).document = {};
+    (window as any).document = {}
 
     window.document.createTreeWalker = () => ({
         // @ts-expect-error
         currentNode: {},
         // @ts-expect-error
         nextNode: () => false,
-    });
-    window.document.querySelector = () => {};
+    })
+    window.document.querySelector = () => {}
 })
 
 describe('waitToLoadReact', () => {
