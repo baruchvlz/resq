@@ -1,7 +1,7 @@
 import { findReactInstance } from './utils'
 
-export function waitToLoadReact(timeout = 5000, rootElSelector) {
-    if (global.isReactLoaded) {
+export function waitToLoadReact(timeout = 5000, rootElSelector: any) {
+    if (window.isReactLoaded) {
         return Promise.resolve('React already loaded')
     }
 
@@ -19,15 +19,15 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
         }
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: any, reject: any) => {
         let timedout = false
 
         const tryToFindApp = () => {
             const reactRoot = findReactRoot()
 
             if (reactRoot) {
-                global.isReactLoaded = true
-                global.rootReactElement = findReactInstance(reactRoot)
+                window.isReactLoaded = true
+                window.rootReactElement = findReactInstance(reactRoot)
                 return resolve()
             }
             /* istanbul ignore next */
