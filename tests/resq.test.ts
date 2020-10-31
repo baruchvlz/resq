@@ -1,16 +1,16 @@
-import ReactSelectorQuery from '../src/resq'
+import { ReactSelectorQuery } from '../src/resq'
 
 import { vdom } from './__mocks__/vdom'
 
 describe('ReactSelectorQuery', () => {
     it('should build', () => {
-        const resq = new ReactSelectorQuery('TestWrapper', vdom)
+        const resq = new ReactSelectorQuery('TestWrapper', vdom as any)
 
         expect(resq).toBeTruthy()
     })
 
     it('should select one element', () => {
-        const resq = new ReactSelectorQuery('TestWrapper span', vdom)
+        const resq = new ReactSelectorQuery('TestWrapper span', vdom as any)
         const $ = resq.find()
 
         expect($).toMatchObject(
@@ -24,7 +24,7 @@ describe('ReactSelectorQuery', () => {
     })
 
     it('should select multiple elements', () => {
-        const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+        const resq = new ReactSelectorQuery('TestWrapper div', vdom as any)
         const $$ = resq.findAll()
 
         expect($$).toMatchObject([
@@ -47,7 +47,7 @@ describe('ReactSelectorQuery', () => {
 
     describe('byProps', () => {
         it('should return the first instance of component filtered by prop', () => {
-            const resq = new ReactSelectorQuery('TestWrapper span', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper span', vdom as any)
             const $ = resq.find()
             const result = $.byProps({ testProp: 'some prop' })
 
@@ -62,7 +62,7 @@ describe('ReactSelectorQuery', () => {
         })
 
         it('should return all components filtered by prop', () => {
-            const resq = new ReactSelectorQuery('TestWrapper span', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper span', vdom as any)
             const $$ = resq.findAll()
 
             const result = $$.byProps({ testProp: 'some prop' })
@@ -87,7 +87,7 @@ describe('ReactSelectorQuery', () => {
 
     describe('byState', () => {
         it('should return the first instance of component filtered by state', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper div', vdom as any)
             const $ = resq.find()
             const result = $.byState({ testState: true })
 
@@ -100,7 +100,7 @@ describe('ReactSelectorQuery', () => {
         })
 
         it('should return all components filtered by state', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper div', vdom as any)
             const $$ = resq.findAll()
             const result = $$.byState({ testState: true })
 
@@ -120,7 +120,7 @@ describe('ReactSelectorQuery', () => {
 
     describe('should be able to use both filtering functions', () => {
         it('should filter for one instance', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper div', vdom as any)
             const $ = resq.find()
             const result = $.byProps({}).byState({ testState: true })
 
@@ -133,7 +133,7 @@ describe('ReactSelectorQuery', () => {
         })
 
         it('should filter for multiple instances', () => {
-            const resq = new ReactSelectorQuery('TestWrapper div', vdom)
+            const resq = new ReactSelectorQuery('TestWrapper div', vdom as any)
             const $$ = resq.findAll()
             const result = $$.byState({ testState: true }).byProps({})
 

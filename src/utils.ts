@@ -1,18 +1,19 @@
 import deepEqual from 'fast-deep-equal'
+import { RESQNode } from '../types'
 
 const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function isFunction(type: any) {
+function isFunction(type: Function | string | undefined): type is Function {
     return typeof type === 'function'
 }
 
-function isHTMLOrText(node: any) {
+function isHTMLOrText(node: any): node is HTMLElement | Text {
     return node instanceof HTMLElement || node instanceof Text
 }
 
-function getElementName(type: any) {
+function getElementName(type: Function | string): string {
     return isFunction(type) ? type.name : type
 }
 
@@ -36,6 +37,9 @@ function findStateNode(element: any) {
     return null
 }
 
+export const splitSelector = (selector: string): string[] => selector.split(' ').filter((el: string) => !!el).map((el: string) => el.trim());
+
+
 export function stripHoCFromName(componentName?: string) {
     if (componentName) {
         const splitName = componentName.split('(')
@@ -49,9 +53,6 @@ export function stripHoCFromName(componentName?: string) {
 }
 
 /**
- * @name removeChildrenFromProps
- * @param {Object | String}
- * @return {Object | String}
  * @description Remove the `children` property from the props since they will be available
  *              in the node
  */
@@ -69,9 +70,6 @@ function removeChildrenFromProps(props: any) {
 }
 
 /**
- * @name getElementState
- * @param {Object}
- * @return {Object} | undefined
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
  */
@@ -89,13 +87,6 @@ function getElementState(elementState: any) {
     return elementState
 }
 
-/**
- * @name verifyIfArraysMatch
- * @param {Array} macther - this is the Array that will be looped
- * @param {Array} verify - this is the Array to match against
- * @param {Boolean} exact - deep equal matcher
- * @return {boolean}
- */
 export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
@@ -112,13 +103,6 @@ export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
     return arr1.some(item => arr2.includes(item))
 }
 
-/**
- * @name verifyIfObjectsMatch
- * @param {Object} macther - this is the object that will be looped
- * @param {Object} verify - this is the object to match against
- * @param {Boolean} exact - deep equal matcher
- * @return boolean
- */
 export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: any | null = {}, exact = false) {
     let results: any = []
 
@@ -150,20 +134,11 @@ export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: 
     return results.length > 0 && results.filter(el => el).length === matchingKeys.length
 }
 
-/**
- * @name buildFragmentNodeArray
- * @param {Object}
- * @return {Array<HTMLElement | empty>}
- * @description Creates an array of the tree's children HTML nodes
- */
 export function buildFragmentNodeArray(tree: any) {
     return tree.children.map((child: any) => child.node).filter((child: any) => !!child)
 }
 
 /**
- * @name buildNodeTree
- * @param {Object}
- * @return {Object}
  * @description Build a node tree based on React virtual dom
  * @example
  {
@@ -174,43 +149,32 @@ export function buildFragmentNodeArray(tree: any) {
       isFragment: false,
     }
  */
-export function buildNodeTree(element: any) {
-    let tree = { children: [] }
+export function buildNodeTree(element: PartialReactInstance): RESQNode {
+    let tree: RESQNode = ({ children: [] } as unknown) as RESQNode;
 
     if (!element) {
-        return tree
+        return tree;
     }
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'name' does not exist on type '{ children... Remove this comment to see the full error message
     tree.name = getElementName(element.type)
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'props' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.props = removeChildrenFromProps(element.memoizedProps)
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'state' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.state = getElementState(element.memoizedState)
 
     let { child } = element
 
     if (child) {
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
-        tree.children.push(child)
+        tree.children.push(buildNodeTree(child))
 
         while (child.sibling) {
-            // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
-            tree.children.push(child.sibling)
+            tree.children.push(buildNodeTree(child.sibling))
             child = child.sibling
         }
     }
 
-    // @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: never[]; }' is not assignable to... Remove this comment to see the full error message
-    tree.children = tree.children.map(child => buildNodeTree(child))
-
     if (isFunction(element.type) && isFragmentInstance(tree)) {
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = buildFragmentNodeArray(tree)
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'isFragment' does not exist on type '{ ch... Remove this comment to see the full error message
         tree.isFragment = true
     } else {
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = findStateNode(element)
     }
 
@@ -232,11 +196,6 @@ function findNode(children: any) {
 }
 
 /**
- * @name findInTree
- * @param {Object}
- * @param {Function}
- * @param {Boolean} - default false
- * @return {Array<Object>}
  * @description Iterate over the tree param and return matches from the passed function
  */
 
@@ -265,10 +224,6 @@ export function findInTree(stack: any, searchFn: any) {
 }
 
 /**
- * @name matchSelector
- * @param {string} selector
- * @param {string} nodeName
- * @return {boolean}
  * @description Check is node name match to selector
  */
 export function matchSelector(selector: any, nodeName: any) {
@@ -281,16 +236,10 @@ export function matchSelector(selector: any, nodeName: any) {
 }
 
 /**
- * @name findSelectorInTree
- * @param {Array<String>}
- * @param {Object}
- * @param {Boolean} - default false
- * @param {Function}
- * @return {Object}
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
  */
-export function findSelectorInTree(selectors: any, tree: any, selectFirst = false, searchFn: any) {
+export function findSelectorInTree(selectors: any, tree: any, selectFirst = false, searchFn?: any) {
     return selectors.reduce((res: any, selector: any) => {
         return res.concat(findInTree(
             res,
@@ -310,14 +259,9 @@ export function findSelectorInTree(selectors: any, tree: any, selectFirst = fals
 }
 
 /**
- * @name filterNodesBy
- * @param {Array<Object>}
- * @param {String}
- * @param {*}
- * @return {Array<Objects>}
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes: any, key: any, matcher: any, exact = false) {
+export function filterNodesBy(nodes: any, key: 'props' | 'state', matcher: any, exact?: boolean) {
     if (isFunction(matcher)) {
         // eslint-disable-next-line no-console
         console.warn('Functions are not supported as filter matchers')
@@ -325,16 +269,11 @@ export function filterNodesBy(nodes: any, key: any, matcher: any, exact = false)
     }
 
     return nodes.filter((node: any) => (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
-    (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
-    (node[key] === matcher)
+        (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
+        (node[key] === matcher)
     )
 }
 
-/**
- * @name findReactInstance
- * @param {Object} element
- * @return {FiberNode}
- */
 export function findReactInstance(element: any) {
     if (element.hasOwnProperty('_reactRootContainer')) {
         return element._reactRootContainer._internalRoot.current

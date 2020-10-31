@@ -28,7 +28,7 @@
     ],
     "semi": [
       "error",
-      "never"
+      "always"
     ],
     "no-restricted-imports": [
       2,
