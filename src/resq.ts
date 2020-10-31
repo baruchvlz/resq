@@ -1,75 +1,59 @@
-import { filterNodesBy, findSelectorInTree, buildNodeTree } from './utils'
+import { RESQNode } from '../types';
+import { filterNodesBy, findSelectorInTree, buildNodeTree, splitSelector } from './utils'
 
-class ReactSelectorQueryNodes extends Array {
-    constructor(nodes: any) {
-        if (!nodes) {
-            nodes = []
-        }
+export class ReactSelectorQueryNodes extends Array {
+    public nodes: ReactSelectorQueryNode[] = [];
 
-        super(...nodes)
-    }
-
-    byProps(props: any, { exact } = { exact: false }) {
+    byProps(props: NotFunction<any>, { exact }: { exact: boolean } = { exact: false }): ReactSelectorQueryNodes {
         const filtered = filterNodesBy(this, 'props', props, exact)
 
         return new ReactSelectorQueryNodes(filtered)
 
     }
 
-    byState(state: any, { exact } = { exact: false }) {
+    byState(state: NotFunction<any>, { exact }: { exact: boolean } = { exact: false }): ReactSelectorQueryNodes {
         const filtered = filterNodesBy(this, 'state', state, exact)
 
         return new ReactSelectorQueryNodes(filtered)
     }
 }
 
-class ReactSelectorQueryNode extends Object {
-    _nodes: any;
-    constructor(item: any, nodes: any) {
+export class ReactSelectorQueryNode extends Object {
+    constructor(item: Object, private nodes: ReactSelectorQueryNodes) {
         super(item)
-        this._nodes = nodes
 
-        for(let key in item) {
+        for (let key in item) {
             // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
             this[key] = item[key]
         }
     }
 
-    byProps(props: any, { exact } = { exact: false }) {
-        const filtered = filterNodesBy(this._nodes, 'props', props, exact)[0]
+    byProps(props: NotFunction<any>, { exact }: { exact: boolean } = { exact: false }): ReactSelectorQueryNode {
+        const filtered = filterNodesBy(this.nodes, 'props', props, exact)[0]
 
-        return new ReactSelectorQueryNode(filtered, this._nodes)
+        return new ReactSelectorQueryNode(filtered, this.nodes)
     }
 
-    byState(state: any, { exact } = { exact: false }) {
-        const filtered = filterNodesBy(this._nodes, 'state', state, exact)[0]
+    byState(state: NotFunction<any>, { exact }: { exact: boolean } = { exact: false }): ReactSelectorQueryNode {
+        const filtered = filterNodesBy(this.nodes, 'state', state, exact)[0]
 
-        return new ReactSelectorQueryNode(filtered, this._nodes)
+        return new ReactSelectorQueryNode(filtered, this.nodes)
     }
 }
 
-export default class ReactSelectorQuery {
-    nodes: any;
-    rootComponent: any;
-    selectors: any;
-    tree: any;
-    constructor(selector: any, root: any) {
-        this.selectors = selector.split(' ').filter((el: any) => !!el).map((el: any) => el.trim())
-        this.rootComponent = root
-        this.tree = buildNodeTree(this.rootComponent)
-    }
+export class ReactSelectorQuery {
+    private tree: RESQNode = buildNodeTree(this.root);
+    private nodes: ReactSelectorQueryNodes = new ReactSelectorQueryNodes(
+        findSelectorInTree(splitSelector(this.selector), this.tree, true),
+    )
+
+    constructor(public selector: string, private root: PartialReactInstance) { }
 
     find() {
-        this.nodes = new ReactSelectorQueryNodes(
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
-            findSelectorInTree(this.selectors, this.tree, true),
-        )
-
         return new ReactSelectorQueryNode(this.nodes[0], this.nodes)
     }
 
     findAll() {
-        // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
-        return new ReactSelectorQueryNodes(findSelectorInTree(this.selectors, this.tree))
+        return new ReactSelectorQueryNodes(findSelectorInTree(splitSelector(this.selector), this.tree))
     }
 }

@@ -1,18 +1,19 @@
 import deepEqual from 'fast-deep-equal'
+import { RESQNode } from '../types'
 
 const { isArray } = Array
 const { keys } = Object
 
 // One liner helper functions
-function isFunction(type: any) {
+function isFunction(type: Function | string | undefined): type is Function {
     return typeof type === 'function'
 }
 
-function isHTMLOrText(node: any) {
+function isHTMLOrText(node: any): node is HTMLElement | Text {
     return node instanceof HTMLElement || node instanceof Text
 }
 
-function getElementName(type: any) {
+function getElementName(type: Function | string): string {
     return isFunction(type) ? type.name : type
 }
 
@@ -35,6 +36,9 @@ function findStateNode(element: any) {
 
     return null
 }
+
+export const splitSelector = (selector: string): string[] => selector.split(' ').filter((el: string) => !!el).map((el: string) => el.trim());
+
 
 export function stripHoCFromName(componentName?: string) {
     if (componentName) {
@@ -174,43 +178,32 @@ export function buildFragmentNodeArray(tree: any) {
       isFragment: false,
     }
  */
-export function buildNodeTree(element: any) {
-    let tree = { children: [] }
+export function buildNodeTree(element: PartialReactInstance): RESQNode {
+    let tree: RESQNode = ({ children: [] } as unknown) as RESQNode;
 
     if (!element) {
-        return tree
+        return tree;
     }
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'name' does not exist on type '{ children... Remove this comment to see the full error message
     tree.name = getElementName(element.type)
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'props' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.props = removeChildrenFromProps(element.memoizedProps)
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'state' does not exist on type '{ childre... Remove this comment to see the full error message
     tree.state = getElementState(element.memoizedState)
 
     let { child } = element
 
     if (child) {
-        // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
-        tree.children.push(child)
+        tree.children.push(buildNodeTree(child))
 
         while (child.sibling) {
-            // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
-            tree.children.push(child.sibling)
+            tree.children.push(buildNodeTree(child.sibling))
             child = child.sibling
         }
     }
 
-    // @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: never[]; }' is not assignable to... Remove this comment to see the full error message
-    tree.children = tree.children.map(child => buildNodeTree(child))
-
     if (isFunction(element.type) && isFragmentInstance(tree)) {
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = buildFragmentNodeArray(tree)
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'isFragment' does not exist on type '{ ch... Remove this comment to see the full error message
         tree.isFragment = true
     } else {
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'node' does not exist on type '{ children... Remove this comment to see the full error message
         tree.node = findStateNode(element)
     }
 
@@ -290,7 +283,7 @@ export function matchSelector(selector: any, nodeName: any) {
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
  */
-export function findSelectorInTree(selectors: any, tree: any, selectFirst = false, searchFn: any) {
+export function findSelectorInTree(selectors: any, tree: any, selectFirst = false, searchFn?: any) {
     return selectors.reduce((res: any, selector: any) => {
         return res.concat(findInTree(
             res,
@@ -317,7 +310,7 @@ export function findSelectorInTree(selectors: any, tree: any, selectFirst = fals
  * @return {Array<Objects>}
  * @description Filter nodes by deep matching the node[key] to the obj
  */
-export function filterNodesBy(nodes: any, key: any, matcher: any, exact = false) {
+export function filterNodesBy(nodes: any, key: 'props' | 'state', matcher: any, exact?: boolean) {
     if (isFunction(matcher)) {
         // eslint-disable-next-line no-console
         console.warn('Functions are not supported as filter matchers')
@@ -325,8 +318,8 @@ export function filterNodesBy(nodes: any, key: any, matcher: any, exact = false)
     }
 
     return nodes.filter((node: any) => (isNativeObject(matcher) && verifyIfObjectsMatch(matcher, node[key], exact)) ||
-    (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
-    (node[key] === matcher)
+        (isArray(matcher) && verifyIfArraysMatch(matcher, node[key], exact)) ||
+        (node[key] === matcher)
     )
 }
 
