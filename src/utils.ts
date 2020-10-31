@@ -53,9 +53,6 @@ export function stripHoCFromName(componentName?: string) {
 }
 
 /**
- * @name removeChildrenFromProps
- * @param {Object | String}
- * @return {Object | String}
  * @description Remove the `children` property from the props since they will be available
  *              in the node
  */
@@ -73,9 +70,6 @@ function removeChildrenFromProps(props: any) {
 }
 
 /**
- * @name getElementState
- * @param {Object}
- * @return {Object} | undefined
  * @description Class components store the state in `memoizedState`, but functional components
  *              using hooks store them in `memoizedState.baseState`
  */
@@ -93,13 +87,6 @@ function getElementState(elementState: any) {
     return elementState
 }
 
-/**
- * @name verifyIfArraysMatch
- * @param {Array} macther - this is the Array that will be looped
- * @param {Array} verify - this is the Array to match against
- * @param {Boolean} exact - deep equal matcher
- * @return {boolean}
- */
 export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
     if (!isArray(arr1) || !isArray(arr2)) {
         return false
@@ -116,13 +103,6 @@ export function verifyIfArraysMatch(arr1: any, arr2: any, exact = false) {
     return arr1.some(item => arr2.includes(item))
 }
 
-/**
- * @name verifyIfObjectsMatch
- * @param {Object} macther - this is the object that will be looped
- * @param {Object} verify - this is the object to match against
- * @param {Boolean} exact - deep equal matcher
- * @return boolean
- */
 export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: any | null = {}, exact = false) {
     let results: any = []
 
@@ -154,20 +134,11 @@ export function verifyIfObjectsMatch(matcher: Record<string, any> = {}, verify: 
     return results.length > 0 && results.filter(el => el).length === matchingKeys.length
 }
 
-/**
- * @name buildFragmentNodeArray
- * @param {Object}
- * @return {Array<HTMLElement | empty>}
- * @description Creates an array of the tree's children HTML nodes
- */
 export function buildFragmentNodeArray(tree: any) {
     return tree.children.map((child: any) => child.node).filter((child: any) => !!child)
 }
 
 /**
- * @name buildNodeTree
- * @param {Object}
- * @return {Object}
  * @description Build a node tree based on React virtual dom
  * @example
  {
@@ -225,11 +196,6 @@ function findNode(children: any) {
 }
 
 /**
- * @name findInTree
- * @param {Object}
- * @param {Function}
- * @param {Boolean} - default false
- * @return {Array<Object>}
  * @description Iterate over the tree param and return matches from the passed function
  */
 
@@ -258,10 +224,6 @@ export function findInTree(stack: any, searchFn: any) {
 }
 
 /**
- * @name matchSelector
- * @param {string} selector
- * @param {string} nodeName
- * @return {boolean}
  * @description Check is node name match to selector
  */
 export function matchSelector(selector: any, nodeName: any) {
@@ -274,12 +236,6 @@ export function matchSelector(selector: any, nodeName: any) {
 }
 
 /**
- * @name findSelectorInTree
- * @param {Array<String>}
- * @param {Object}
- * @param {Boolean} - default false
- * @param {Function}
- * @return {Object}
  * @description Base iterator function for the library. Iterates over selectors and searches
  *              node tree
  */
@@ -303,11 +259,6 @@ export function findSelectorInTree(selectors: any, tree: any, selectFirst = fals
 }
 
 /**
- * @name filterNodesBy
- * @param {Array<Object>}
- * @param {String}
- * @param {*}
- * @return {Array<Objects>}
  * @description Filter nodes by deep matching the node[key] to the obj
  */
 export function filterNodesBy(nodes: any, key: 'props' | 'state', matcher: any, exact?: boolean) {
@@ -323,11 +274,6 @@ export function filterNodesBy(nodes: any, key: 'props' | 'state', matcher: any, 
     )
 }
 
-/**
- * @name findReactInstance
- * @param {Object} element
- * @return {FiberNode}
- */
 export function findReactInstance(element: any) {
     if (element.hasOwnProperty('_reactRootContainer')) {
         return element._reactRootContainer._internalRoot.current
