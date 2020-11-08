@@ -1,5 +1,6 @@
 import { RESQNode } from '../types';
-import { filterNodesBy, findSelectorInTree, buildNodeTree, splitSelector } from './utils'
+import { PartialReactInstance } from './types/PartialReactInstance';
+import { buildNodeTree, filterNodesBy, findSelectorInTree, splitSelector } from './utils';
 
 export class ReactSelectorQueryNodes extends Array {
     public nodes: ReactSelectorQueryNode[] = [];
@@ -23,7 +24,7 @@ export class ReactSelectorQueryNode extends Object {
         super(item)
 
         for (let key in item) {
-            // @ts-expect-error ts-migrate(7053) FIXME: No index signature with a parameter of type 'strin... Remove this comment to see the full error message
+            // @ts-expect-error FIXME TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'ReactSelectorQueryNode'.
             this[key] = item[key]
         }
     }

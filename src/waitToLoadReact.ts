@@ -13,6 +13,7 @@ export function waitToLoadReact(timeout = 5000, rootElSelector: string): HTMLEle
         }
 
         while(walker.nextNode()) {
+            // eslint-disable-next-line no-prototype-builtins
             if (walker.currentNode.hasOwnProperty('_reactRootContainer')) {
                 return walker.currentNode
             }
@@ -27,7 +28,11 @@ export function waitToLoadReact(timeout = 5000, rootElSelector: string): HTMLEle
 
             if (reactRoot) {
                 window.isReactLoaded = true
-                window.rootReactElement = findReactInstance(reactRoot)
+                const reactInstance = findReactInstance(reactRoot);
+
+                if (reactInstance){
+                    window.rootReactElement = reactInstance;
+                }
                 return resolve()
             }
             /* istanbul ignore next */

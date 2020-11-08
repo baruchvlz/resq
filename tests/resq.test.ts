@@ -11,16 +11,12 @@ describe('ReactSelectorQuery', () => {
 
     it('should select one element', () => {
         const resq = new ReactSelectorQuery('TestWrapper span', vdom as any)
-        const $ = resq.find()
+        const $ = resq.find() as any;
+        expect($.name).toEqual('span');
+        expect($.props).toEqual( { testProp: 'some prop' });
+        expect($.state).toEqual({});
+        expect($.node).toEqual(document.createElement('span'));
 
-        expect($).toMatchObject(
-            {
-                name: 'span',
-                props: { testProp: 'some prop' },
-                state: {},
-                node: document.createElement('span'),
-            },
-        )
     })
 
     it('should select multiple elements', () => {
@@ -51,7 +47,7 @@ describe('ReactSelectorQuery', () => {
             const $ = resq.find()
             const result = $.byProps({ testProp: 'some prop' })
 
-            delete result._nodes
+            // delete result._nodes
 
             expect(result).toMatchObject({
                 name: 'span',
