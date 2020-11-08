@@ -9,7 +9,7 @@ import {
     stripHoCFromName,
     verifyIfArraysMatch,
     verifyIfObjectsMatch,
-} from '../src/utils'
+} from '../src/utils';
 
 import {
     fragmentTree,
@@ -19,7 +19,8 @@ import {
     treeWithNonObjectState,
     treeWithStyledComponents,
     vdom,
-} from './__mocks__/vdom'
+} from './__mocks__/vdom';
+import { PartialReactInstance } from '../src/types/PartialReactInstance';
 
 beforeAll(() => {
     window.isReactLoaded = true
@@ -33,13 +34,13 @@ describe('utils', () => {
         })
 
         it('should build tree', () => {
-            expect(buildNodeTree(vdom)).toMatchObject(tree)
-        })
+            expect(buildNodeTree((vdom as unknown) as PartialReactInstance)).toMatchObject(tree);
+        });
 
         it('should build tree for fragments', () => {
-            expect(buildNodeTree(fragmentVDOM)).toMatchObject(fragmentTree)
-        })
-    })
+            expect(buildNodeTree((fragmentVDOM as unknown) as PartialReactInstance)).toMatchObject(fragmentTree);
+        });
+    });
 
     test('findInTree', () => {
         let results = [tree]
@@ -69,8 +70,7 @@ describe('utils', () => {
     })
 
     describe('findSelectorInTree', () => {
-        it('should return all intances of nested selectors', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
+        it('should return all instances of nested selectors', () => {
             const results = findSelectorInTree('TestWrapper span'.split(' '), tree)
 
             expect(results.length).toBe(2)
@@ -125,7 +125,6 @@ describe('utils', () => {
         })
 
         it('should correctly find a styled component', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['styled__Button'],
                 treeWithStyledComponents,
@@ -151,7 +150,6 @@ describe('utils', () => {
         })
 
         it('should correctly find a nested styled component', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', 'styled__Button'],
                 treeWithStyledComponents,
@@ -177,7 +175,6 @@ describe('utils', () => {
         })
 
         it('should correctly find a child of styled component', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', 'styled__Div', 'MyButton'],
                 treeWithStyledComponents,
@@ -195,7 +192,6 @@ describe('utils', () => {
         })
 
         it('should correctly find a nested node', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['styled__Div'],
                 treeWithStyledComponents,
@@ -221,7 +217,6 @@ describe('utils', () => {
         })
 
         it('should correctly not find a node', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['AnyComponentDoesnotExist'],
                 treeWithStyledComponents,
@@ -298,7 +293,6 @@ describe('utils', () => {
 
     describe('findSelectorInTree with wildcards', () => {
         it('should correctly find nodes by wildcard in the end of selector', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', 'Test*'],
                 treeForWildcards,
@@ -324,7 +318,6 @@ describe('utils', () => {
         })
 
         it('should correctly find nodes by wildcard in the start of selector', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', '*Test'],
                 treeForWildcards,
@@ -343,7 +336,6 @@ describe('utils', () => {
         })
 
         it('should correctly find nodes by wildcard in the middle of selector', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', '*am*'],
                 treeForWildcards,
@@ -376,7 +368,6 @@ describe('utils', () => {
         })
 
         it('should correctly find all nodes by wildcards', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', '*'],
                 treeForWildcards,
@@ -427,7 +418,6 @@ describe('utils', () => {
         })
 
         it('should correctly find nodes behind wildcard node', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const results = findSelectorInTree(
                 ['TestWrapper', '*', 'div'],
                 treeForWildcards,
@@ -446,7 +436,6 @@ describe('utils', () => {
 
     describe('filterNodesBy', () => {
         it('should non-strictly match objects', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const nodes = findSelectorInTree(['TestWrapper'], tree)
             const results = filterNodesBy(nodes, 'props', { myProps: 'test prop' })
 
@@ -455,7 +444,6 @@ describe('utils', () => {
         })
 
         it('should strictly match objects when `exact` flag is true', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const nodes = findSelectorInTree(['TestWrapper', 'div'], tree)
             const results = filterNodesBy(
                 nodes,
@@ -477,7 +465,6 @@ describe('utils', () => {
         })
 
         it('should work for any type of state', () => {
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
             const arrayState = filterNodesBy(nodes, 'state', [1, 2, 3])
             const numberState = filterNodesBy(nodes, 'state', 123)
@@ -531,7 +518,6 @@ describe('utils', () => {
 
         it('should not match functions', () => {
             window.console.warn = jest.fn()
-            // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 2.
             const nodes = findSelectorInTree(['TestWrapper', 'div'], treeWithNonObjectState)
 
             expect(filterNodesBy(nodes, 'state', () => {})).toMatchObject([])
@@ -648,8 +634,8 @@ describe('utils', () => {
                 __reactInternalInstance$test1234: true,
             }
 
-            expect(findReactInstance(element)).toBeTruthy()
-        })
+            expect(findReactInstance((element as unknown) as HTMLElement)).toBeTruthy();
+        });
 
         it('should return undefined if no instance is found', () => {
             expect(findReactInstance(document.createElement('div'))).toBeFalsy()

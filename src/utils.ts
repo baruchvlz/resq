@@ -1,5 +1,7 @@
-import deepEqual from 'fast-deep-equal'
-import { RESQNode } from '../types'
+import deepEqual from 'fast-deep-equal';
+import { RESQNode } from '../types';
+import { HTMLElementWithReactRootContainer } from './types/HTMLElementWithReactRootContainer';
+import { PartialReactInstance } from './types/PartialReactInstance';
 
 const { isArray } = Array
 const { keys } = Object
@@ -274,14 +276,16 @@ export function filterNodesBy(nodes: any, key: 'props' | 'state', matcher: any, 
     )
 }
 
-export function findReactInstance(element: any) {
+export function findReactInstance(element: HTMLElement | Node): PartialReactInstance | undefined {
+    // eslint-disable-next-line no-prototype-builtins
     if (element.hasOwnProperty('_reactRootContainer')) {
-        return element._reactRootContainer._internalRoot.current
+        return (element as HTMLElementWithReactRootContainer)._reactRootContainer._internalRoot.current as PartialReactInstance;
     }
 
     const instanceId = Object.keys(element).find((key: any) => key.startsWith('__reactInternalInstance'))
 
     if (instanceId) {
-        return element[instanceId]
+        // @ts-ignore FIXME
+        return element[instanceId] as PartialReactInstance;
     }
 }
