@@ -330,7 +330,9 @@ export function findReactInstance(element) {
         return element._reactRootContainer._internalRoot.current
     }
 
-    const instanceId = Object.keys(element).find(key => key.startsWith('__reactInternalInstance'))
+    const instanceId = Object.keys(element).find(
+        key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber')
+    )
 
     if (instanceId) {
         return element[instanceId]
