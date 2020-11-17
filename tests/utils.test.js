@@ -635,6 +635,14 @@ describe('utils', () => {
             expect(findReactInstance(element)).toBeTruthy()
         })
 
+        it('should work with React 17', () => {
+            const element = {
+                __reactFiber$test1234: true,
+            }
+
+            expect(findReactInstance(element)).toBeTruthy()
+        })
+
         it('should return undefined if no instance is found', () => {
             expect(findReactInstance(document.createElement('div'))).toBeFalsy()
         })
