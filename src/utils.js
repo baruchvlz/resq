@@ -13,7 +13,7 @@ function isHTMLOrText(node) {
 }
 
 function getElementName(type) {
-    return isFunction(type) ? type.name : type
+    return isFunction(type) ? (type.displayName || type.name) : type
 }
 
 function isFragmentInstance(element) {
