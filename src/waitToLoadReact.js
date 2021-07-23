@@ -48,3 +48,46 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
         }, timeout)
     })
 }
+
+export function waitToLoadReactPlayerWeb(timeout = 5000) {
+    if (global.isReactLoaded) {
+        return Promise.resolve('React already loaded')
+    }
+
+    const findReactRoot = () => {
+        return document
+            .querySelector('html > body > div > iframe')
+            .contentWindow
+            .document
+            .querySelector('#root')
+    }
+
+    return new Promise((resolve, reject) => {
+        let timedout = false
+
+        const tryToFindApp = () => {
+            const reactRoot = findReactRoot()
+
+            if (reactRoot) {
+                global.isReactLoaded = true
+                global.rootReactElement = findReactInstance(reactRoot)
+                return resolve()
+            }
+            /* istanbul ignore next */
+            if (timedout) {
+                return
+            }
+
+            setTimeout(tryToFindApp, 200)
+        }
+
+        tryToFindApp()
+
+        /* istanbul ignore next */
+        setTimeout(() => {
+            timedout = true
+
+            reject('Timed out')
+        }, timeout)
+    })
+}
