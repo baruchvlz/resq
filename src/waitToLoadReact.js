@@ -55,7 +55,7 @@ export function waitToLoadReactInIframe(timeout = 5000, iFrameElSelector, rootEl
     }
 
     const findReactRoot = () => {
-        if (iFrameElSelector) {
+        if (iFrameElSelector && rootElSelector) {
             return document
                 .querySelector(iFrameElSelector)
                 .contentWindow
