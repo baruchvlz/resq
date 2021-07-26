@@ -49,17 +49,27 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
     })
 }
 
-export function waitToLoadReactPlayerWeb(timeout = 5000) {
+export function waitToLoadReactInIframe(timeout = 5000, iFrameElSelector, rootElSelector) {
     if (global.isReactLoaded) {
         return Promise.resolve('React already loaded')
     }
 
     const findReactRoot = () => {
-        return document
-            .querySelector('html > body > div > iframe')
-            .contentWindow
-            .document
-            .querySelector('#root')
+        if (iFrameElSelector) {
+            return document
+                .querySelector(iFrameElSelector)
+                .contentWindow
+                .document
+                .querySelector(rootElSelector)
+        }
+
+        const walker = document.createTreeWalker(document)
+
+        while(walker.nextNode()) {
+            if (walker.currentNode.hasOwnProperty('_reactRootContainer')) {
+                return walker.currentNode
+            }
+        }
     }
 
     return new Promise((resolve, reject) => {

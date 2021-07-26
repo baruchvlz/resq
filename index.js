@@ -1,5 +1,5 @@
 import ReactSelectorQuery from './src/resq'
-import { waitToLoadReact, waitToLoadReactPlayerWeb } from './src/waitToLoadReact'
+import { waitToLoadReact, waitToLoadReactInIframe } from './src/waitToLoadReact'
 import { findReactInstance } from './src/utils'
 
 function doQuery(selector, method, element) {
@@ -28,4 +28,4 @@ export function resq$$(selector, element) {
     return doQuery(selector, 'findAll', element)
 }
 
-export { waitToLoadReact, waitToLoadReactPlayerWeb }
+export { waitToLoadReact, waitToLoadReactInIframe }
