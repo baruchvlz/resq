@@ -1,7 +1,7 @@
 {
-    "name": "resq",
-    "version": "1.10.1",
-    "description": "React Element Selector Query (resq) - Query React components and children by selector (component name)",
+    "name": "enhanced-resq",
+    "version": "1.0.0",
+    "description": "React Element Selector Query Enhanced - Query React components and children by selector (component name), starting also from an iFrame",
     "keywords": [
         "react",
         "selector",
@@ -10,7 +10,7 @@
         "queryselector",
         "query"
     ],
-    "author": "Baruch Velez <baruchvelez@gmail.com>",
+    "author": "Alessandro Defendenti (Radicalbit S.r.l.)",
     "license": "MIT",
     "main": "dist/index.js",
     "bugs": {
