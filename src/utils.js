@@ -288,6 +288,10 @@ export function findSelectorInTree(selectors, tree, selectFirst = false, searchF
                 if (typeof child.name === 'string') {
                     return matchSelector(selector, child.name)
                 } else if (child.name !== null && typeof child.name === 'object') {
+                    if (child.name.render !== undefined && child.name.render.name !== null &&
+                        typeof child.name.render.name === 'string') {
+                        return matchSelector(selector, child.name.render.name)
+                    }
                     return matchSelector(selector, child.name.displayName)
                 }
 
