@@ -21,6 +21,7 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
 
     return new Promise((resolve, reject) => {
         let timedout = false
+        let timeoutHandler = null;
 
         const tryToFindApp = () => {
             const reactRoot = findReactRoot()
@@ -28,7 +29,11 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
             if (reactRoot) {
                 global.isReactLoaded = true
                 global.rootReactElement = findReactInstance(reactRoot)
-                return resolve()
+
+                if (global.rootReactElement) {
+                    clearTimeout(timeoutHandler)
+                    return resolve()
+                }
             }
             /* istanbul ignore next */
             if (timedout) {
@@ -41,10 +46,9 @@ export function waitToLoadReact(timeout = 5000, rootElSelector) {
         tryToFindApp()
 
         /* istanbul ignore next */
-        setTimeout(() => {
-            timedout = true
-
-            reject('Timed out')
-        }, timeout)
-    })
+        timeoutHandler = setTimeout(() => {
+            timedout = true;
+            reject("Timed out");
+        }, timeout);
+  });
 }
