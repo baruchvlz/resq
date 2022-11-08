@@ -331,7 +331,8 @@ export function findReactInstance(element) {
     }
 
     const instanceId = Object.keys(element).find(
-        key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber')
+        key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber') ||
+          key.startsWith('__reactContainer')
     )
 
     if (instanceId) {
