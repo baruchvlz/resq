@@ -643,6 +643,14 @@ describe('utils', () => {
             expect(findReactInstance(element)).toBeTruthy()
         })
 
+        it('should work with React 18', () => {
+            const element = {
+                __reactContainer$test1234: true,
+            }
+
+            expect(findReactInstance(element)).toBeTruthy()
+        })
+
         it('should return undefined if no instance is found', () => {
             expect(findReactInstance(document.createElement('div'))).toBeFalsy()
         })
