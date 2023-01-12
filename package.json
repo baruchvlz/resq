@@ -1,6 +1,6 @@
 {
     "name": "resq",
-    "version": "1.10.2",
+    "version": "1.11.0",
     "description": "React Element Selector Query (resq) - Query React components and children by selector (component name)",
     "keywords": [
         "react",
