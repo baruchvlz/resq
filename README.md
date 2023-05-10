@@ -25,7 +25,7 @@ To get the most out of the library, we recommend you use React Dev Tools to veri
 ```typescript
 
 interface RESQNode {
-    name: 'MyComponent',
+    name: string,
     node: HTMLElement | null,
     isFragment: boolean,
     state: string | boolean | any[] | {},
