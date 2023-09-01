@@ -326,7 +326,10 @@ export function filterNodesBy(nodes, key, matcher, exact = false) {
  * @return {FiberNode}
  */
 export function findReactInstance(element) {
-    if (element.hasOwnProperty('_reactRootContainer')) {
+    if (
+        element.hasOwnProperty('_reactRootContainer') &&
+        element._reactRootContainer._internalRoot
+    ) {
         return element._reactRootContainer._internalRoot.current
     }
 
