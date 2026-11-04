@@ -1,0 +1,12 @@
+{
+    "entryPoints": ["src/index.ts"],
+    "tsconfig": "tsconfig.json",
+    "plugin": ["typedoc-plugin-markdown"],
+    "out": "docs/api",
+    "readme": "none",
+    "hideBreadcrumbs": true,
+    "hidePageHeader": true,
+    "entryFileName": "index",
+    "excludePrivate": true,
+    "skipErrorChecking": false
+}

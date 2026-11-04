@@ -1,231 +1,61 @@
-# resq (React Element Selector Query) ![npm](https://img.shields.io/npm/v/resq.svg) [![Build Status](https://travis-ci.org/baruchvlz/resq.svg?branch=master)](https://travis-ci.org/baruchvlz/resq) [![codecov](https://codecov.io/gh/baruchvlz/resq/branch/master/graph/badge.svg)](https://codecov.io/gh/baruchvlz/resq)
+# resq (React Element Selector Query)
 
-## Requirements
+[![npm](https://img.shields.io/npm/v/resq.svg)](https://www.npmjs.com/package/resq)
+[![CI](https://github.com/baruchvlz/resq/actions/workflows/ci.yml/badge.svg)](https://github.com/baruchvlz/resq/actions/workflows/ci.yml)
 
-- React v16 or higher
-- Node 8 or higher
-- React DevTools (optional)
+`querySelector` for the React tree. Find components by name, then read their props, state and DOM nodes.
+Built for end-to-end tests, browser automation and debugging.
 
-This library tries to implement something similar to `querySelector` and `querySelectorAll`, but through the React VirtualDOM. You can query for React composite elements or HTML elements. It provides two functions `resq$` and `resq$$` for selecting one or multiple components, respectively.
+**Documentation: <https://baruchvlz.github.io/resq/>**
 
-## Installation
+- React 16 to 19 (`ReactDOM.render` and `createRoot`)
+- Written in TypeScript, ships ESM, CommonJS and a browser bundle
+- Wildcards (`My*`), descendant chains (`Form Field input`), filtering by props and state
 
-```
-$ npm install --save resq
+## Install
 
-$ yarn add resq
+```sh
+npm install resq
 ```
 
 ## Usage
 
-To get the most out of the library, we recommend you use React Dev Tools to verify the component names you want to select. Granted for basic usage you don't need this as long as you know the component name beforehand, but for Styled components and MaterialUI components it will be of great help.
+```ts
+import { resq$, resq$$, waitToLoadReact } from 'resq'
 
+const root = document.getElementById('root')!
 
-#### Type definition
-```typescript
+resq$('MyComponent', root) // first match, or undefined
+resq$$('My*', root) // every match
 
-interface RESQNode {
-    name: string,
-    node: HTMLElement | null,
-    isFragment: boolean,
-    state: string | boolean | any[] | {},
-    props: {},
-    children: RESQNode[]
-}
+resq$('Button', root)?.byProps({ primary: true })?.props // filter by props or state
 
-resq$(selector: string, element?: HTMLElement): RESQNode
-resq$$(selector: string, element?: HTMLElement): Array<RESQNode>
-
+await waitToLoadReact(2000) // wait for React, then query without an element
+resq$('MyComponent')
 ```
 
-* [Basic Usage](README.md#basic-usage)
-* [Wildcard selection](README.md#wildcard-selection)
-* [Async selection](README.md#async-selection)
-* [Filtering selection](README.md#filtering-selection)
+Each result has `name`, `props`, `state`, `node`, `isFragment`, `children`, `byProps()` and `byState()`.
 
-#### Basic Usage
-Take this React App:
+## Migrating from v1
 
-```jsx
-// imports
+v2 keeps the API but changes a few behaviors (not-found returns `undefined`, errors are typed, the browser
+bundle is `dist/index.global.js`). See the [migration guide](https://baruchvlz.github.io/resq/guide/migration-v1-to-v2).
 
-const MyComponent = () => (
-    <div>My Component</div>
-)
+## Development
 
-const App = () => (
-    <div><MyComponent /></div>
-)
-
-ReactDOM.render(<App />, document.getElementById('root'))
+```sh
+npm ci
+npm test            # unit and integration tests with coverage
+npm run lint
+npm run typecheck
+npm run build
+npm run bench       # compare against the v1 implementation
+npm run docs:dev    # documentation site
 ```
 
-Selecting `MyComponent`:
+Tests run against the installed React version. To try another one:
+`npm install --no-save --legacy-peer-deps react@17 react-dom@17 && npm test`.
 
-```js
-import { resq$ } from 'resq'
+## License
 
-const root = document.getElementById('root');
-resq$('MyComponent', root);
-/*
-{
-    name: 'MyComponent',
-    node: <div />,
-    isFragment: false,
-    state: {},
-    props: {},
-    children: []
-}
-*/
-```
-
-#### Wildcard selection
-
-You can select your components by partial name use a wildcard selectors:
-
-```jsx
-// imports
-
-const MyComponent = () => (
-    <div>My Component</div>
-)
-
-const MyAnotherComponent = () => (
-    <div>My Another Component</div>
-)
-
-const App = () => (
-    <div>
-        <MyComponent />
-        <MyAnotherComponent />
-    </div>
-)
-
-ReactDOM.render(<App />, document.getElementById('root'))
-```
-
-Selecting both components by wildcard:
-```js
-import { resq$$ } from 'resq'
-
-const root = document.getElementById('root');
-resq$$('My*', root);
-/*
-[
-    {
-        name: 'MyComponent',
-        node: <div />,
-        isFragment: false,
-        state: {},
-        props: {},
-        children: []
-    },
-    {
-        name: 'MyAnotherComponent',
-        node: <div />,
-        isFragment: false,
-        state: {},
-        props: {},
-        children: []
-    },
-]
-*/
-```
-
-Selecting `MyAnotherComponent` by wildcard:
-```js
-import { resq$ } from 'resq'
-
-const root = document.getElementById('root');
-resq$('My*Component', root);
-/*
-{
-    name: 'MyAnotherComponent',
-    node: <div />,
-    isFragment: false,
-    state: {},
-    props: {},
-    children: []
-}
-*/
-```
-
-#### Async selection
-
-Going by the same example as in [basic usage](README.md#basic-usage), if you don't want to pass the root element to the function, you can do it this way:
-
-```js
-import { resq$, waitToLoadReact } from 'resq'
-
-async function getReactElement(name) {
-    try {
-        await waitToLoadReact(2000) // time in MS to wait before erroring
-
-        return resq$(name)
-    } catch (error) {
-        console.warn('resq error', error)
-    }
-}
-
-getReactElement('MyComponent')
-```
-
-
-#### Filtering selection
-
-You can filter your selections `byState` or `byProps`. These are methods attached to the RESQNode return objects.
-
-Example app:
-```jsx
-// imports
-
-const MyComponent = ({ someBooleanProp }) => (
-    <div>My Component {someBooleanProp ? 'show this' : ''} </div>
-)
-
-const App = () => (
-    <div>
-        <MyComponent />
-        <MyComponent someBooleanProp={true} />
-    </div>
-)
-
-ReactDOM.render(<App />, document.getElementById('root'))
-```
-
-To select the first instance of `MyComponent` where `someBooleanProp` is true:
-
-```js
-import { resq$ } from 'resq'
-
-const root = document.getElementById('root')
-const myComponent = resq$('MyComponent', root)
-const filtered = myComponent.byProps({ someBooleanProp: true })
-
-console.log(filtered)
-/*
-{
-    name: 'MyComponent',
-    node: <div />,
-    isFragment: false,
-    state: {},
-    props: {
-        someBooleanProp: true,
-    },
-    children: []
-}
-*/
-
-```
-
-**Deep Matching with `exact` flag**
-
-If you are in need of filtering `byProps` or `byState` and require the filter to match exactly every property and value in the object (or nested objects), you can pass the `exact` flag to the function:
-
-```js
-import { resq$ } from 'resq'
-
-const root = document.getElementById('root')
-const myComponent = resq$('MyComponent', root)
-const filtered = myComponent.byProps({ someBooleanProp: true }, { exact: true })
-```
+MIT
