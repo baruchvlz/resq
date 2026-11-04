@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [master, v2]
+  pull_request:
+
+jobs:
+  checks:
+    name: Lint, typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  test:
+    name: Tests (React ${{ matrix.react }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react: ['16.14.0', '17.0.2', '18.3.1', '19']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install React ${{ matrix.react }}
+        run: npm install --no-save --legacy-peer-deps react@${{ matrix.react }} react-dom@${{ matrix.react }}
+      - run: npm test
