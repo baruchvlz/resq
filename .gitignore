@@ -30,5 +30,8 @@ babel/
 .theia
 
 /test-demo
-package-lock.json
-yarn.lock
+
+# docs
+docs/.vitepress/cache
+docs/.vitepress/dist
+docs/api
